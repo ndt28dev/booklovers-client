@@ -15,7 +15,7 @@ import {
   googleLogin,
   facebookLogin,
 } from "../../../../redux/slices/userSlice";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 // import FacebookLogin from "react-facebook-login";
 
 const breadcrumbItems = [
