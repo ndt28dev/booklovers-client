@@ -27,6 +27,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
   const { isLoading, error, isLoggedIn } = useSelector(
     (state) => state.user.auth
   );
@@ -224,11 +226,13 @@ const LoginPage = () => {
                 </div>
 
                 <div className="d-flex justify-content-center gap-3">
-                  <GoogleLogin
-                    onSuccess={(res) => dispatch(googleLogin(res.credential))}
-                    onError={() => console.log("Google login thất bại")}
-                    useOneTap={false}
-                  />
+                  <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                    <GoogleLogin
+                      onSuccess={(res) => dispatch(googleLogin(res.credential))}
+                      onError={() => console.log("Google login thất bại")}
+                      useOneTap={false}
+                    />
+                  </GoogleOAuthProvider>
                 </div>
               </Col>
 
