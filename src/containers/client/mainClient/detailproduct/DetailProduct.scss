@@ -1,0 +1,50 @@
+
+
+.ipQuantity {
+    border: 1px solid #ccc ;
+    border-radius: 5px;
+    width: 130px !important;
+    .ipQuantity-input {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+    .btnDecrease {
+        background-color: white;
+        // border: 1px solid #929191 ;
+        border: none;
+        outline: none !important;
+        
+        .btnDecrease-icon {
+            color: #0D0E0F;
+            font-weight: bold;
+        }
+        &:hover {
+            background-color: transparent !important;
+            color: inherit !important;
+            box-shadow: none !important;
+       }
+    }
+    
+    .btnIncrease {
+        background-color: white;
+        // border: 1px solid #929191 ;
+        border: none;
+        outline: none !important;
+        
+        .btnIncrease-icon {
+            color: #0D0E0F;
+            font-weight: bold;
+        }
+
+        &:hover {
+            background-color: transparent !important;
+            color: inherit !important;
+            box-shadow: none !important;
+       }
+    }
+}

@@ -1,0 +1,19 @@
+.card-date {
+    color: black;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+    max-height: "42px";
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .featuredPostCard {
+
+    &:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+  }  

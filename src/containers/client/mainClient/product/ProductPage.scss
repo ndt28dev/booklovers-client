@@ -1,0 +1,207 @@
+.filter-section {
+
+    .filter-section-title {
+        padding-left: 10px;
+    }
+
+    .filter-section-form {
+        padding: 0 10px;
+      
+        .filter-section-form-check {
+          cursor: pointer;
+      
+          label {
+            cursor: pointer;
+          }
+      
+          &:hover {
+            color: #de3241;
+          }
+        }
+      }
+      
+    .category-list {
+
+
+
+        .category-item {
+            position: relative;
+            cursor: pointer;
+            padding-left: 10px;
+            color: black;
+        
+            .category-item-icon {
+                padding: 8px 10px;
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            &:hover  {
+              color: #E35765;
+            }
+
+            &:hover  .submenu{
+              color: #333;
+            }
+        
+            &:hover .category-item-icon{
+                background-color: #EEEEEE;
+            }
+            
+            .submenu {
+              position: absolute;
+              top: 0;
+              left: 100%;
+              min-width: 180px;
+              background: #fff;
+              border: 5px solid #eee;
+              padding: 10px;
+              list-style: none;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              z-index: 1;
+          
+              li {
+                padding: 6px 0;
+                white-space: nowrap;
+          
+                &:hover {
+                  color: #de3241;
+                }
+              }
+            }
+          }
+    }
+}
+
+.filter-result {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  
+    .result-count {
+      color: #ccc;
+      font-weight: 500;
+    }
+  
+    .filter-tag {
+      background-color: #E35765;
+      color: #fff;
+      padding: 0 6px;
+      border-radius: 5px;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+  
+      .remove-tag {
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 2px
+  
+      }
+    }
+  }
+  
+  .icon-search-btn {
+    cursor: pointer;
+  
+    &:hover {
+      color: #e35765;
+    }
+  }
+
+  .form-switch .form-check-input {
+    width: 60px;         
+    height: 20px;         
+    background-color: #287BFF;
+    border-color: #287BFF;
+    cursor: pointer;
+    box-shadow: none;
+    transition: all 0.3s ease;
+  }
+  
+  .form-switch .form-check-input:checked {
+    background-color: #e35765;
+    border-color: #e35765;
+  }
+  
+.product-card {
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0); 
+    position: relative;
+    cursor: pointer;
+    
+    .product-card-title {
+        text-align: left;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; 
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 18px;
+        margin-bottom: 8px;
+        color: #333;
+    }
+  
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      transform: translateY(-6px);
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 4px;
+        right: -10px;
+        background-color: #e35765;
+        color: white;
+        font-weight: bold;
+        font-size: 13px;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+  }
+  
+  .pagination-book {
+    .page-item {
+      margin: 0 4px;
+  
+      .page-link {
+        border: 1px solid #ccc;
+        border-radius: 50% !important;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        text-align: center;
+        line-height: 40px;
+        background-color: #f8f9fa;
+        color: #333;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+  
+      .page-link:hover {
+        background-color: #d14552;
+        color: #e9ecef;
+      }
+  
+      &.active .page-link {
+        background-color: #d14552;
+        color: white;
+        font-weight: bold;
+        border-color: #d14552;
+      }
+  
+      .page-link:disabled,
+      &.disabled .page-link {
+        background-color: #ddd !important;
+        color: #999 !important;
+        border-color: #ccc !important;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  

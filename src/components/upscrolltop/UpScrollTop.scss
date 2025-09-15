@@ -1,0 +1,26 @@
+.upscroll-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: black;
+    border: 2px solid rgb(117, 117, 117);
+    font-size: 20px;
+    cursor: pointer;
+   bottom: 20px;
+    right: 10px;
+    transition: background-color 0.3s ease;
+    position: fixed;
+    opacity: 0;
+    
+    &:hover {
+        border-color: #E35765;
+        color: #E35765;
+    }
+    &.show {
+        opacity: 1;
+        visibility: visible;
+      }
+}

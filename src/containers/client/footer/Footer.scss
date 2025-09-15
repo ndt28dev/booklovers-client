@@ -1,0 +1,24 @@
+
+.colorPri {
+    color: #E35765;
+}
+
+.list-unstyled.ul-foot {
+    li {
+
+        &:hover{
+            color: #E35765;
+            cursor: pointer;
+        }
+    }
+}
+
+.footer-icon {
+    color: black;
+    cursor: pointer;
+    font-size: 20px;
+
+    &:hover {
+        color: #D14552;
+    }
+}

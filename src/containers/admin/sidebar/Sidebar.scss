@@ -1,0 +1,27 @@
+
+  
+.sidebar-container {
+
+  .sidebar-link {
+    color: inherit;
+      border-radius: 5px;
+      padding: 8px 12px;
+      font-size: 1.1rem;
+      text-decoration: none !important;
+      transition: background-color 0.3s;
+    
+      &:hover {
+        background-color: #fff1f3; 
+        color: #E35765 ;
+      }
+    
+      &.active {
+        color: #E35765;
+        font-weight: 600;
+        background-color: #fff1f3;
+      }
+    }
+
+    
+}
+

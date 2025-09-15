@@ -1,0 +1,25 @@
+.book-banner-bottom {
+  
+    img {
+      object-fit: cover;
+      height: 100%;
+    }
+  
+    h1 {
+      font-size: 3rem;
+    }
+  
+    button {
+      font-weight: bold;
+      color: #3e9ffb;
+    }
+  }
+
+  .category-card {
+    transition: transform 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+  }
