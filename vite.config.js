@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   define: { global: "window" },
   server: {
-    port: 8085,
+    port: 8080,
     hmr: {
       protocol: "ws",
       host: "localhost",
-      port: 8085,
+      port: 8080,
     },
   },
 });
