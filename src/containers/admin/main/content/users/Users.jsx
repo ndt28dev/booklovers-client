@@ -1,17 +1,35 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
-import Table from "react-bootstrap/Table";
 import Image from "react-bootstrap/Image";
-import Pagination from "react-bootstrap/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../../../../../redux/slices/userSlice";
 import API_URL from "../../../../../config/api";
+import CreateUpdateUserModal from "./crud/CreateUpdateUserModal";
+import MyDataTable from "../../../../../components/mytable/MyDataTable";
+import MyButtonCreate from "../../../../../components/button/MyButtonCreate";
+import MyButtonUpdate from "../../../../../components/button/MyButtonUpdate";
+import MyButtonDelete from "../../../../../components/button/MyButtonDelete";
+import { Badge, Col, Row } from "react-bootstrap";
+import { formatDate } from "../../../../../utils/format";
+import MyButtonImport from "../../../../../components/button/MyButtonImport";
+import MyButtonExport from "../../../../../components/button/MyButtonExport";
+import DeleteUserModal from "./crud/DeleteUserModal";
+
+import ImportUserModal from "./crud/ImportUserModal";
+import ExportUserModal from "./crud/ExportUserModal";
+import MyLayoutAdmin from "../../../../../components/mylayout/MyLayoutAdmin";
 
 const Users = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [isOpenImport, setIsOpenImport] = useState(false);
+  const [isOpenExport, setIsOpenExport] = useState(false);
+  const [isCheck, setIsCheck] = useState(false);
+  const [dataSelected, setDataSelected] = useState(null);
+
+  const [role, setRole] = useState("");
+  const [search, setSearch] = useState("");
 
   const { list, error, pagination } = useSelector((state) => state.user.users);
 
@@ -23,8 +41,15 @@ const Users = () => {
   const totalPages = pagination?.totalPages || 0;
 
   useEffect(() => {
-    dispatch(fetchAllUser({ page: currentPage, limit: 10 }));
-  }, [currentPage]);
+    dispatch(
+      fetchAllUser({
+        page: currentPage,
+        limit: 10,
+        role: role,
+        search: search,
+      })
+    );
+  }, [currentPage, role, search]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -32,164 +57,165 @@ const Users = () => {
     }
   };
 
-  const handleBtnAddUser = () => {
-    navigate("/admin/users/add");
+  const handleCreate = () => {
+    setIsOpen(true);
+    setIsCheck(false);
   };
+
+  const handleUpdate = (dataSelected) => {
+    setIsOpen(true);
+    setIsCheck(true);
+    setDataSelected(dataSelected);
+  };
+
+  const handleDelete = (dataSelected) => {
+    setIsOpenDelete(true);
+    setDataSelected(dataSelected);
+  };
+
+  const handleImport = () => {
+    setIsOpenImport(true);
+  };
+
+  const handleExport = () => {
+    setIsOpenExport(true);
+  };
+
+  const columns = [
+    { title: "STT", style: { width: "40px", textAlign: "center" } },
+    { title: "Ảnh", style: { width: "100px", textAlign: "center" } },
+    { title: "Họ và tên", style: { width: "20%" } },
+    { title: "Email", style: { width: "25%" } },
+    { title: "SĐT", style: { width: "10%" } },
+    { title: "Ngày sinh", style: { width: "10%" } },
+    { title: "Giới tính", style: { width: "8%", textAlign: "center" } },
+    { title: "Quyền", style: { width: "100px" } },
+    { title: "Thao tác", style: { width: "10%", textAlign: "center" } },
+  ];
+
+  const renderRow = (user, index) => (
+    <tr key={index}>
+      <td className="text-center align-middle d-none">{user.id}</td>
+      <td className="text-center align-middle">
+        {(page - 1) * limit + index + 1}
+      </td>
+
+      <td className="text-center align-middle">
+        <Image
+          src={
+            user?.avatar && user.avatar?.startsWith("http")
+              ? user.avatar
+              : `${API_URL}/avatar/${user?.avatar}`
+          }
+          style={{ width: "50px", height: "50px" }}
+          roundedCircle
+        />
+      </td>
+
+      <td className="align-middle">{user.fullname}</td>
+      <td className="align-middle">{user.email}</td>
+      <td className="align-middle">{user.phone}</td>
+      <td className="align-middle">{formatDate(user.birthday)}</td>
+      <td className="align-middle" style={{ textAlign: "center" }}>
+        {user.gender === "MALE" ? "Nam" : "Nữ"}
+      </td>
+      <td className="align-middle">
+        {user.role === "admin" ? (
+          <Badge bg="info">Admin</Badge>
+        ) : (
+          <Badge bg="secondary">User</Badge>
+        )}
+      </td>
+
+      <td className="text-center align-middle">
+        <MyButtonUpdate onClick={() => handleUpdate(user)} />
+        <MyButtonDelete onClick={() => handleDelete(user)} />
+      </td>
+    </tr>
+  );
+
   return (
     <>
-      <div className="d-flex align-items-center justify-content-between mb-2">
-        <h4>User List</h4>
-        <Button variant="primary" onClick={handleBtnAddUser}>
-          <i className="bi bi-person-plus-fill me-2"></i>Add new user
-        </Button>
-      </div>
-      <div className="d-flex align-items-center justify-content-between mb-2">
-        <div className="d-flex align-items-center ">
-          <span>Show</span>
-          <Form.Select
-            aria-label="Default select example"
-            style={{ width: "68px", height: "38px" }}
-            className="ms-2 me-2"
-          >
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-          </Form.Select>
-          <span>row</span>
-        </div>
-        <div className="d-flex align-items-center" style={{ gap: "20px" }}>
-          <Form.Select
-            aria-label="Default select example"
-            style={{ width: "110px", height: "38px" }}
-          >
-            <option value="1">All User</option>
-            <option value="2">Admin</option>
-            <option value="3">User</option>
-          </Form.Select>
+      {isOpen && (
+        <CreateUpdateUserModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          title={"Thêm mới người dùng"}
+          isCheck={isCheck}
+          dataSelected={dataSelected}
+          currentPage={currentPage}
+        />
+      )}
+      {isOpenDelete && (
+        <DeleteUserModal
+          isOpen={isOpenDelete}
+          onClose={() => setIsOpenDelete(false)}
+          id={dataSelected?.id}
+          currentPage={currentPage}
+        />
+      )}
+      {isOpenImport && (
+        <ImportUserModal
+          isOpen={isOpenImport}
+          onClose={() => setIsOpenImport(false)}
+          currentPage={currentPage}
+        />
+      )}
+      {isOpenExport && (
+        <ExportUserModal
+          isOpen={isOpenExport}
+          onClose={() => setIsOpenExport(false)}
+          list={list}
+        />
+      )}
+      <MyLayoutAdmin title="Danh sách người dùng">
+        <div className="d-flex align-items-center justify-content-between mb-2">
+          <Col className="d-flex align-items-center  gap-3">
+            <MyButtonCreate onClick={handleCreate} />
+            <MyButtonImport onClick={handleImport} />
+            <MyButtonExport onClick={handleExport} />
+          </Col>
+          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+            <Form.Select
+              value={role}
+              onChange={(e) => {
+                setRole(e.target.value);
+                setCurrentPage(1);
+              }}
+              style={{ width: "110px", height: "38px" }}
+            >
+              <option value="">Tất cả</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </Form.Select>
 
-          <div className="d-flex align-items-center">
-            <Form.Label className="mb-0 me-2 text-nowrap">Tìm kiếm</Form.Label>
-            <Form.Control type="text" placeholder="Nhập từ khóa..." />
+            <div className="d-flex align-items-center">
+              <Form.Label className="mb-0 me-2 text-nowrap">
+                Tìm kiếm
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Nhập từ khóa..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
-
-      <div style={{ minHeight: "722px" }}>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th style={{ width: "5%", textAlign: "center" }}>Id</th>
-              <th style={{ width: "10%", textAlign: "center" }}>Avatar</th>
-              <th style={{ width: "25%" }}>Fullname</th>
-              <th style={{ width: "25%" }}>Email</th>
-              <th style={{ width: "15%" }}>Role</th>
-              <th style={{ width: "15%", textAlign: "center" }}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {list && list.length > 0 ? (
-              list.map((user, index) => (
-                <tr key={index}>
-                  <td
-                    style={{
-                      width: "5%",
-                      textAlign: "center",
-                      verticalAlign: "middle",
-                    }}
-                  >
-                    {user.id}
-                  </td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <Image
-                      src={
-                        user?.avatar && user.avatar?.startsWith("http")
-                          ? user.avatar
-                          : `${API_URL}/avatar/${user?.avatar}`
-                      }
-                      style={{ width: "50px", height: "50px" }}
-                      roundedCircle
-                    />
-                  </td>
-                  <td style={{ verticalAlign: "middle" }}>{user.fullname}</td>
-                  <td style={{ verticalAlign: "middle" }}>{user.email}</td>
-                  <td style={{ verticalAlign: "middle" }}>{user.role}</td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <Button className="me-2" variant="success">
-                      <i className="bi bi-eye"></i>
-                    </Button>
-                    <Button className="me-2" variant="warning">
-                      <i className="bi bi-pencil-square"></i>
-                    </Button>
-                    <Button variant="danger">
-                      <i className="bi bi-trash"></i>
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            ) : error ? (
-              <tr>
-                <td colSpan="6" className="text-center text-muted">
-                  {error}
-                </td>
-              </tr>
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center text-muted">
-                  Không có dữ liệu
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-      </div>
-      <div className="d-flex justify-content-between">
-        <div>
-          <span>
-            Showing {total === 0 ? 0 : (page - 1) * limit + 1} to{" "}
-            {Math.min(page * limit, total)} of {total} results
-          </span>
+        <div style={{ minHeight: "722px" }}>
+          <MyDataTable
+            columns={columns}
+            data={list}
+            renderRow={renderRow}
+            pagination={pagination}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
-        {totalPages < 1 && (
-          <div className="d-flex justify-content-end">
-            <Pagination>...</Pagination>
-          </div>
-        )}
-        {totalPages > 1 && (
-          <Pagination
-            className={`justify-content-end ${
-              isTheme ? "pagination-dark" : "pagination-light"
-            }`}
-          >
-            <Pagination.First
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1}
-            />
-            <Pagination.Prev
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            />
-
-            {[...Array(totalPages).keys()].map((num) => (
-              <Pagination.Item
-                key={num + 1}
-                active={num + 1 === currentPage}
-                onClick={() => handlePageChange(num + 1)}
-              >
-                {num + 1}
-              </Pagination.Item>
-            ))}
-
-            <Pagination.Next
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            />
-            <Pagination.Last
-              onClick={() => handlePageChange(totalPages)}
-              disabled={currentPage === totalPages}
-            />
-          </Pagination>
-        )}
-      </div>
+      </MyLayoutAdmin>
     </>
   );
 };

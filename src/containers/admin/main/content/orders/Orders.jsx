@@ -329,7 +329,7 @@ const Orders = () => {
       <Row className="justify-content-between mb-2">
         <Col xs="auto">
           <h4 className="fw-bold" style={{ color: "#E35765" }}>
-            Đơn hàng
+            Danh sách đơn hàng
           </h4>
         </Col>
         <Col>
@@ -396,7 +396,6 @@ const Orders = () => {
       </Row>
 
       <Row className="mb-2 justify-content-between align-items-center">
-        {/* Bên trái: Show X rows */}
         <Col xs="auto">
           <div className="d-flex align-items-center">
             <span>Hiển thị</span>
@@ -418,14 +417,13 @@ const Orders = () => {
           </div>
         </Col>
 
-        {/* Bên phải: Nút xuất file và lọc ngày */}
         <Col className="d-flex flex-wrap gap-2 justify-content-end" xs="auto">
-          <Button variant="success" onClick={handleExportPDF}>
+          <Button variant="success" onClick={handleExportPDF} size="sm">
             <i className="bi bi-file-earmark-pdf me-1"></i>
             Xuất PDF
           </Button>
 
-          <Button variant="primary" onClick={handleExportExcel}>
+          <Button variant="primary" onClick={handleExportExcel} size="sm">
             <i className="bi bi-file-earmark-excel me-1"></i>
             Xuất Excel
           </Button>
@@ -454,7 +452,8 @@ const Orders = () => {
             variant="outline-primary"
             onClick={handleResetAndLoad}
             disabled={loading}
-            style={{ width: "42px", height: "38px" }}
+            style={{ width: "34px", height: "34px" }}
+            size="sm"
           >
             {loading ? (
               <span className="d-flex align-items-center gap-2">
@@ -519,6 +518,7 @@ const Orders = () => {
                   className="me-2"
                   variant="success"
                   onClick={() => handleViewDetail(order)}
+                  size="sm"
                 >
                   <i className="bi bi-eye"></i>
                 </Button>
@@ -529,6 +529,7 @@ const Orders = () => {
                       className="me-2"
                       variant="warning"
                       onClick={() => handleOpenStatusModal(order)}
+                      size="sm"
                     >
                       <i className="bi bi-pencil-square"></i>
                     </Button>
@@ -563,7 +564,7 @@ const Orders = () => {
                       </Popover>
                     }
                   >
-                    <Button className="me-2" variant="danger">
+                    <Button className="me-2" variant="danger" size="sm">
                       <i className="bi bi-x-circle"></i>
                     </Button>
                   </OverlayTrigger>
@@ -597,7 +598,7 @@ const Orders = () => {
                       </Popover>
                     }
                   >
-                    <Button className="me-2" variant="secondary">
+                    <Button className="me-2" variant="secondary" size="sm">
                       <i className="bi bi-box-arrow-in-left"></i>
                     </Button>
                   </OverlayTrigger>

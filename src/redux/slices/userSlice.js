@@ -2,14 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import API_URL from "../../config/api";
+import { data } from "react-router-dom";
 
 export const fetchAllUser = createAsyncThunk(
   "user/fetchAllUser",
-  async ({ page = 1, limit = 5 }, thunkAPI) => {
+  async ({ page = 1, limit = 5, role = "", search = "" }, thunkAPI) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/users?page=${page}&limit=${limit}`
+        `${API_URL}/api/users?page=${page}&limit=${limit}&role=${role}&search=${search}`
       );
+
       return {
         users: response.data.data,
         pagination: response.data.pagination,
@@ -185,8 +187,8 @@ export const deleteUserAddress = createAsyncThunk(
   }
 );
 
-export const updateUser = createAsyncThunk(
-  "user/updateUser",
+export const updateUserProfile = createAsyncThunk(
+  "user/updateUserProfile",
   async (dataUp, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
@@ -205,6 +207,32 @@ export const updateUser = createAsyncThunk(
     }
   }
 );
+
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async (dataUp, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/api/user`, dataUp);
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  "user/deleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(`${API_URL}/user/${id}`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Delete failed");
+    }
+  }
+);
+
 export const updatePassword = createAsyncThunk(
   "user/updatePassword",
   async (newPassword, { rejectWithValue, getState }) => {
@@ -281,6 +309,32 @@ export const getAdminUserProfile = createAsyncThunk(
   }
 );
 
+export const importUsers = createAsyncThunk(
+  "users/importUsers",
+  async (file, thunkAPI) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post(
+        `${API_URL}/api/users/import`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Import users thất bại"
+      );
+    }
+  }
+);
+
 const initialState = {
   users: {
     list: [],
@@ -336,6 +390,11 @@ const initialState = {
     success: false,
     error: null,
   },
+  deleteUser: {
+    loading: false,
+    success: false,
+    error: null,
+  },
   updatePassword: {
     updatePassLoading: false,
     updatePassSuccess: false,
@@ -352,6 +411,12 @@ const initialState = {
     token: null,
     loading: false,
     error: null,
+  },
+  importUser: {
+    isLoading: false,
+    success: false,
+    error: null,
+    data: null,
   },
 };
 
@@ -419,6 +484,13 @@ const userSlice = createSlice({
         error: null,
       };
     },
+    resetDeleteUserStatus: (state) => {
+      state.deleteUser = {
+        loading: false,
+        success: false,
+        error: null,
+      };
+    },
     resetUpdatePasswordState: (state) => {
       state.updatePassword = {
         updatePassLoading: false,
@@ -433,6 +505,14 @@ const userSlice = createSlice({
         error: null,
       };
       localStorage.removeItem("tokenAdmin");
+    },
+    resetImportUserStatus: (state) => {
+      state.importUser = {
+        loading: false,
+        success: false,
+        error: null,
+        data: null,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -560,6 +640,23 @@ const userSlice = createSlice({
         state.deleteAddress.success = false;
         state.deleteAddress.error = action.payload;
       })
+
+      // // update user profile
+      // .addCase(updateUser.pending, (state) => {
+      //   state.updateUser.loading = true;
+      //   state.updateUser.success = false;
+      //   state.updateUser.error = null;
+      // })
+      // .addCase(updateUser.fulfilled, (state, action) => {
+      //   state.updateUser.loading = false;
+      //   state.updateUser.success = true;
+      //   state.profile.user = action.payload.user; // cập nhật lại thông tin user
+      // })
+      // .addCase(updateUser.rejected, (state, action) => {
+      //   state.updateUser.loading = false;
+      //   state.updateUser.error = action.payload;
+      // })
+
       // update user
       .addCase(updateUser.pending, (state) => {
         state.updateUser.loading = true;
@@ -569,12 +666,26 @@ const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.updateUser.loading = false;
         state.updateUser.success = true;
-        state.profile.user = action.payload.user; // cập nhật lại thông tin user
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.updateUser.loading = false;
         state.updateUser.error = action.payload;
       })
+      // delete user
+      .addCase(deleteUser.pending, (state) => {
+        state.deleteUser.loading = true;
+        state.deleteUser.success = false;
+        state.deleteUser.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.deleteUser.loading = false;
+        state.deleteUser.success = true;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.deleteUser.loading = false;
+        state.deleteUser.error = action.payload;
+      })
+
       // up password
       .addCase(updatePassword.pending, (state) => {
         state.updatePassword.updatePassLoading = true;
@@ -625,6 +736,24 @@ const userSlice = createSlice({
       // get admin profile
       .addCase(getAdminUserProfile.fulfilled, (state, action) => {
         state.profileAdmin.user = action.payload;
+      })
+
+      // import
+      .addCase(importUsers.pending, (state) => {
+        state.importUser.isLoading = true;
+        state.importUser.error = null;
+        state.importUser.success = false;
+      })
+
+      .addCase(importUsers.fulfilled, (state, action) => {
+        state.importUser.isLoading = false;
+        state.importUser.success = true;
+        state.importUser.data = action.payload;
+      })
+
+      .addCase(importUsers.rejected, (state, action) => {
+        state.importUser.isLoading = false;
+        state.importUser.error = action.payload;
       });
   },
 });
@@ -639,7 +768,9 @@ export const {
   resetDeleteressStatus,
   resetUpdateUserStatus,
   resetUpdatePasswordState,
+  resetDeleteUserStatus,
   logoutAdmin,
+  resetImportUserStatus,
 } = userSlice.actions;
 
 export default userSlice.reducer;

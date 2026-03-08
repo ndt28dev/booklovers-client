@@ -95,10 +95,14 @@ const StatusModal = ({ show, onClose, onSubmit, order }) => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
+        <Button variant="secondary" onClick={onClose} size="sm">
           Hủy
         </Button>
-        <Button variant="primary" onClick={() => onSubmit(nextStatus)}>
+        <Button
+          variant="primary"
+          onClick={() => onSubmit(nextStatus)}
+          size="sm"
+        >
           Cập nhật
         </Button>
       </Modal.Footer>

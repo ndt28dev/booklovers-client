@@ -9,9 +9,7 @@ function App() {
     <>
       <ToastContainer autoClose={1000} position="top-right" />
       <ScrollToTop />
-      <div style={{ userSelect: "none" }}>
-        <AppRoutes />
-      </div>
+      <AppRoutes />
     </>
   );
 }

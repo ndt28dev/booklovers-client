@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const Admin = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   return (
-    <div style={{ userSelect: "none" }}>
+    <div>
       <Header
         handleList={() => setShowSidebar(!showSidebar)}
         showSidebar={showSidebar}
