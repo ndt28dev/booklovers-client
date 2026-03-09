@@ -35,7 +35,7 @@ const Users = () => {
 
   const page = pagination?.page || 1;
   const limit = pagination?.limit || 10;
-  const total = pagination?.total || 0;
+  // const total = pagination?.total || 0;
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = pagination?.totalPages || 0;
@@ -140,7 +140,7 @@ const Users = () => {
         <CreateUpdateUserModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          title={"Thêm mới người dùng"}
+          title={isCheck ? "Cập nhật người dùng" : "Thêm mới người dùng"}
           isCheck={isCheck}
           dataSelected={dataSelected}
           currentPage={currentPage}

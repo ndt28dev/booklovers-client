@@ -66,6 +66,58 @@ export const fetchBookById = createAsyncThunk(
   }
 );
 
+export const createBook = createAsyncThunk(
+  "book/createBook",
+  async (formData, thunkAPI) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/book`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi tạo sách"
+      );
+    }
+  }
+);
+
+export const updateBook = createAsyncThunk(
+  "book/updateBook",
+  async (formData, thunkAPI) => {
+    try {
+      const response = await axios.put(`${API_URL}/api/book`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi cập nhật sách"
+      );
+    }
+  }
+);
+
+export const deleteBook = createAsyncThunk(
+  "books/deleteBook",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`${API_URL}/api/book/${id}`);
+      return { id, message: response.data.message };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: "Delete book failed" }
+      );
+    }
+  }
+);
+
 const initialState = {
   fetchBook: {
     listBook: [],
@@ -78,12 +130,49 @@ const initialState = {
     bookImages: [],
     error: null,
   },
+  createBook: {
+    isLoading: false,
+    success: false,
+    error: null,
+  },
+  updateBook: {
+    isLoading: false,
+    error: null,
+    success: false,
+  },
+  deleteBook: {
+    isLoading: false,
+    error: null,
+    success: false,
+  },
 };
 
 const bookSlice = createSlice({
   name: "book",
   initialState,
-  reducers: {},
+  reducers: {
+    resetCreateBookStatus: (state) => {
+      state.createBook = {
+        isLoading: false,
+        error: null,
+        success: false,
+      };
+    },
+    resetUpdateBookStatus: (state) => {
+      state.updateBook = {
+        isLoading: false,
+        error: null,
+        success: false,
+      };
+    },
+    resetDeleteBookStatus: (state) => {
+      state.deleteBook = {
+        isLoading: false,
+        error: null,
+        success: false,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllBook.fulfilled, (state, action) => {
@@ -107,8 +196,62 @@ const bookSlice = createSlice({
         state.bookDetail.bookDetail = null;
         state.bookDetail.bookImages = [];
         state.bookDetail.error = action.payload;
+      })
+
+      // create  book
+      .addCase(createBook.pending, (state) => {
+        state.createBook.isLoading = true;
+        state.createBook.success = false;
+        state.createBook.error = null;
+      })
+
+      .addCase(createBook.fulfilled, (state) => {
+        state.createBook.isLoading = false;
+        state.createBook.success = true;
+      })
+
+      .addCase(createBook.rejected, (state, action) => {
+        state.createBook.isLoading = false;
+        state.createBook.success = false;
+        state.createBook.error = action.payload;
+      })
+
+      // update book
+      .addCase(updateBook.pending, (state) => {
+        state.updateBook.isLoading = true;
+        state.updateBook.error = null;
+        state.updateBook.success = false;
+      })
+      .addCase(updateBook.fulfilled, (state) => {
+        state.updateBook.isLoading = false;
+        state.updateBook.success = true;
+      })
+      .addCase(updateBook.rejected, (state, action) => {
+        state.updateBook.isLoading = false;
+        state.updateBook.error = action.payload;
+      })
+
+      // delete book
+      .addCase(deleteBook.pending, (state) => {
+        state.deleteBook.isLoading = true;
+        state.deleteBook.error = null;
+        state.deleteBook.success = false;
+      })
+      .addCase(deleteBook.fulfilled, (state, action) => {
+        state.deleteBook.isLoading = false;
+        state.deleteBook.success = true;
+      })
+      .addCase(deleteBook.rejected, (state, action) => {
+        state.deleteBook.isLoading = false;
+        state.deleteBook.error = action.payload;
       });
   },
 });
+
+export const {
+  resetCreateBookStatus,
+  resetUpdateBookStatus,
+  resetDeleteBookStatus,
+} = bookSlice.actions;
 
 export default bookSlice.reducer;

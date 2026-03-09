@@ -418,7 +418,12 @@ const Orders = () => {
         </Col>
 
         <Col className="d-flex flex-wrap gap-2 justify-content-end" xs="auto">
-          <Button variant="success" onClick={handleExportPDF} size="sm">
+          <Button
+            variant="success"
+            onClick={handleExportPDF}
+            disabled
+            size="sm"
+          >
             <i className="bi bi-file-earmark-pdf me-1"></i>
             Xuất PDF
           </Button>

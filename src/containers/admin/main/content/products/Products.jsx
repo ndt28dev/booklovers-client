@@ -12,6 +12,9 @@ import MyButtonDelete from "../../../../../components/button/MyButtonDelete";
 import { fetchAllBook } from "../../../../../redux/slices/bookSlice";
 import API_URL from "../../../../../config/api";
 import CreateUpdateBookModal from "./crud/CreateUpdateBookModal";
+import DeleteBookModal from "./crud/DeleteBookModal";
+import { fetchCategoriesWithSub } from "../../../../../redux/slices/categorySlice";
+import ExportBookModal from "./crud/ExportBookModal";
 const Products = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
@@ -32,14 +35,40 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = pagination?.totalPages || 0;
 
+  const { categories: categoriesAll } = useSelector((state) => state.category);
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [subcategoryFilter, setSubcategoryFilter] = useState("");
+  const [subcategories, setSubcategories] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchCategoriesWithSub());
+  }, []);
+
   useEffect(() => {
     dispatch(
       fetchAllBook({
         page: currentPage,
         limit: 10,
+        search: search,
+        categoryId: categoryFilter,
+        subcategoryId: subcategoryFilter,
       })
     );
-  }, [currentPage]);
+  }, [currentPage, search, categoryFilter, subcategoryFilter]);
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+
+    setCategoryFilter(value);
+    setSubcategoryFilter("");
+
+    const selectedCategory = categoriesAll.find(
+      (cat) => cat.id === Number(value)
+    );
+
+    setSubcategories(selectedCategory?.subcategories || []);
+  };
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -122,33 +151,78 @@ const Products = () => {
         <CreateUpdateBookModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          title={"Thêm sản phẩm mới"}
+          title={isCheck ? "Cập nhật sản phẩm" : "Thêm mới sản phẩm"}
           isCheck={isCheck}
           dataSelected={dataSelected}
           currentPage={currentPage}
+        />
+      )}
+      {isOpenDelete && (
+        <DeleteBookModal
+          isOpen={isOpenDelete}
+          onClose={() => setIsOpenDelete(false)}
+          id={dataSelected?.id}
+          currentPage={currentPage}
+        />
+      )}
+      {isOpenExport && (
+        <ExportBookModal
+          isOpen={isOpenExport}
+          onClose={() => setIsOpenExport(false)}
+          list={listBook}
         />
       )}
       <MyLayoutAdmin title="Danh sách sản phẩm">
         <div className="d-flex align-items-center justify-content-between mb-2">
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
-            <MyButtonImport onClick={handleImport} />
+            {/* <MyButtonImport onClick={handleImport} /> */}
             <MyButtonExport onClick={handleExport} />
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
-            <Form.Select
-              aria-label="Default select example"
-              style={{ width: "110px", height: "38px" }}
-            >
-              <option value="1">Tất cả</option>
-              <option value="2">Lập trình</option>
-              <option value="3">Tâm lý học</option>
-            </Form.Select>
+            <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+              <Form.Select
+                value={categoryFilter}
+                onChange={handleCategoryChange}
+                style={{ width: "160px", height: "38px" }}
+              >
+                <option value="">Tất cả danh mục</option>
+
+                {categoriesAll.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Select
+                value={subcategoryFilter}
+                onChange={(e) => setSubcategoryFilter(e.target.value)}
+                disabled={!categoryFilter}
+                style={{ width: "180px", height: "38px" }}
+              >
+                <option value="">Tất cả thể loại</option>
+
+                {subcategories.map((sub) => (
+                  <option key={sub.id} value={sub.id}>
+                    {sub.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
             <div className="d-flex align-items-center">
               <Form.Label className="mb-0 me-2 text-nowrap">
                 Tìm kiếm
               </Form.Label>
-              <Form.Control type="text" placeholder="Nhập từ khóa..." />
+
+              <Form.Control
+                type="text"
+                placeholder="Nhập từ khóa..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
             </div>
           </div>
         </div>

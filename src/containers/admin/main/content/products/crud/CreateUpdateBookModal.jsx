@@ -1,9 +1,18 @@
 import { Form, Button, Row, Col, Image } from "react-bootstrap";
 import MyModal from "../../../../../../components/mymodal/MyModal";
-import { useDispatch } from "react-redux";
-import { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useRef, useEffect } from "react";
 import API_URL from "../../../../../../config/api";
 import { Editor } from "@tinymce/tinymce-react";
+import { fetchCategoriesWithSub } from "../../../../../../redux/slices/categorySlice";
+import {
+  createBook,
+  fetchAllBook,
+  resetCreateBookStatus,
+  resetUpdateBookStatus,
+  updateBook,
+} from "../../../../../../redux/slices/bookSlice";
+import { toast } from "react-toastify";
 
 const CreateUpdateBookModal = ({
   isOpen,
@@ -15,8 +24,20 @@ const CreateUpdateBookModal = ({
 }) => {
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
+  const [errors, setErrors] = useState({});
+
+  const { isLoading, error, success } = useSelector(
+    (state) => state.book.createBook
+  );
+
+  const {
+    isLoading: isLoadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = useSelector((state) => state.book.updateBook);
 
   const [form, setForm] = useState({
+    id: "",
     name: "",
     category_id: "",
     subcategory_id: "",
@@ -37,18 +58,65 @@ const CreateUpdateBookModal = ({
     description: "",
 
     mainImageFile: null,
-    mainImagePreview: `${API_URL}/book/default.jpg`,
+    mainImagePreview: `bookDefault.png`,
 
     subImages: [],
   });
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!form.name.trim()) {
+      newErrors.name = "Tên sách không được để trống";
+    }
+
+    if (!form.category_id) {
+      newErrors.category_id = "Vui lòng chọn danh mục";
+    }
+
+    if (!form.subcategory_id) {
+      newErrors.subcategory_id = "Vui lòng chọn danh mục con";
+    }
+
+    if (!form.price) {
+      newErrors.price = "Giá không được để trống";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const { categories: categoriesAll } = useSelector((state) => state.category);
+  const [subcategories, setSubcategories] = useState([]);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesWithSub());
+  }, [dispatch]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setForm({
-      ...form,
+    if (name === "category_id") {
+      const selectedCategory = categoriesAll.find(
+        (cat) => cat.id === Number(value)
+      );
+
+      setSubcategories(selectedCategory?.subcategories || []);
+
+      setForm((prev) => ({
+        ...prev,
+        category_id: value,
+        subcategory_id: "",
+      }));
+
+      return;
+    }
+
+    setForm((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubImages = (e) => {
@@ -90,6 +158,8 @@ const CreateUpdateBookModal = ({
   };
 
   const handleSubmit = () => {
+    if (!validateForm()) return;
+
     const formData = new FormData();
 
     formData.append("name", form.name);
@@ -97,15 +167,104 @@ const CreateUpdateBookModal = ({
     formData.append("subcategory_id", form.subcategory_id);
     formData.append("price", form.price);
     formData.append("discount", form.discount);
+    formData.append("description", form.description);
 
-    if (form.mainImageFile) {
-      formData.append("main_image", form.mainImageFile);
+    // add details
+    formData.append("barcode", form.barcode);
+    formData.append("supplier_name", form.supplier_name);
+    formData.append("authors", form.authors);
+    formData.append("publisher", form.publisher);
+    formData.append("published_year", form.published_year);
+    formData.append("language", form.language);
+    formData.append("weight_gram", form.weight_gram);
+    formData.append("dimensions", form.dimensions);
+    formData.append("page_count", form.page_count);
+    formData.append("cover_type", form.cover_type);
+
+    // add images
+    formData.append("mainImage", form.mainImageFile);
+
+    // ảnh cũ
+    const oldImages = form.subImages
+      .filter((img) => img.id)
+      .map((img) => img.id);
+
+    formData.append("oldImages", JSON.stringify(oldImages));
+
+    // ảnh mới
+    form.subImages
+      .filter((img) => img.file)
+      .forEach((img) => {
+        formData.append("subImages", img.file);
+      });
+
+    if (isCheck) {
+      formData.append("id", form.id);
+      dispatch(updateBook(formData));
+    } else {
+      dispatch(createBook(formData));
     }
-
-    console.log(formData);
-
-    // dispatch(createBook(formData))
   };
+
+  useEffect(() => {
+    if (isCheck && dataSelected) {
+      const categoryId = dataSelected?.category?.id || "";
+
+      const selectedCategory = categoriesAll.find(
+        (cat) => cat.id === Number(categoryId)
+      );
+
+      setSubcategories(selectedCategory?.subcategories || []);
+
+      setForm({
+        id: dataSelected?.id || "",
+        name: dataSelected?.name || "",
+        category_id: categoryId,
+        subcategory_id: dataSelected?.subcategory?.id || "",
+
+        price: dataSelected?.price || "",
+        discount: dataSelected?.discount || "",
+
+        description: dataSelected?.description || "",
+
+        barcode: dataSelected?.book_detail?.barcode || "",
+        supplier_name: dataSelected?.book_detail?.supplier_name || "",
+        authors: dataSelected?.book_detail?.authors || "",
+        publisher: dataSelected?.book_detail?.publisher || "",
+        published_year: dataSelected?.book_detail?.published_year || "",
+        language: dataSelected?.book_detail?.language || "",
+        weight_gram: dataSelected?.book_detail?.weight_gram || "",
+        dimensions: dataSelected?.book_detail?.dimensions || "",
+        page_count: dataSelected?.book_detail?.page_count || "",
+        cover_type: dataSelected?.book_detail?.cover_type || "",
+
+        mainImagePreview: dataSelected?.main_image || "",
+        subImages: dataSelected?.images || [],
+      });
+    }
+  }, [isCheck, dataSelected, categoriesAll]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Thêm sản phẩm thành công!");
+      dispatch(resetCreateBookStatus());
+      dispatch(fetchAllBook({ page: currentPage, limit: 10 }));
+      onClose();
+    } else if (error) {
+      toast.error(error?.message || error);
+    }
+  }, [error, success]);
+
+  useEffect(() => {
+    if (successUpdate) {
+      toast.success("Cập nhật sản phẩm thành công!");
+      dispatch(resetUpdateBookStatus());
+      dispatch(fetchAllBook({ page: currentPage, limit: 10 }));
+      onClose();
+    } else if (errorUpdate) {
+      toast.error(errorUpdate?.message || errorUpdate);
+    }
+  }, [errorUpdate, successUpdate]);
 
   return (
     <MyModal show={isOpen} handleClose={onClose} title={title} size="lg">
@@ -121,7 +280,11 @@ const CreateUpdateBookModal = ({
                 name="name"
                 value={form.name}
                 onChange={handleChange}
+                isInvalid={!!errors.name}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.name}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Row>
@@ -132,28 +295,39 @@ const CreateUpdateBookModal = ({
                     name="category_id"
                     value={form.category_id}
                     onChange={handleChange}
+                    isInvalid={!!errors.category_id}
                   >
                     <option disabled value="">
                       Chọn danh mục
                     </option>
-                    <option value="1">Programming</option>
-                    <option value="2">Novel</option>
+
+                    {categoriesAll.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-2">
-                  <Form.Label>Danh mục con</Form.Label>
+                  <Form.Label>Thể loại</Form.Label>
                   <Form.Select
                     name="subcategory_id"
                     value={form.subcategory_id}
                     onChange={handleChange}
+                    isInvalid={!!errors.subcategory_id}
+                    disabled={!form.category_id}
                   >
                     <option disabled value="">
-                      Chọn danh mục con
+                      Chọn danh thể loại
                     </option>
-                    <option value="1">Backend</option>
-                    <option value="2">Frontend</option>
+
+                    {subcategories.map((sub) => (
+                      <option key={sub.id} value={sub.id}>
+                        {sub.name}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -168,7 +342,11 @@ const CreateUpdateBookModal = ({
                     name="price"
                     value={form.price}
                     onChange={handleChange}
+                    isInvalid={!!errors.price}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.price}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
 
@@ -185,52 +363,16 @@ const CreateUpdateBookModal = ({
               </Col>
             </Row>
           </Col>
-
-          {/* <Col md={3} className="text-center position-relative">
-            <Image
-              src={form.mainImagePreview}
-              rounded
-              style={{
-                width: "200px",
-                height: "200px",
-                objectFit: "cover",
-                border: "3px solid #cce5ff",
-                padding: "5px",
-              }}
-            />
-
-            <input
-              type="file"
-              accept="image/*"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
-
-            <Button
-              variant="light"
-              size="sm"
-              className="position-absolute"
-              style={{
-                bottom: "0px",
-                right: "55px",
-                border: "1px solid #ccc",
-                borderRadius: "50%",
-                width: "32px",
-                height: "32px",
-                padding: 0,
-              }}
-              onClick={() => fileInputRef.current.click()}
-            >
-              <i className="bi bi-pencil-fill"></i>
-            </Button>
-          </Col> */}
         </Row>
         <Row className="mt-3 mb-3">
           <Col md={3} className="position-relative text-center">
             <label style={{ marginBottom: "5px" }}>Ảnh đại diện</label>
             <Image
-              src={form.mainImagePreview}
+              src={
+                form.mainImagePreview?.startsWith("blob")
+                  ? form.mainImagePreview
+                  : `${API_URL}/uploads/${form.mainImagePreview}`
+              }
               rounded
               style={{
                 width: "120px",
@@ -248,7 +390,11 @@ const CreateUpdateBookModal = ({
               accept="image/*"
               onChange={handleFileChange}
             />
-
+            {errors.mainImageFile && (
+              <div style={{ color: "red", fontSize: "13px", marginTop: "5px" }}>
+                {errors.mainImageFile}
+              </div>
+            )}
             <Button
               size="sm"
               variant="success"
@@ -270,43 +416,47 @@ const CreateUpdateBookModal = ({
           <Col md={9}>
             <label style={{ marginBottom: "5px" }}>Ảnh liên quan</label>
             <Col className="d-flex gap-2 flex-wrap">
-              {form.subImages.map((img, index) => (
-                <div
-                  key={index}
-                  style={{
-                    position: "relative",
-                  }}
-                >
-                  <Image
-                    src={img.preview}
-                    rounded
+              {form.subImages &&
+                form.subImages.map((img, index) => (
+                  <div
+                    key={index}
                     style={{
-                      width: "60px",
-                      height: "80px",
-                      objectFit: "cover",
+                      position: "relative",
                     }}
-                  />
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    className="position-absolute"
-                    style={{
-                      top: "-6px",
-                      right: "-6px",
-                      width: "20px",
-                      height: "20px",
-                      padding: 0,
-                      borderRadius: "50%",
-                      fontSize: "12px",
-                    }}
-                    onClick={() => removeSubImage(index)}
                   >
-                    ×
-                  </Button>
-                </div>
-              ))}
+                    <Image
+                      src={
+                        img.preview
+                          ? img.preview
+                          : `${API_URL}/uploads/${img.image_url}`
+                      }
+                      rounded
+                      style={{
+                        width: "60px",
+                        height: "80px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className="position-absolute"
+                      style={{
+                        top: "-6px",
+                        right: "-6px",
+                        width: "20px",
+                        height: "20px",
+                        padding: 0,
+                        borderRadius: "50%",
+                        fontSize: "12px",
+                      }}
+                      onClick={() => removeSubImage(index)}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
 
-              {/* ADD IMAGE */}
               <label
                 style={{
                   width: "60px",
@@ -326,7 +476,13 @@ const CreateUpdateBookModal = ({
             </Col>
           </Col>
         </Row>
-        <label style={{ marginBottom: "5px" }}>Mô tả</label>
+        <label style={{ marginBottom: "5px" }}>Mô tả</label> <br />
+        <label style={{ marginBottom: "5px" }} className="text-muted">
+          Soạn thảo thuận tiện hơn{" "}
+          <a href="https://docs.google.com/" target="_blank">
+            ở đây{" "}
+          </a>
+        </label>
         <Editor
           apiKey="66bx6owe7e8habzc85msf0cjt0fq0tcowhkrcmuwa6l4x8f9"
           value={form.description}
@@ -461,11 +617,15 @@ const CreateUpdateBookModal = ({
               <Col>
                 <Form.Group className="mb-2">
                   <Form.Label>Loại bìa</Form.Label>
-                  <Form.Control
+                  <Form.Select
                     name="cover_type"
                     value={form.cover_type}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="">Chọn loại bìa</option>
+                    <option value="Bìa mềm">Bìa mềm</option>
+                    <option value="Bìa cứng">Bìa cứng</option>
+                  </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
