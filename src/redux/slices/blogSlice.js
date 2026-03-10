@@ -91,6 +91,20 @@ export const updateBlog = createAsyncThunk(
   }
 );
 
+export const deleteBlog = createAsyncThunk(
+  "blogs/deleteBlog",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.delete(`${API_URL}/api/blog/${id}`);
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi xóa blog"
+      );
+    }
+  }
+);
+
 const initialState = {
   listState: {
     listBlog: [],
@@ -116,6 +130,11 @@ const initialState = {
     success: false,
     error: null,
   },
+  deleteState: {
+    isLoading: false,
+    success: false,
+    error: null,
+  },
 };
 
 const blogSlice = createSlice({
@@ -131,6 +150,11 @@ const blogSlice = createSlice({
       state.updateState.isLoading = false;
       state.updateState.success = false;
       state.updateState.error = null;
+    },
+    resetDeleteBlogState: (state) => {
+      state.deleteState.isLoading = false;
+      state.deleteState.success = false;
+      state.deleteState.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -203,10 +227,29 @@ const blogSlice = createSlice({
       .addCase(updateBlog.rejected, (state, action) => {
         state.updateState.isLoading = false;
         state.updateState.error = action.payload;
+      })
+
+      // Delete blog
+      .addCase(deleteBlog.pending, (state) => {
+        state.deleteState.isLoading = true;
+        state.deleteState.success = false;
+        state.deleteState.error = null;
+      })
+      .addCase(deleteBlog.fulfilled, (state) => {
+        state.deleteState.isLoading = false;
+        state.deleteState.success = true;
+      })
+      .addCase(deleteBlog.rejected, (state, action) => {
+        state.deleteState.isLoading = false;
+        state.deleteState.error = action.payload;
       });
   },
 });
 
-export const { resetCreateBlogState, resetUpdateBlogState } = blogSlice.actions;
+export const {
+  resetCreateBlogState,
+  resetUpdateBlogState,
+  resetDeleteBlogState,
+} = blogSlice.actions;
 
 export default blogSlice.reducer;

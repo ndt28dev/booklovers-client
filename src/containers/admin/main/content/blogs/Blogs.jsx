@@ -14,6 +14,7 @@ import API_URL from "../../../../../config/api";
 import { fetchAllBlog } from "../../../../../redux/slices/blogSlice";
 import ExportBlogModal from "./crud/ExportBlogModal";
 import CreateUpdateBlogModal from "./crud/CreateUpdateBlogModal";
+import DeleteBlogModal from "./crud/DeleteBlogModal";
 
 const Blogs = () => {
   const dispatch = useDispatch();
@@ -130,6 +131,14 @@ const Blogs = () => {
           currentPage={currentPage}
         />
       )}
+      {isOpenDelete && (
+        <DeleteBlogModal
+          isOpen={isOpenDelete}
+          onClose={() => setIsOpenDelete(false)}
+          id={dataSelected?.id}
+          currentPage={currentPage}
+        />
+      )}
       {isOpenExport && (
         <ExportBlogModal
           isOpen={isOpenExport}
@@ -141,7 +150,7 @@ const Blogs = () => {
         <div className="d-flex align-items-center justify-content-between mb-2">
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
-            <MyButtonImport onClick={handleImport} />
+            {/* <MyButtonImport onClick={handleImport} /> */}
             <MyButtonExport onClick={handleExport} />
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
