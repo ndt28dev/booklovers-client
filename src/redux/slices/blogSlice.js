@@ -53,6 +53,25 @@ export const fetchAllBlogFeatured = createAsyncThunk(
   }
 );
 
+export const createBlog = createAsyncThunk(
+  "blogs/createBlog",
+  async (formData, thunkAPI) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/blog`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi tạo blog"
+      );
+    }
+  }
+);
+
 const initialState = {
   listState: {
     listBlog: [],
@@ -68,12 +87,23 @@ const initialState = {
     listFeatured: [],
     error: null,
   },
+  createState: {
+    isLoading: false,
+    success: false,
+    error: null,
+  },
 };
 
 const blogSlice = createSlice({
   name: "blog",
   initialState,
-  reducers: {},
+  reducers: {
+    resetCreateBlogState: (state) => {
+      state.createState.isLoading = false;
+      state.createState.success = false;
+      state.createState.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Fetch all blogs
@@ -114,8 +144,25 @@ const blogSlice = createSlice({
       })
       .addCase(fetchAllBlogFeatured.rejected, (state, action) => {
         state.featuredState.error = action.payload;
+      })
+
+      // Create blog
+      .addCase(createBlog.pending, (state) => {
+        state.createState.isLoading = true;
+        state.createState.success = false;
+        state.createState.error = null;
+      })
+      .addCase(createBlog.fulfilled, (state) => {
+        state.createState.isLoading = false;
+        state.createState.success = true;
+      })
+      .addCase(createBlog.rejected, (state, action) => {
+        state.createState.isLoading = false;
+        state.createState.error = action.payload;
       });
   },
 });
+
+export const { resetCreateBlogState } = blogSlice.actions;
 
 export default blogSlice.reducer;

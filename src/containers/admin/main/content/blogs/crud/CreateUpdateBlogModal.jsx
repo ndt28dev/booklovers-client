@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import { Form, Button, Row, Col, Image } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MyModal from "../../../../../../components/mymodal/MyModal";
 import { Editor } from "@tinymce/tinymce-react";
+import {
+  createBlog,
+  fetchAllBlog,
+  resetCreateBlogState,
+} from "../../../../../../redux/slices/blogSlice";
+import API_URL from "../../../../../../config/api";
+import { toast } from "react-toastify";
 
 const CreateUpdateBlogModal = ({
   isOpen,
@@ -10,6 +17,7 @@ const CreateUpdateBlogModal = ({
   title,
   isCheck = false,
   dataSelected,
+  currentPage,
 }) => {
   const dispatch = useDispatch();
 
@@ -19,12 +27,15 @@ const CreateUpdateBlogModal = ({
     author: "",
     description: "",
     image: null,
+    is_featured: 0,
   });
 
   const [preview, setPreview] = useState(null);
   const [errors, setErrors] = useState({});
 
-  // ================= VALIDATE =================
+  const { isLoading, error, success } = useSelector(
+    (state) => state.blog.createState
+  );
 
   const validate = () => {
     let newErrors = {};
@@ -41,7 +52,9 @@ const CreateUpdateBlogModal = ({
       newErrors.author = "Tác giả không được để trống";
     }
 
-    if (!formData.description || formData.description === "<p><br></p>") {
+    const text = formData.description.replace(/<[^>]*>?/gm, "").trim();
+
+    if (!text) {
       newErrors.description = "Mô tả không được để trống";
     }
 
@@ -49,8 +62,6 @@ const CreateUpdateBlogModal = ({
 
     return Object.keys(newErrors).length === 0;
   };
-
-  // ================= FILL DATA WHEN UPDATE =================
 
   useEffect(() => {
     if (isCheck && dataSelected) {
@@ -60,13 +71,21 @@ const CreateUpdateBlogModal = ({
         author: dataSelected.author || "",
         description: dataSelected.description || "",
         image: null,
+        is_featured: dataSelected.is_featured || 0,
       });
 
-      setPreview(dataSelected.image || null);
+      if (dataSelected.image) {
+        setPreview(`${API_URL}/blogs/${dataSelected.image}`);
+      }
     }
   }, [dataSelected, isCheck]);
 
-  // ================= HANDLE INPUT =================
+  const handleToggleFeatured = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      is_featured: e.target.checked ? 1 : 0,
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,16 +96,14 @@ const CreateUpdateBlogModal = ({
     });
   };
 
-  // ================= HANDLE IMAGE =================
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
     if (file) {
-      setFormData({
-        ...formData,
+      setFormData((prev) => ({
+        ...prev,
         image: file,
-      });
+      }));
 
       setPreview(URL.createObjectURL(file));
     }
@@ -95,13 +112,11 @@ const CreateUpdateBlogModal = ({
   const handleRemoveImage = () => {
     setPreview(null);
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       image: null,
-    });
+    }));
   };
-
-  // ================= SUBMIT =================
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -114,25 +129,46 @@ const CreateUpdateBlogModal = ({
     data.append("date", formData.date);
     data.append("author", formData.author);
     data.append("description", formData.description);
+    data.append("is_featured", formData.is_featured);
 
     if (formData.image) {
       data.append("image", formData.image);
     }
 
     if (isCheck) {
-      console.log("Update Blog", data);
-      // dispatch(updateBlog(data))
+      console.log("Update Blog");
     } else {
-      console.log("Create Blog", data);
-      // dispatch(createBlog(data))
+      // console.log("Create Blog", formData.description);
+      dispatch(createBlog(data));
     }
   };
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Thêm bài viết thành công!");
+      dispatch(resetCreateBlogState());
+      dispatch(fetchAllBlog({ page: currentPage, limit: 10 }));
+      onClose();
+    } else if (error) {
+      toast.error(error?.message || error);
+    }
+  }, [error, success]);
+
+  // useEffect(() => {
+  //   if (successUpdate) {
+  //     toast.success("Cập nhật bài viết thành công!");
+  //     dispatch(resetUpdateBookStatus());
+  //     dispatch(fetchAllBook({ page: currentPage, limit: 10 }));
+  //     onClose();
+  //   } else if (errorUpdate) {
+  //     toast.error(errorUpdate?.message || errorUpdate);
+  //   }
+  // }, [errorUpdate, successUpdate]);
 
   return (
     <MyModal show={isOpen} handleClose={onClose} title={title} size="xl">
       <Form onSubmit={handleSubmit}>
         <Row>
-          {/* LEFT SIDE */}
           <Col md={6}>
             <Row>
               <Col md={12}>
@@ -190,7 +226,6 @@ const CreateUpdateBlogModal = ({
             </Row>
           </Col>
 
-          {/* RIGHT SIDE */}
           <Col md={6}>
             <Form.Group className="mb-3">
               <Row className="align-items-start">
@@ -236,7 +271,7 @@ const CreateUpdateBlogModal = ({
                         style={{
                           position: "absolute",
                           top: "5px",
-                          right: "85px",
+                          right: "20%",
                           padding: "2px 8px",
                           lineHeight: "1",
                         }}
@@ -250,7 +285,6 @@ const CreateUpdateBlogModal = ({
             </Form.Group>
           </Col>
 
-          {/* DESCRIPTION */}
           <Col md={12}>
             <div className="mb-3">
               <label style={{ marginBottom: "5px" }}>Mô tả</label>
@@ -289,10 +323,10 @@ const CreateUpdateBlogModal = ({
                   `,
                 }}
                 onEditorChange={(content) =>
-                  setFormData({
-                    ...formData,
+                  setFormData((prev) => ({
+                    ...prev,
                     description: content,
-                  })
+                  }))
                 }
               />
 
@@ -303,20 +337,34 @@ const CreateUpdateBlogModal = ({
           </Col>
         </Row>
 
-        {/* BUTTON */}
-        <div className="d-flex justify-content-end mt-3">
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            className="me-2"
-            size="sm"
-          >
-            Hủy
-          </Button>
+        <div className="d-flex justify-content-between align-items-center ">
+          <Form.Check
+            type="switch"
+            id="featured-switch"
+            label="Bài viết nổi bật"
+            checked={formData.is_featured === 1}
+            onChange={handleToggleFeatured}
+          />
 
-          <Button variant="success" type="submit" size="sm">
-            Lưu
-          </Button>
+          <div>
+            <Button
+              variant="secondary"
+              onClick={onClose}
+              className="me-2"
+              size="sm"
+            >
+              Hủy
+            </Button>
+
+            <Button
+              variant="success"
+              type="submit"
+              size="sm"
+              disabled={isLoading}
+            >
+              Lưu
+            </Button>
+          </div>
         </div>
       </Form>
     </MyModal>
