@@ -72,6 +72,25 @@ export const createBlog = createAsyncThunk(
   }
 );
 
+export const updateBlog = createAsyncThunk(
+  "blogs/updateBlog",
+  async (formData, thunkAPI) => {
+    try {
+      const response = await axios.put(`${API_URL}/api/blog`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi cập nhật blog"
+      );
+    }
+  }
+);
+
 const initialState = {
   listState: {
     listBlog: [],
@@ -92,6 +111,11 @@ const initialState = {
     success: false,
     error: null,
   },
+  updateState: {
+    isLoading: false,
+    success: false,
+    error: null,
+  },
 };
 
 const blogSlice = createSlice({
@@ -102,6 +126,11 @@ const blogSlice = createSlice({
       state.createState.isLoading = false;
       state.createState.success = false;
       state.createState.error = null;
+    },
+    resetUpdateBlogState: (state) => {
+      state.updateState.isLoading = false;
+      state.updateState.success = false;
+      state.updateState.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -159,10 +188,25 @@ const blogSlice = createSlice({
       .addCase(createBlog.rejected, (state, action) => {
         state.createState.isLoading = false;
         state.createState.error = action.payload;
+      })
+
+      // Update blog
+      .addCase(updateBlog.pending, (state) => {
+        state.updateState.isLoading = true;
+        state.updateState.success = false;
+        state.updateState.error = null;
+      })
+      .addCase(updateBlog.fulfilled, (state) => {
+        state.updateState.isLoading = false;
+        state.updateState.success = true;
+      })
+      .addCase(updateBlog.rejected, (state, action) => {
+        state.updateState.isLoading = false;
+        state.updateState.error = action.payload;
       });
   },
 });
 
-export const { resetCreateBlogState } = blogSlice.actions;
+export const { resetCreateBlogState, resetUpdateBlogState } = blogSlice.actions;
 
 export default blogSlice.reducer;

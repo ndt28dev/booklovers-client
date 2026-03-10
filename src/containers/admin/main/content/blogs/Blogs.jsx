@@ -80,6 +80,7 @@ const Blogs = () => {
     { title: "Ngày đăng", style: { width: "10%", textAlign: "center" } },
     { title: "Tác giả", style: { width: "18%" } },
     { title: "Ảnh", style: { width: "15%", textAlign: "center" } },
+    { title: "Nổi bật", style: { width: "10%", textAlign: "center" } },
     { title: "Thao tác", style: { width: "10%", textAlign: "center" } },
   ];
 
@@ -102,6 +103,14 @@ const Blogs = () => {
           style={{ width: "150px", height: "80px" }}
         />
       </td>
+      <td className="align-middle text-center">
+        {blog.is_featured === 1 ? (
+          <Badge bg="success">Nổi bật</Badge>
+        ) : (
+          <Badge bg="secondary">Không</Badge>
+        )}
+      </td>
+
       <td className="text-center align-middle">
         <MyButtonUpdate onClick={() => handleUpdate(blog)} />
         <MyButtonDelete onClick={() => handleDelete(blog)} />

@@ -7,6 +7,8 @@ import {
   createBlog,
   fetchAllBlog,
   resetCreateBlogState,
+  resetUpdateBlogState,
+  updateBlog,
 } from "../../../../../../redux/slices/blogSlice";
 import API_URL from "../../../../../../config/api";
 import { toast } from "react-toastify";
@@ -22,6 +24,7 @@ const CreateUpdateBlogModal = ({
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
+    id: null,
     title: "",
     date: "",
     author: "",
@@ -36,6 +39,12 @@ const CreateUpdateBlogModal = ({
   const { isLoading, error, success } = useSelector(
     (state) => state.blog.createState
   );
+
+  const {
+    isLoading: isLoadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = useSelector((state) => state.blog.updateState);
 
   const validate = () => {
     let newErrors = {};
@@ -66,8 +75,11 @@ const CreateUpdateBlogModal = ({
   useEffect(() => {
     if (isCheck && dataSelected) {
       setFormData({
+        id: dataSelected.id || null,
         title: dataSelected.title || "",
-        date: dataSelected.date || "",
+        date: dataSelected.date
+          ? new Date(dataSelected.date).toISOString().split("T")[0]
+          : "",
         author: dataSelected.author || "",
         description: dataSelected.description || "",
         image: null,
@@ -136,7 +148,8 @@ const CreateUpdateBlogModal = ({
     }
 
     if (isCheck) {
-      console.log("Update Blog");
+      data.append("id", formData.id);
+      dispatch(updateBlog(data));
     } else {
       // console.log("Create Blog", formData.description);
       dispatch(createBlog(data));
@@ -154,16 +167,16 @@ const CreateUpdateBlogModal = ({
     }
   }, [error, success]);
 
-  // useEffect(() => {
-  //   if (successUpdate) {
-  //     toast.success("Cập nhật bài viết thành công!");
-  //     dispatch(resetUpdateBookStatus());
-  //     dispatch(fetchAllBook({ page: currentPage, limit: 10 }));
-  //     onClose();
-  //   } else if (errorUpdate) {
-  //     toast.error(errorUpdate?.message || errorUpdate);
-  //   }
-  // }, [errorUpdate, successUpdate]);
+  useEffect(() => {
+    if (successUpdate) {
+      toast.success("Cập nhật bài viết thành công!");
+      dispatch(resetUpdateBlogState());
+      dispatch(fetchAllBlog({ page: currentPage, limit: 10 }));
+      onClose();
+    } else if (errorUpdate) {
+      toast.error(errorUpdate?.message || errorUpdate);
+    }
+  }, [errorUpdate, successUpdate]);
 
   return (
     <MyModal show={isOpen} handleClose={onClose} title={title} size="xl">
@@ -270,8 +283,8 @@ const CreateUpdateBlogModal = ({
                         onClick={handleRemoveImage}
                         style={{
                           position: "absolute",
-                          top: "5px",
-                          right: "20%",
+                          top: "4px",
+                          right: "21%",
                           padding: "2px 8px",
                           lineHeight: "1",
                         }}
