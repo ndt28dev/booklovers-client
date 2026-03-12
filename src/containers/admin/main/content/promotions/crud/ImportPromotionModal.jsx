@@ -4,18 +4,22 @@ import MyModal from "../../../../../../components/mymodal/MyModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllUser,
-  importUsers,
   resetImportUserStatus,
 } from "../../../../../../redux/slices/userSlice";
 import { toast } from "react-toastify";
+import {
+  fetchAllPromotion,
+  importPromotions,
+  resetImportPromotionStatus,
+} from "../../../../../../redux/slices/promotionSlice";
 
-const ImportUserModal = ({ isOpen, onClose, currentPage }) => {
+const ImportPromotionModal = ({ isOpen, onClose, currentPage }) => {
   const dispatch = useDispatch();
   const fileRef = useRef();
   const [file, setFile] = useState(null);
 
   const { data, isLoading, success, error } = useSelector(
-    (state) => state.user.importUser
+    (state) => state.promotion.importPromotion
   );
 
   const handleChooseFile = () => {
@@ -35,14 +39,14 @@ const ImportUserModal = ({ isOpen, onClose, currentPage }) => {
       return;
     }
 
-    dispatch(importUsers(file));
+    dispatch(importPromotions(file));
   };
 
   useEffect(() => {
     if (success) {
       toast.success("Import thành cong");
-      dispatch(resetImportUserStatus());
-      dispatch(fetchAllUser({ page: currentPage, limit: 10 }));
+      dispatch(resetImportPromotionStatus());
+      dispatch(fetchAllPromotion({ page: currentPage, limit: 10 }));
       onClose();
     } else if (error) {
       toast.error(error);
@@ -95,5 +99,4 @@ const ImportUserModal = ({ isOpen, onClose, currentPage }) => {
     </MyModal>
   );
 };
-
-export default ImportUserModal;
+export default ImportPromotionModal;

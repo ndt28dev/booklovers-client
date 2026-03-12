@@ -86,6 +86,33 @@ export const deletePromotion = createAsyncThunk(
   }
 );
 
+// import promotion
+export const importPromotions = createAsyncThunk(
+  "promotion/importPromotions",
+  async (file, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await axios.post(
+        `${API_URL}/api/promotion/import`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Import khuyến mãi thất bại"
+      );
+    }
+  }
+);
+
 const promotionSlice = createSlice({
   name: "promotion",
   initialState: {
@@ -112,6 +139,12 @@ const promotionSlice = createSlice({
     },
     delete: {
       loading: false,
+      success: false,
+      error: null,
+    },
+    importPromotion: {
+      data: null,
+      isLoading: false,
       success: false,
       error: null,
     },
@@ -145,6 +178,14 @@ const promotionSlice = createSlice({
     resetDeletePromotion: (state) => {
       state.delete = {
         loading: false,
+        success: false,
+        error: null,
+      };
+    },
+    resetImportPromotionStatus: (state) => {
+      state.importPromotion = {
+        data: null,
+        isLoading: false,
         success: false,
         error: null,
       };
@@ -224,6 +265,24 @@ const promotionSlice = createSlice({
       .addCase(deletePromotion.rejected, (state, action) => {
         state.delete.loading = false;
         state.delete.error = action.payload;
+      })
+
+      // import
+      .addCase(importPromotions.pending, (state) => {
+        state.importPromotion.isLoading = true;
+        state.importPromotion.error = null;
+        state.importPromotion.success = false;
+      })
+
+      .addCase(importPromotions.fulfilled, (state, action) => {
+        state.importPromotion.isLoading = false;
+        state.importPromotion.success = true;
+        state.importPromotion.data = action.payload;
+      })
+
+      .addCase(importPromotions.rejected, (state, action) => {
+        state.importPromotion.isLoading = false;
+        state.importPromotion.error = action.payload;
       });
   },
 });
@@ -233,6 +292,7 @@ export const {
   resetCreatePromotion,
   resetUpdatePromotion,
   resetDeletePromotion,
+  resetImportPromotionStatus,
 } = promotionSlice.actions;
 
 export default promotionSlice.reducer;

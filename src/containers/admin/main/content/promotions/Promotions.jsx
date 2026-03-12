@@ -12,6 +12,8 @@ import MyButtonDelete from "../../../../../components/button/MyButtonDelete";
 import CreateUpdatePromotionModal from "./crud/CreateUpdatePromotionModal";
 import ExportPromotionModal from "./crud/ExportPromotionModal";
 import DeletePromotionModal from "./crud/DeletePromotionModal";
+import MyButtonImport from "../../../../../components/button/MyButtonImport";
+import ImportPromotionModal from "./crud/ImportPromotionModal";
 
 const Promotions = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,9 @@ const Promotions = () => {
   const [isOpenExport, setIsOpenExport] = useState(false);
   const [isCheck, setIsCheck] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
+
+  const [search, setSearch] = useState("");
+  const [discountType, setDiscountType] = useState("");
 
   const { listPromotion, error, pagination } = useSelector(
     (state) => state.promotion.listState
@@ -37,9 +42,11 @@ const Promotions = () => {
       fetchAllPromotion({
         page: currentPage,
         limit: 10,
+        search,
+        discount_type: discountType,
       })
     );
-  }, [currentPage]);
+  }, [currentPage, search, discountType]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -142,6 +149,13 @@ const Promotions = () => {
           currentPage={currentPage}
         />
       )}
+      {isOpenImport && (
+        <ImportPromotionModal
+          isOpen={isOpenImport}
+          onClose={() => setIsOpenImport(false)}
+          currentPage={currentPage}
+        />
+      )}
       {isOpenExport && (
         <ExportPromotionModal
           isOpen={isOpenExport}
@@ -153,21 +167,21 @@ const Promotions = () => {
         <div className="d-flex align-items-center justify-content-between mb-2">
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
-            {/* <MyButtonImport onClick={handleImport} /> */}
+            <MyButtonImport onClick={handleImport} />
             <MyButtonExport onClick={handleExport} />
           </Col>
-          {/* <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
             <Form.Select
-              value={featured}
+              value={discountType}
               onChange={(e) => {
-                setFeatured(e.target.value);
+                setDiscountType(e.target.value);
                 setCurrentPage(1);
               }}
-              style={{ width: "150px", height: "38px" }}
+              style={{ width: "170px", height: "38px" }}
             >
-              <option value="">Tất cả</option>
-              <option value="1">Nổi bật</option>
-              <option value="0">Không nổi bật</option>
+              <option value="">Tất cả loại</option>
+              <option value="percent">Phần trăm (%)</option>
+              <option value="amount">Số tiền (VNĐ)</option>
             </Form.Select>
 
             <div className="d-flex align-items-center">
@@ -176,15 +190,16 @@ const Promotions = () => {
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Nhập tiêu đề..."
+                placeholder="Nhập code hoặc mô tả..."
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
                   setCurrentPage(1);
                 }}
+                style={{ width: "220px" }}
               />
             </div>
-          </div> */}
+          </div>
         </div>
         <div style={{ minHeight: "722px" }}>
           <MyDataTable
