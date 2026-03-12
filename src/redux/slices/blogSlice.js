@@ -4,11 +4,20 @@ import API_URL from "../../config/api";
 
 export const fetchAllBlog = createAsyncThunk(
   "blogs/fetchAllBlog",
-  async ({ page = 1, limit = 6 }, thunkAPI) => {
+  async ({ page = 1, limit = 6, is_featured = "", search = "" }, thunkAPI) => {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/blogs?page=${page}&limit=${limit}`
-      );
+      let url = `${API_URL}/api/blogs?page=${page}&limit=${limit}`;
+
+      if (is_featured !== "") {
+        url += `&is_featured=${is_featured}`;
+      }
+
+      if (search) {
+        url += `&search=${encodeURIComponent(search)}`;
+      }
+
+      const response = await axios.get(url);
+
       return {
         blogs: response.data.data,
         pagination: response.data.pagination,

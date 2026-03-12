@@ -25,13 +25,15 @@ const Blogs = () => {
   const [isCheck, setIsCheck] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
 
+  const [featured, setFeatured] = useState("");
+  const [search, setSearch] = useState("");
+
   const { listBlog, error, pagination } = useSelector(
     (state) => state.blog.listState
   );
 
   const page = pagination?.page || 1;
   const limit = pagination?.limit || 10;
-  const total = pagination?.total || 0;
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = pagination?.totalPages || 0;
@@ -41,9 +43,11 @@ const Blogs = () => {
       fetchAllBlog({
         page: currentPage,
         limit: 10,
+        is_featured: featured,
+        search: search,
       })
     );
-  }, [currentPage]);
+  }, [currentPage, featured, search]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -155,16 +159,16 @@ const Blogs = () => {
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
             <Form.Select
-              // value={role}
+              value={featured}
               onChange={(e) => {
-                setRole(e.target.value);
+                setFeatured(e.target.value);
                 setCurrentPage(1);
               }}
-              style={{ width: "110px", height: "38px" }}
+              style={{ width: "150px", height: "38px" }}
             >
               <option value="">Tất cả</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
+              <option value="1">Nổi bật</option>
+              <option value="0">Không nổi bật</option>
             </Form.Select>
 
             <div className="d-flex align-items-center">
@@ -173,8 +177,8 @@ const Blogs = () => {
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Nhập từ khóa..."
-                // value={search}
+                placeholder="Nhập tiêu đề..."
+                value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
                   setCurrentPage(1);
