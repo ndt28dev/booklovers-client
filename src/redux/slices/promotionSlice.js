@@ -78,7 +78,7 @@ export const deletePromotion = createAsyncThunk(
   "promotion/deletePromotion",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/api/promotion/${id}`);
       return id;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Lỗi xóa mã");

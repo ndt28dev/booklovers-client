@@ -11,6 +11,7 @@ import MyButtonUpdate from "../../../../../components/button/MyButtonUpdate";
 import MyButtonDelete from "../../../../../components/button/MyButtonDelete";
 import CreateUpdatePromotionModal from "./crud/CreateUpdatePromotionModal";
 import ExportPromotionModal from "./crud/ExportPromotionModal";
+import DeletePromotionModal from "./crud/DeletePromotionModal";
 
 const Promotions = () => {
   const dispatch = useDispatch();
@@ -133,14 +134,14 @@ const Promotions = () => {
           currentPage={currentPage}
         />
       )}
-      {/* {isOpenDelete && (
+      {isOpenDelete && (
         <DeletePromotionModal
           isOpen={isOpenDelete}
           onClose={() => setIsOpenDelete(false)}
           id={dataSelected?.id}
           currentPage={currentPage}
         />
-      )} */}
+      )}
       {isOpenExport && (
         <ExportPromotionModal
           isOpen={isOpenExport}
