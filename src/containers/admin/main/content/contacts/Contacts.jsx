@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContacts } from "../../../../../redux/slices/contactSlice";
 import MyLayoutAdmin from "../../../../../components/mylayout/MyLayoutAdmin";
-import { Col } from "react-bootstrap";
+import { Badge, Button, Col } from "react-bootstrap";
 import MyDataTable from "../../../../../components/mytable/MyDataTable";
 import { formatDate } from "../../../../../utils/format";
 
@@ -37,10 +37,10 @@ const Contacts = () => {
     { title: "STT", style: { width: "3%", textAlign: "center" } },
     { title: "Họ và tên", style: { width: "16%" } },
     { title: "Email", style: { width: "10%" } },
-    { title: "Số điện thoại", style: { width: "12%", textAlign: "center" } },
+    { title: "Số điện thoại", style: { width: "11%", textAlign: "center" } },
     { title: "Tin nhắn" },
     { title: "Ngày tạo", style: { width: "6%", textAlign: "center" } },
-    // { title: "Thao tác", style: { width: "10%", textAlign: "center" } },
+    { title: "Trạng thái", style: { width: "12%", textAlign: "center" } },
   ];
 
   const renderRow = (contact, index) => (
@@ -52,9 +52,24 @@ const Contacts = () => {
       <td className="align-middle">{contact.name}</td>
       <td className="align-middle">{contact.email}</td>
       <td className="align-middle text-center">{contact.phone}</td>
-      <td className="align-middle text-center">{contact.message}</td>
+      <td className="align-middle">{contact.message}</td>
       <td className="align-middle text-center">
         {formatDate(contact.created_at)}
+      </td>
+      <td className="align-middle text-center">
+        {contact.status === "pending" && (
+          <Button variant="danger" size="sm">
+            Chưa phản hồi
+          </Button>
+        )}
+        {contact.status === "in_progress" && (
+          <Button variant="warning" size="sm">
+            Đang xử lý
+          </Button>
+        )}
+        {contact.status === "resolved" && (
+          <span className="badge bg-success">Đã xong</span>
+        )}
       </td>
     </tr>
   );
