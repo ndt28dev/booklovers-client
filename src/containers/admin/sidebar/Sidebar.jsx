@@ -27,6 +27,10 @@ const Sidebar = ({ show }) => {
           <i className="bi bi-book"></i>
           {show && <span className="ms-2">Sản phẩm</span>}
         </NavLink>
+        <NavLink to="/admin/nhap-hang" className="sidebar-link mb-2">
+          <i className="bi bi-book"></i>
+          {show && <span className="ms-2">Sản phẩm</span>}
+        </NavLink>
         <NavLink to="/admin/don-hang" className="sidebar-link mb-2">
           <i className="bi bi-cash-coin"></i>
           {show && <span className="ms-2">Đơn hàng</span>}

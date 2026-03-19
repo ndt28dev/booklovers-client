@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContacts } from "../../../../../redux/slices/contactSlice";
+import {
+  fetchContacts,
+  updateContactStatus,
+} from "../../../../../redux/slices/contactSlice";
 import MyLayoutAdmin from "../../../../../components/mylayout/MyLayoutAdmin";
 import { Badge, Button, Col } from "react-bootstrap";
 import MyDataTable from "../../../../../components/mytable/MyDataTable";
@@ -58,12 +61,20 @@ const Contacts = () => {
       </td>
       <td className="align-middle text-center">
         {contact.status === "pending" && (
-          <Button variant="danger" size="sm">
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => handleChangeStatus(contact.id, "in_progress")}
+          >
             Chưa phản hồi
           </Button>
         )}
         {contact.status === "in_progress" && (
-          <Button variant="warning" size="sm">
+          <Button
+            variant="warning"
+            size="sm"
+            onClick={() => handleChangeStatus(contact.id, "resolved")}
+          >
             Đang xử lý
           </Button>
         )}
@@ -73,6 +84,11 @@ const Contacts = () => {
       </td>
     </tr>
   );
+
+  const handleChangeStatus = async (id, status) => {
+    await dispatch(updateContactStatus({ id, status }));
+    dispatch(fetchContacts({ page, limit }));
+  };
 
   return (
     <MyLayoutAdmin title="Danh sách phản hồi">

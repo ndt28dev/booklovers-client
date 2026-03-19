@@ -94,6 +94,7 @@ const AppRoutes = () => {
         <Route path="trang-chu" element={<Dashboard />} />
         <Route path="don-hang" element={<Orders />} />
         <Route path="san-pham" element={<Products />} />
+        <Route path="nhap-hang" element={<Products />} />
         <Route path="nguoi-dung" element={<Users />} />
         <Route path="nguoi-dung/them" element={<AddUser />} />
         <Route path="bai-viet" element={<Blogs />} />

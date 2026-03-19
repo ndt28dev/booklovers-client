@@ -35,6 +35,23 @@ export const fetchContacts = createAsyncThunk(
   }
 );
 
+export const updateContactStatus = createAsyncThunk(
+  "contact/updateContactStatus",
+  async ({ id, status }, thunkAPI) => {
+    try {
+      const res = await axios.put(`${API_URL}/api/contact/${id}/status`, {
+        status,
+      });
+
+      return { id, status }; // trả về để update state
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi cập nhật trạng thái"
+      );
+    }
+  }
+);
+
 const initialState = {
   listContact: {
     data: [],
@@ -45,6 +62,10 @@ const initialState = {
   createContact: {
     isSubmitting: false,
     success: false,
+    error: null,
+  },
+  updateStatus: {
+    loading: false,
     error: null,
   },
 };
@@ -88,6 +109,21 @@ const contactSlice = createSlice({
 
       .addCase(fetchContacts.rejected, (state, action) => {
         state.listContact.error = action.payload;
+      })
+
+      // UPDATE CONTACT STATUS
+      .addCase(updateContactStatus.pending, (state) => {
+        state.updateStatus.loading = true;
+        state.updateStatus.error = null;
+      })
+
+      .addCase(updateContactStatus.fulfilled, (state) => {
+        state.updateStatus.loading = false;
+      })
+
+      .addCase(updateContactStatus.rejected, (state, action) => {
+        state.updateStatus.loading = false;
+        state.updateStatus.error = action.payload;
       });
   },
 });
