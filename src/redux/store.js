@@ -12,6 +12,8 @@ import adminUserSlice from "./slices/admin/userSlice";
 import statisticSlice from "./slices/admin/statisticSlice";
 import orderSliceAdmin from "./slices/admin/orderSlice";
 import promotionSlice from "./slices/promotionSlice";
+import supplierSlice from "./slices/supplierSlice";
+import importsSlice from "./slices/importSlice";
 
 export const store = configureStore({
   reducer: {
@@ -28,5 +30,7 @@ export const store = configureStore({
     statistics: statisticSlice,
     adminOrder: orderSliceAdmin,
     promotion: promotionSlice,
+    supplier: supplierSlice,
+    imports: importsSlice,
   },
 });

@@ -35,6 +35,7 @@ import Settings from "../containers/admin/main/content/settings/Settings";
 import Contacts from "../containers/admin/main/content/contacts/Contacts";
 import Promotions from "../containers/admin/main/content/promotions/Promotions";
 import NotFound from "../containers/notfound/NotFound";
+import Imports from "../containers/admin/main/content/imports/Imports";
 
 const AppRoutes = () => {
   return (
@@ -94,7 +95,7 @@ const AppRoutes = () => {
         <Route path="trang-chu" element={<Dashboard />} />
         <Route path="don-hang" element={<Orders />} />
         <Route path="san-pham" element={<Products />} />
-        <Route path="nhap-hang" element={<Products />} />
+        <Route path="nhap-hang" element={<Imports />} />
         <Route path="nguoi-dung" element={<Users />} />
         <Route path="nguoi-dung/them" element={<AddUser />} />
         <Route path="bai-viet" element={<Blogs />} />
