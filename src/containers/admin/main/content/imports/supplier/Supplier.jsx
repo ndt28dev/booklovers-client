@@ -17,7 +17,7 @@ import { formatDate } from "../../../../../../utils/format";
 import MyButtonEye from "../../../../../../components/button/MyButtonEye";
 import MyButtonUpdate from "../../../../../../components/button/MyButtonUpdate";
 import MyButtonDelete from "../../../../../../components/button/MyButtonDelete";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const Supplier = ({ isOpen, onClose }) => {
@@ -290,12 +290,12 @@ const Supplier = ({ isOpen, onClose }) => {
               Huỷ
             </Button>
             <Button
-              className="btn btn-success"
+              className="btn btn-success "
               onClick={handleSubmit}
               disabled={loading}
               size="sm"
             >
-              {loading ? "Đang lưu..." : "Lưu"}
+              Lưu
             </Button>
           </div>
         </div>
