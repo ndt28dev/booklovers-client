@@ -6,84 +6,189 @@ import MyButtonCreate from "../../../../../../../components/button/MyButtonCreat
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import { fetchCategoriesWithSub } from "../../../../../../../redux/slices/categorySlice";
+import {
+  fetchCategoriesWithSub,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  resetCreate,
+  resetUpdate,
+  resetDelete,
+} from "../../../../../../../redux/slices/categorySlice";
+
 import {
   createSubcategory,
-  deleteSubcategory,
   updateSubcategory,
-  resetDelete,
-  resetUpdate,
-  resetCreate,
+  deleteSubcategory,
+  resetCreate as resetSubCreate,
+  resetUpdate as resetSubUpdate,
+  resetDelete as resetSubDelete,
 } from "../../../../../../../redux/slices/subcategorySlice";
 
 const SettingCategory = () => {
   const dispatch = useDispatch();
 
-  // State mở danh mục cha
+  // ========== STATES ==========
   const [openIds, setOpenIds] = useState([]);
-  // State chỉnh sửa subcategory
-  const [editingId, setEditingId] = useState(null);
-  const [editingValue, setEditingValue] = useState("");
-  // State thêm subcategory
-  const [addingCatId, setAddingCatId] = useState(null);
+  const [editingCatId, setEditingCatId] = useState(null);
+  const [editingCatValue, setEditingCatValue] = useState("");
+
+  const [addingCat, setAddingCat] = useState(false);
+  const [newCatName, setNewCatName] = useState("");
+
+  const [editingSubId, setEditingSubId] = useState(null);
+  const [editingSubValue, setEditingSubValue] = useState("");
+  const [addingSubCatId, setAddingSubCatId] = useState(null);
   const [newSubName, setNewSubName] = useState("");
 
-  const { categories: data } = useSelector((state) => state.category);
-
-  const { loading, error, success } = useSelector(
-    (state) => state.subcategory.create
-  );
-
+  const { categories: data, fetch } = useSelector((state) => state.category);
   const {
-    loading: isLoadingUpdate,
-    error: errorUpdate,
-    success: successUpdate,
-  } = useSelector((state) => state.subcategory.update);
+    create,
+    update,
+    delete: del,
+  } = useSelector((state) => state.category);
 
-  const {
-    loading: isLoadingDelete,
-    error: errorDelete,
-    success: successDelete,
-  } = useSelector((state) => state.subcategory.delete);
+  const subCreate = useSelector((state) => state.subcategory.create);
+  const subUpdate = useSelector((state) => state.subcategory.update);
+  const subDelete = useSelector((state) => state.subcategory.delete);
 
+  // ========== EFFECTS ==========
   useEffect(() => {
     dispatch(fetchCategoriesWithSub());
   }, [dispatch]);
 
+  // ===== Category Toasts =====
+  useEffect(() => {
+    if (create.success) {
+      toast.success("Thêm danh mục cha thành công!");
+      dispatch(resetCreate());
+      dispatch(fetchCategoriesWithSub());
+      setAddingCat(false);
+      setNewCatName("");
+    } else if (create.error) {
+      toast.error(create.error || "Lỗi khi thêm danh mục cha");
+    }
+  }, [create, dispatch]);
+
+  useEffect(() => {
+    if (update.success) {
+      toast.success("Cập nhật danh mục cha thành công!");
+      dispatch(resetUpdate());
+      dispatch(fetchCategoriesWithSub());
+      setEditingCatId(null);
+      setEditingCatValue("");
+    } else if (update.error) {
+      toast.error(update.error || "Lỗi khi cập nhật danh mục cha");
+    }
+  }, [update, dispatch]);
+
+  useEffect(() => {
+    if (del.success) {
+      toast.success("Xoá danh mục cha thành công!");
+      dispatch(resetDelete());
+      dispatch(fetchCategoriesWithSub());
+    } else if (del.error) {
+      toast.error(del.error || "Lỗi khi xoá danh mục cha");
+    }
+  }, [del, dispatch]);
+
+  // ===== Subcategory Toasts =====
+  useEffect(() => {
+    if (subCreate.success) {
+      toast.success("Thêm danh mục con thành công!");
+      dispatch(resetSubCreate());
+      dispatch(fetchCategoriesWithSub());
+      setAddingSubCatId(null);
+      setNewSubName("");
+    } else if (subCreate.error) {
+      toast.error(subCreate.error || "Lỗi khi thêm danh mục con");
+    }
+  }, [subCreate, dispatch]);
+
+  useEffect(() => {
+    if (subUpdate.success) {
+      toast.success("Cập nhật danh mục con thành công!");
+      dispatch(resetSubUpdate());
+      dispatch(fetchCategoriesWithSub());
+      setEditingSubId(null);
+      setEditingSubValue("");
+    } else if (subUpdate.error) {
+      toast.error(subUpdate.error || "Lỗi khi cập nhật danh mục con");
+    }
+  }, [subUpdate, dispatch]);
+
+  useEffect(() => {
+    if (subDelete.success) {
+      toast.success("Xoá danh mục con thành công!");
+      dispatch(resetSubDelete());
+      dispatch(fetchCategoriesWithSub());
+    } else if (subDelete.error) {
+      toast.error(subDelete.error || "Lỗi khi xoá danh mục con");
+    }
+  }, [subDelete, dispatch]);
+
+  // ========== HANDLERS ==========
   const toggle = (id) => {
     setOpenIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
-  const handleSubEdit = (sub) => {
-    setEditingId(sub.id);
-    setEditingValue(sub.name);
+  // ===== Category =====
+  const handleCatEdit = (cat) => {
+    setEditingCatId(cat.id);
+    setEditingCatValue(cat.name);
   };
 
-  const handleSubCategoryUpdate = (sub) => {
-    if (!editingValue.trim()) {
+  const handleCatUpdate = (cat) => {
+    if (!editingCatValue.trim()) {
+      toast.error("Tên danh mục không được để trống");
+      return;
+    }
+    dispatch(updateCategory({ id: cat.id, name: editingCatValue.trim() }));
+  };
+
+  const handleCatDelete = (id) => {
+    const confirmed = window.confirm("Bạn có chắc muốn xoá danh mục này?");
+    if (!confirmed) return;
+    dispatch(deleteCategory(id));
+  };
+
+  const handleCatAdd = () => {
+    if (!newCatName.trim()) {
+      toast.error("Tên danh mục không được để trống");
+      return;
+    }
+    dispatch(createCategory(newCatName.trim()));
+  };
+
+  // ===== Subcategory =====
+  const handleSubEdit = (sub) => {
+    setEditingSubId(sub.id);
+    setEditingSubValue(sub.name);
+  };
+
+  const handleSubUpdate = (sub) => {
+    if (!editingSubValue.trim()) {
       toast.error("Tên danh mục con không được để trống");
       return;
     }
-    dispatch(updateSubcategory({ id: sub.id, name: editingValue.trim() }));
-    setEditingId(null);
-    setEditingValue("");
+    dispatch(updateSubcategory({ id: sub.id, name: editingSubValue.trim() }));
   };
 
-  const handleSubCategoryDelete = (id) => {
-    const confirmed = window.confirm("Bạn có chắc muốn xoá danh mục con này?");
+  const handleSubDelete = (id) => {
+    const confirmed = window.confirm("Bạn có chắc muốn xoá danh mục con?");
     if (!confirmed) return;
     dispatch(deleteSubcategory(id));
   };
 
   const handleAddSubClick = (catId) => {
-    setAddingCatId(catId);
+    setAddingSubCatId(catId);
     setNewSubName("");
   };
 
-  const handleAddCancel = () => {
-    setAddingCatId(null);
+  const handleAddSubCancel = () => {
+    setAddingSubCatId(null);
     setNewSubName("");
   };
 
@@ -95,45 +200,36 @@ const SettingCategory = () => {
     dispatch(
       createSubcategory({ name: newSubName.trim(), category_id: catId })
     );
-    setAddingCatId(null);
-    setNewSubName("");
   };
 
-  useEffect(() => {
-    if (success) {
-      toast.success("Thêm danh mục con thành công!");
-      dispatch(resetCreate());
-      dispatch(fetchCategoriesWithSub());
-    } else if (error) {
-      toast.error(error?.message || error);
-    }
-  }, [error, success]);
-
-  useEffect(() => {
-    if (successUpdate) {
-      toast.success("Cập nhật danh mục con thành công!");
-      dispatch(resetUpdate());
-      dispatch(fetchCategoriesWithSub());
-    } else if (errorUpdate) {
-      toast.error(errorUpdate?.message || errorUpdate);
-    }
-  }, [errorUpdate, successUpdate, dispatch]);
-
-  useEffect(() => {
-    if (successDelete) {
-      toast.success("Xoá danh mục con thành công!");
-      dispatch(resetDelete());
-      dispatch(fetchCategoriesWithSub());
-    } else if (errorDelete) {
-      toast.error(errorDelete?.message || errorDelete);
-    }
-  }, [errorDelete, successDelete, dispatch]);
-
+  // ========== JSX ==========
   return (
     <div>
       <div className="d-flex align-items-center justify-content-between mb-3">
         <h5 style={{ color: "#E35765" }}>Danh sách danh mục</h5>
-        <MyButtonCreate />
+        {addingCat ? (
+          <div className="d-flex align-items-center gap-2">
+            <input
+              className="form-control"
+              value={newCatName}
+              onChange={(e) => setNewCatName(e.target.value)}
+              placeholder="Tên danh mục mới"
+              style={{ width: "200px", height: "30px" }}
+            />
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setAddingCat(false)}
+            >
+              Huỷ
+            </Button>
+            <Button variant="success" size="sm" onClick={handleCatAdd}>
+              Lưu
+            </Button>
+          </div>
+        ) : (
+          <MyButtonCreate onClick={() => setAddingCat(true)} />
+        )}
       </div>
 
       {data.map((cat) => (
@@ -148,27 +244,59 @@ const SettingCategory = () => {
             }}
           >
             <div className="d-flex align-items-center justify-content-between">
-              <div className="flex-grow-1" onClick={() => toggle(cat.id)}>
-                <span>
+              <div className="flex-grow-1 " onClick={() => toggle(cat.id)}>
+                <span className="d-flex align-items-center">
                   {openIds.includes(cat.id) ? (
                     <i className="bi bi-caret-down"></i>
                   ) : (
                     <i className="bi bi-caret-right"></i>
                   )}{" "}
-                  {cat.name} ({cat.subcategories.length})
+                  {editingCatId === cat.id ? (
+                    <input
+                      className="form-control me-1"
+                      value={editingCatValue}
+                      onChange={(e) => setEditingCatValue(e.target.value)}
+                      style={{ width: "200px", height: "30px" }}
+                    />
+                  ) : (
+                    cat.name
+                  )}{" "}
+                  ({cat.subcategories && cat.subcategories.length})
                 </span>
               </div>
-              <div className="d-flex align-items-center">
-                <Button
-                  variant="primary"
-                  size="sm"
-                  className="me-2"
-                  onClick={() => handleAddSubClick(cat.id)}
-                >
-                  <i className="bi bi-plus"></i>
-                </Button>
-                <MyButtonUpdate />
-                <MyButtonDelete />
+
+              <div className="d-flex align-items-center gap-1">
+                {editingCatId === cat.id ? (
+                  <>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setEditingCatId(null)}
+                    >
+                      Huỷ
+                    </Button>
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={() => handleCatUpdate(cat)}
+                    >
+                      Lưu
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => handleAddSubClick(cat.id)}
+                      className="me-2"
+                    >
+                      <i className="bi bi-plus"></i>
+                    </Button>
+                    <MyButtonUpdate onClick={() => handleCatEdit(cat)} />
+                    <MyButtonDelete onClick={() => handleCatDelete(cat.id)} />
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -190,25 +318,25 @@ const SettingCategory = () => {
                   }}
                   className="d-flex align-items-center justify-content-between"
                 >
-                  {editingId === sub.id ? (
+                  {editingSubId === sub.id ? (
                     <div className="d-flex align-items-center gap-2">
                       <input
                         className="form-control"
-                        value={editingValue}
-                        onChange={(e) => setEditingValue(e.target.value)}
-                        style={{ height: "30px", width: "250px" }}
+                        value={editingSubValue}
+                        onChange={(e) => setEditingSubValue(e.target.value)}
+                        style={{ width: "250px", height: "30px" }}
                       />
                       <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => setEditingId(null)}
+                        onClick={() => setEditingSubId(null)}
                       >
                         Huỷ
                       </Button>
                       <Button
                         variant="success"
                         size="sm"
-                        onClick={() => handleSubCategoryUpdate(sub)}
+                        onClick={() => handleSubUpdate(sub)}
                       >
                         Lưu
                       </Button>
@@ -216,31 +344,26 @@ const SettingCategory = () => {
                   ) : (
                     <span style={{ fontWeight: "500" }}>{sub.name}</span>
                   )}
-                  <div className="d-flex align-items-center">
+                  <div className="d-flex align-items-center gap-1">
                     <MyButtonUpdate onClick={() => handleSubEdit(sub)} />
-                    <MyButtonDelete
-                      onClick={() => handleSubCategoryDelete(sub.id)}
-                    />
+                    <MyButtonDelete onClick={() => handleSubDelete(sub.id)} />
                   </div>
                 </div>
               ))}
 
-              {addingCatId === cat.id && (
-                <div
-                  className="d-flex align-items-center gap-2 mt-2"
-                  style={{ paddingLeft: "0px" }}
-                >
+              {addingSubCatId === cat.id && (
+                <div className="d-flex align-items-center gap-2 mt-2">
                   <input
                     className="form-control"
                     value={newSubName}
                     onChange={(e) => setNewSubName(e.target.value)}
-                    style={{ height: "30px", width: "250px" }}
                     placeholder="Tên danh mục con mới"
+                    style={{ width: "250px", height: "30px" }}
                   />
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={handleAddCancel}
+                    onClick={handleAddSubCancel}
                   >
                     Huỷ
                   </Button>
