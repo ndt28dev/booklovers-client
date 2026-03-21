@@ -113,23 +113,21 @@ const SettingSupplier = () => {
           currentPage={currentPage}
         />
       )}
-      <MyLayoutAdmin>
-        <div className="d-flex align-items-center justify-content-between mb-3">
-          <h5 style={{ color: "#E35765" }}>Danh sách nhà cung cấp</h5>
-          <MyButtonCreate onClick={handleCreate} />
-        </div>
+      <div className="d-flex align-items-center justify-content-between mb-3">
+        <h5 style={{ color: "#E35765" }}>Danh sách nhà cung cấp</h5>
+        <MyButtonCreate onClick={handleCreate} />
+      </div>
 
-        <div>
-          <MyDataTable
-            columns={columns}
-            data={data}
-            renderRow={renderRow}
-            pagination={pagination}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      </MyLayoutAdmin>
+      <div>
+        <MyDataTable
+          columns={columns}
+          data={data}
+          renderRow={renderRow}
+          pagination={pagination}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </>
   );
 };
