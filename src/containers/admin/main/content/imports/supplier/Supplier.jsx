@@ -13,8 +13,6 @@ import {
   resetUpdateSupplier,
   updateSupplier,
 } from "../../../../../../redux/slices/supplierSlice";
-import { formatDate } from "../../../../../../utils/format";
-import MyButtonEye from "../../../../../../components/button/MyButtonEye";
 import MyButtonUpdate from "../../../../../../components/button/MyButtonUpdate";
 import MyButtonDelete from "../../../../../../components/button/MyButtonDelete";
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";

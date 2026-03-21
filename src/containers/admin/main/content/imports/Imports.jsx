@@ -19,7 +19,6 @@ const Imports = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
-  const [isOpenSupplier, setIsOpenSupplier] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
 
   const { data, pagination } = useSelector((state) => state.imports.imports);
@@ -137,10 +136,6 @@ const Imports = () => {
     printWindow.print();
   };
 
-  const handleSupplier = () => {
-    setIsOpenSupplier(true);
-  };
-
   const columns = [
     { title: "STT", style: { width: "3%", textAlign: "center" } },
     { title: "Nhà cung cấp" },
@@ -185,21 +180,11 @@ const Imports = () => {
           dataSelected={dataSelected}
         />
       )}
-      {isOpenSupplier && (
-        <Supplier
-          isOpen={isOpenSupplier}
-          onClose={() => setIsOpenSupplier(false)}
-          currentPage={currentPage}
-        />
-      )}
       <MyLayoutAdmin title="Danh sách nhập hàng">
         <div className="d-flex align-items-center justify-content-between mb-2">
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
           </Col>
-          <Button variant="dark" onClick={handleSupplier} size="sm">
-            Quản lý nhà cung cấp
-          </Button>
         </div>
         <div style={{ minHeight: "722px" }}>
           <MyDataTable
