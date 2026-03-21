@@ -4,25 +4,35 @@ import MyButtonUpdate from "../../../../../../../components/button/MyButtonUpdat
 import MyButtonDelete from "../../../../../../../components/button/MyButtonDelete";
 import MyButtonCreate from "../../../../../../../components/button/MyButtonCreate";
 import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+
 import { fetchCategoriesWithSub } from "../../../../../../../redux/slices/categorySlice";
 import {
+  createSubcategory,
   deleteSubcategory,
-  getAllSubcategories,
+  updateSubcategory,
   resetDelete,
   resetUpdate,
-  updateSubcategory,
+  resetCreate,
 } from "../../../../../../../redux/slices/subcategorySlice";
-import { toast } from "react-toastify";
 
 const SettingCategory = () => {
   const dispatch = useDispatch();
 
+  // State mở danh mục cha
   const [openIds, setOpenIds] = useState([]);
+  // State chỉnh sửa subcategory
   const [editingId, setEditingId] = useState(null);
   const [editingValue, setEditingValue] = useState("");
+  // State thêm subcategory
+  const [addingCatId, setAddingCatId] = useState(null);
+  const [newSubName, setNewSubName] = useState("");
 
   const { categories: data } = useSelector((state) => state.category);
-  //   const { subcategories } = useSelector((state) => state.subcategory);
+
+  const { loading, error, success } = useSelector(
+    (state) => state.subcategory.create
+  );
 
   const {
     loading: isLoadingUpdate,
@@ -52,32 +62,52 @@ const SettingCategory = () => {
   };
 
   const handleSubCategoryUpdate = (sub) => {
-    dispatch(
-      updateSubcategory({
-        id: sub.id,
-        name: editingValue.trim(),
-      })
-    );
+    if (!editingValue.trim()) {
+      toast.error("Tên danh mục con không được để trống");
+      return;
+    }
+    dispatch(updateSubcategory({ id: sub.id, name: editingValue.trim() }));
     setEditingId(null);
     setEditingValue("");
   };
 
   const handleSubCategoryDelete = (id) => {
     const confirmed = window.confirm("Bạn có chắc muốn xoá danh mục con này?");
-    if (!confirmed) return; // nếu nhấn Cancel thì thôi
+    if (!confirmed) return;
     dispatch(deleteSubcategory(id));
   };
 
-  //   useEffect(() => {
-  //     if (success) {
-  //       toast.success("Thêm khuyến mãi thành công!");
-  //       dispatch(resetCreatePromotion());
-  //       dispatch(fetchAllPromotion({ page: currentPage, limit: 10 }));
-  //       onClose();
-  //     } else if (error) {
-  //       toast.error(error?.message || error);
-  //     }
-  //   }, [error, success]);
+  const handleAddSubClick = (catId) => {
+    setAddingCatId(catId);
+    setNewSubName("");
+  };
+
+  const handleAddCancel = () => {
+    setAddingCatId(null);
+    setNewSubName("");
+  };
+
+  const handleAddSubSave = (catId) => {
+    if (!newSubName.trim()) {
+      toast.error("Vui lòng nhập tên danh mục con");
+      return;
+    }
+    dispatch(
+      createSubcategory({ name: newSubName.trim(), category_id: catId })
+    );
+    setAddingCatId(null);
+    setNewSubName("");
+  };
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Thêm danh mục con thành công!");
+      dispatch(resetCreate());
+      dispatch(fetchCategoriesWithSub());
+    } else if (error) {
+      toast.error(error?.message || error);
+    }
+  }, [error, success]);
 
   useEffect(() => {
     if (successUpdate) {
@@ -87,7 +117,7 @@ const SettingCategory = () => {
     } else if (errorUpdate) {
       toast.error(errorUpdate?.message || errorUpdate);
     }
-  }, [errorUpdate, successUpdate]);
+  }, [errorUpdate, successUpdate, dispatch]);
 
   useEffect(() => {
     if (successDelete) {
@@ -97,7 +127,7 @@ const SettingCategory = () => {
     } else if (errorDelete) {
       toast.error(errorDelete?.message || errorDelete);
     }
-  }, [errorDelete, successDelete]);
+  }, [errorDelete, successDelete, dispatch]);
 
   return (
     <div>
@@ -125,12 +155,16 @@ const SettingCategory = () => {
                   ) : (
                     <i className="bi bi-caret-right"></i>
                   )}{" "}
-                  {cat.name}{" "}
+                  {cat.name} ({cat.subcategories.length})
                 </span>
-                <span>({cat.subcategories.length})</span>
               </div>
               <div className="d-flex align-items-center">
-                <Button variant="primary" size="sm" className="me-2">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => handleAddSubClick(cat.id)}
+                >
                   <i className="bi bi-plus"></i>
                 </Button>
                 <MyButtonUpdate />
@@ -190,6 +224,35 @@ const SettingCategory = () => {
                   </div>
                 </div>
               ))}
+
+              {addingCatId === cat.id && (
+                <div
+                  className="d-flex align-items-center gap-2 mt-2"
+                  style={{ paddingLeft: "0px" }}
+                >
+                  <input
+                    className="form-control"
+                    value={newSubName}
+                    onChange={(e) => setNewSubName(e.target.value)}
+                    style={{ height: "30px", width: "250px" }}
+                    placeholder="Tên danh mục con mới"
+                  />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleAddCancel}
+                  >
+                    Huỷ
+                  </Button>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => handleAddSubSave(cat.id)}
+                  >
+                    Lưu
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
