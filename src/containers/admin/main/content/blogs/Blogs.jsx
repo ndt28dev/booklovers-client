@@ -5,22 +5,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { Badge, Col, Form, Image } from "react-bootstrap";
 import MyButtonUpdate from "../../../../../components/button/MyButtonUpdate";
 import MyButtonDelete from "../../../../../components/button/MyButtonDelete";
-import { fetchAllUser } from "../../../../../redux/slices/userSlice";
 import { formatDate } from "../../../../../utils/format";
 import MyDataTable from "../../../../../components/mytable/MyDataTable";
-import MyButtonImport from "../../../../../components/button/MyButtonImport";
 import MyButtonExport from "../../../../../components/button/MyButtonExport";
 import API_URL from "../../../../../config/api";
 import { fetchAllBlog } from "../../../../../redux/slices/blogSlice";
 import ExportBlogModal from "./crud/ExportBlogModal";
 import CreateUpdateBlogModal from "./crud/CreateUpdateBlogModal";
 import DeleteBlogModal from "./crud/DeleteBlogModal";
+import Select from "react-select";
+
+const featuredOptions = [
+  { value: "", label: "Tất cả" },
+  { value: "1", label: "Nổi bật" },
+  { value: "0", label: "Không nổi bật" },
+];
 
 const Blogs = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
-  const [isOpenImport, setIsOpenImport] = useState(false);
   const [isOpenExport, setIsOpenExport] = useState(false);
   const [isCheck, setIsCheck] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
@@ -69,10 +73,6 @@ const Blogs = () => {
   const handleDelete = (dataSelected) => {
     setIsOpenDelete(true);
     setDataSelected(dataSelected);
-  };
-
-  const handleImport = () => {
-    setIsOpenImport(true);
   };
 
   const handleExport = () => {
@@ -158,18 +158,25 @@ const Blogs = () => {
             <MyButtonExport onClick={handleExport} />
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
-            <Form.Select
-              value={featured}
-              onChange={(e) => {
-                setFeatured(e.target.value);
+            <Select
+              value={featuredOptions.find(
+                (option) => option.value === featured
+              )}
+              onChange={(selectedOption) => {
+                setFeatured(selectedOption.value);
                 setCurrentPage(1);
               }}
-              style={{ width: "150px", height: "38px" }}
-            >
-              <option value="">Tất cả</option>
-              <option value="1">Nổi bật</option>
-              <option value="0">Không nổi bật</option>
-            </Form.Select>
+              options={featuredOptions}
+              isClearable={false}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  minHeight: 38,
+                  width: 150,
+                }),
+                menu: (provided) => ({ ...provided, zIndex: 9999 }),
+              }}
+            />
 
             <div className="d-flex align-items-center">
               <Form.Label className="mb-0 me-2 text-nowrap">
