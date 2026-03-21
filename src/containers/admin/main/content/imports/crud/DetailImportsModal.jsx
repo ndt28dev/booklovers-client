@@ -11,7 +11,7 @@ const DetailImportsModal = ({ isOpen, onClose, dataSelected }) => {
     if (!printRef.current) return;
 
     const logoUrl = `${API_URL}/logo/logo-1.webp`;
-    const printWindow = window.open("", "_blank", "width=900,height=700");
+    const printWindow = window.open("", "_blank"); // mở tab mới
     printWindow.document.write(`
       <html>
         <head>

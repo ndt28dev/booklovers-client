@@ -13,13 +13,12 @@ import CreateUpdateImportsModal from "./crud/CreateUpdateImportsModal";
 import Supplier from "./supplier/Supplier";
 import MyButtonPrint from "../../../../../components/button/MyButtonPrint";
 import DetailImportsModal from "./crud/DetailImportsModal";
-import PrintImportsModal from "./crud/PrintImportsModal";
+import API_URL from "../../../../../config/api";
 
 const Imports = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
-  const [isOpenPrint, setIsOpenPrint] = useState(false);
   const [isOpenSupplier, setIsOpenSupplier] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
 
@@ -56,8 +55,86 @@ const Imports = () => {
   };
 
   const handlePrint = (dataSelected) => {
-    setIsOpenPrint(true);
-    setDataSelected(dataSelected);
+    if (!dataSelected) return;
+
+    const logoUrl = `${API_URL}/logo/logo-1.webp`;
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Phieu nhap hang #${dataSelected.id}</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .invoice-header { text-align: center; margin-bottom: 30px; }
+            .invoice-header h2 { margin-bottom: 0; }
+            .invoice-header p { margin: 0; }
+            .table th, .table td { vertical-align: middle !important; }
+            .total-row { font-weight: bold; font-size: 1.1rem; }
+            .footer { margin-top: 50px; text-align: right; font-size: 0.9rem; }
+            .logo { width: 120px; height: auto; margin-bottom: 15px; }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-header">
+            <img class="logo" src="${logoUrl}" alt="Logo" />
+            <h2>PHIẾU NHẬP HÀNG</h2>
+            <p>Mã phiếu: #${dataSelected.id}</p>
+            <p>Ngày: ${formatDate(dataSelected.created_at)}</p>
+            <p>Nhà cung cấp: ${dataSelected.supplier.name}</p>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="text-center">STT</th>
+                <th>Sản phẩm</th>
+                <th class="text-center">Số lượng</th>
+                <th class="text-center">Đơn giá</th>
+                <th class="text-center">Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${
+                dataSelected.items && dataSelected.items.length > 0
+                  ? dataSelected.items
+                      .map(
+                        (item, index) => `
+                        <tr>
+                          <td class="text-center">${index + 1}</td>
+                          <td>${item.book_name || item.book_id}</td>
+                          <td class="text-center">${item.quantity}</td>
+                          <td class="text-center">${Number(
+                            item.price
+                          ).toLocaleString("vi-VN")}</td>
+                          <td class="text-center">${(
+                            Number(item.quantity) * Number(item.price)
+                          ).toLocaleString("vi-VN")}</td>
+                        </tr>
+                      `
+                      )
+                      .join("")
+                  : `<tr><td colspan="5" class="text-center">Không có sản phẩm</td></tr>`
+              }
+              <tr class="total-row">
+                <td colspan="4" class="text-end">Tổng tiền:</td>
+                <td class="text-center">${(
+                  Number(dataSelected.total_amount) || 0
+                ).toLocaleString("vi-VN")} VNĐ</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="footer">
+            <p>Người lập phiếu: ____________________</p>
+            <p>Người nhận: ____________________</p>
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
   };
 
   const handleSupplier = () => {
@@ -108,13 +185,6 @@ const Imports = () => {
           dataSelected={dataSelected}
         />
       )}
-      {isOpenPrint && (
-        <PrintImportsModal
-          isOpen={isOpenPrint}
-          onClose={() => setIsOpenPrint(false)}
-          dataSelected={dataSelected}
-        />
-      )}
       {isOpenSupplier && (
         <Supplier
           isOpen={isOpenSupplier}
@@ -126,40 +196,10 @@ const Imports = () => {
         <div className="d-flex align-items-center justify-content-between mb-2">
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
-            {/* <MyButtonImport onClick={handleImport} /> */}
-            {/* <MyButtonExport onClick={handleExport} /> */}
           </Col>
           <Button variant="info" onClick={handleSupplier} size="sm">
             Quản lý nhà cung cấp
           </Button>
-          {/* <div className="d-flex align-items-center" style={{ gap: "20px" }}>
-              <Form.Select
-                value={discountType}
-                onChange={(e) => {
-                  setDiscountType(e.target.value);
-                  setCurrentPage(1);
-                }}
-                style={{ width: "170px", height: "38px" }}
-              >
-                <option value="">Tất cả loại</option>
-                <option value="percent">Phần trăm (%)</option>
-                <option value="amount">Số tiền (VNĐ)</option>
-              </Form.Select>
-    
-              <div className="d-flex align-items-center">
-                <Form.Label className="mb-0 me-2 text-nowrap">Tìm kiếm</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Nhập code hoặc mô tả..."
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  style={{ width: "220px" }}
-                />
-              </div>
-            </div> */}
         </div>
         <div style={{ minHeight: "722px" }}>
           <MyDataTable
