@@ -185,9 +185,8 @@ const CreateUpdateBlogModal = ({
           <Col md={6}>
             <Row>
               <Col md={12}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Tiêu đề</Form.Label>
-
+                <Form.Group className="mb-2">
+                  <Form.Label className="mb-0">Tiêu đề</Form.Label>
                   <Form.Control
                     type="text"
                     name="title"
@@ -203,8 +202,8 @@ const CreateUpdateBlogModal = ({
               </Col>
 
               <Col md={5}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Ngày đăng</Form.Label>
+                <Form.Group className="mb-2">
+                  <Form.Label className="mb-0">Ngày đăng</Form.Label>
 
                   <Form.Control
                     type="date"
@@ -220,8 +219,8 @@ const CreateUpdateBlogModal = ({
               </Col>
 
               <Col md={7}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Tác giả</Form.Label>
+                <Form.Group className="mb-2">
+                  <Form.Label className="mb-0">Tác giả</Form.Label>
 
                   <Form.Control
                     type="text"
@@ -243,7 +242,7 @@ const CreateUpdateBlogModal = ({
             <Form.Group className="mb-3">
               <Row className="align-items-start">
                 <Col md={3}>
-                  <Form.Label>Ảnh bài viết</Form.Label>
+                  <Form.Label className="mb-0">Ảnh bài viết</Form.Label>
 
                   <Form.Label
                     htmlFor="upload-image"
@@ -300,7 +299,9 @@ const CreateUpdateBlogModal = ({
 
           <Col md={12}>
             <div className="mb-3">
-              <label style={{ marginBottom: "5px" }}>Mô tả</label>
+              <label className="mb-0" style={{ marginBottom: "5px" }}>
+                Mô tả
+              </label>
               <br />
 
               <label className="text-muted" style={{ marginBottom: "5px" }}>
