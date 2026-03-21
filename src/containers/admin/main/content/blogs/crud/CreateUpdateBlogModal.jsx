@@ -193,6 +193,7 @@ const CreateUpdateBlogModal = ({
                     value={formData.title}
                     onChange={handleChange}
                     placeholder="Nhập tiêu đề bài viết"
+                    isInvalid={errors.title}
                   />
 
                   {errors.title && (
@@ -210,6 +211,7 @@ const CreateUpdateBlogModal = ({
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
+                    isInvalid={errors.date}
                   />
 
                   {errors.date && (
@@ -228,6 +230,7 @@ const CreateUpdateBlogModal = ({
                     value={formData.author}
                     onChange={handleChange}
                     placeholder="Nhập tên tác giả"
+                    isInvalid={errors.author}
                   />
 
                   {errors.author && (
