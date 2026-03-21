@@ -156,11 +156,11 @@ const DetailOrderModal = ({ show, handleClose, order }) => {
         )}
 
         <div className="d-flex justify-content-end gap-2">
-          <Button variant="primary" onClick={() => window.print()}>
+          <Button variant="primary" onClick={() => window.print()} size="sm">
             <i class="bi bi-printer me-1"></i>
             In
           </Button>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose} size="sm">
             Đóng
           </Button>
         </div>
