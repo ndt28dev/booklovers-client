@@ -54,6 +54,7 @@ export const updateOrderStatus = createAsyncThunk(
 const initialState = {
   listOrders: {
     list: [],
+    pagination: {},
     loading: false,
     error: null,
   },
@@ -82,10 +83,13 @@ const orderSlice = createSlice({
         state.listOrders.loading = true;
         state.listOrders.error = null;
       })
+
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.listOrders.loading = false;
-        state.listOrders.list = action.payload;
+        state.listOrders.list = action.payload.data;
+        state.listOrders.pagination = action.payload.pagination;
       })
+
       .addCase(fetchOrders.rejected, (state, action) => {
         state.listOrders.loading = false;
         state.listOrders.error = action.payload;
