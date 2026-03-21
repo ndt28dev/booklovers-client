@@ -272,7 +272,7 @@ const CreateUpdatePromotionModal = ({
         <Row>
           <Col md={6}>
             <Form.Group>
-              <Form.Label className="mb-0">Số lượt dùng</Form.Label>
+              <Form.Label className="mb-0">Giới hạn lượt sử dụng</Form.Label>
               <Form.Control
                 type="number"
                 name="usage_limit"
