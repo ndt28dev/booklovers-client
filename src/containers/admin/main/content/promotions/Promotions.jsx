@@ -14,6 +14,13 @@ import ExportPromotionModal from "./crud/ExportPromotionModal";
 import DeletePromotionModal from "./crud/DeletePromotionModal";
 import MyButtonImport from "../../../../../components/button/MyButtonImport";
 import ImportPromotionModal from "./crud/ImportPromotionModal";
+import Select from "react-select";
+
+const discountOptions = [
+  { value: "", label: "Tất cả loại" },
+  { value: "percent", label: "Phần trăm (%)" },
+  { value: "amount", label: "Số tiền (VNĐ)" },
+];
 
 const Promotions = () => {
   const dispatch = useDispatch();
@@ -175,18 +182,25 @@ const Promotions = () => {
             <MyButtonExport onClick={handleExport} />
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
-            <Form.Select
-              value={discountType}
-              onChange={(e) => {
-                setDiscountType(e.target.value);
+            <Select
+              value={discountOptions.find(
+                (option) => option.value === discountType
+              )}
+              onChange={(selectedOption) => {
+                setDiscountType(selectedOption.value);
                 setCurrentPage(1);
               }}
-              style={{ width: "170px", height: "38px" }}
-            >
-              <option value="">Tất cả loại</option>
-              <option value="percent">Phần trăm (%)</option>
-              <option value="amount">Số tiền (VNĐ)</option>
-            </Form.Select>
+              options={discountOptions}
+              isClearable={false}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  minHeight: 38,
+                  width: 170,
+                }),
+                menu: (provided) => ({ ...provided, zIndex: 9999 }),
+              }}
+            />
 
             <div className="d-flex align-items-center">
               <Form.Label className="mb-0 me-2 text-nowrap">

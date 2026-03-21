@@ -14,7 +14,6 @@ import API_URL from "../../../../../../config/api";
 import Select from "react-select";
 
 const genderOptions = [
-  { value: "", label: "Chọn giới tính" },
   { value: "MALE", label: "Nam" },
   { value: "FEMALE", label: "Nữ" },
 ];
@@ -52,7 +51,7 @@ const CreateUpdateUserModal = ({
     avatarFile: null,
     avatarPreview: `${API_URL}/avatar/default.jpg`,
     birthday: "",
-    gender: "",
+    gender: "MALE",
     phone: "",
     password: "123456",
   });
