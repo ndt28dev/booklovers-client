@@ -10,6 +10,12 @@ import {
   updatePromotion,
 } from "../../../../../../redux/slices/promotionSlice";
 import { toast } from "react-toastify";
+import Select from "react-select";
+
+const discountTypeOptions = [
+  { value: "percent", label: "Phần trăm (%)" },
+  { value: "fixed", label: "Số tiền" },
+];
 
 const CreateUpdatePromotionModal = ({
   isOpen,
@@ -160,26 +166,25 @@ const CreateUpdatePromotionModal = ({
   return (
     <MyModal show={isOpen} handleClose={onClose} title={title} size="md">
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Mã khuyến mãi</Form.Label>
+        <Form.Group className="mb-2">
+          <Form.Label className="mb-0">Mã khuyến mãi</Form.Label>
           <Form.Control
             type="text"
             name="code"
             value={formData.code}
             onChange={handleChange}
             isInvalid={!!errors.code}
-            size="sm"
           />
           <Form.Control.Feedback type="invalid">
             {errors.code}
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Mô tả</Form.Label>
+        <Form.Group className="mb-2">
+          <Form.Label className="mb-0">Mô tả</Form.Label>
           <Form.Control
             as="textarea"
-            rows={3}
+            rows={2}
             name="description"
             value={formData.description}
             onChange={handleChange}
@@ -188,22 +193,34 @@ const CreateUpdatePromotionModal = ({
 
         <Row>
           <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Loại giảm</Form.Label>
-              <Form.Select
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">Loại giảm</Form.Label>
+              <Select
                 name="discount_type"
-                value={formData.discount_type}
-                onChange={handleChange}
-              >
-                <option value="percent">Phần trăm (%)</option>
-                <option value="fixed">Số tiền</option>
-              </Form.Select>
+                value={discountTypeOptions.find(
+                  (option) => option.value === formData.discount_type
+                )}
+                onChange={(selectedOption) => {
+                  handleChange({
+                    target: {
+                      name: "discount_type",
+                      value: selectedOption.value,
+                    },
+                  });
+                }}
+                options={discountTypeOptions}
+                isClearable={false}
+                styles={{
+                  control: (provided) => ({ ...provided, minHeight: 38 }),
+                  menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                }}
+              />
             </Form.Group>
           </Col>
 
           <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Giá trị giảm</Form.Label>
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">Giá trị giảm</Form.Label>
               <Form.Control
                 type="number"
                 name="discount_value"
@@ -220,36 +237,8 @@ const CreateUpdatePromotionModal = ({
 
         <Row>
           <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Số lượt dùng</Form.Label>
-              <Form.Control
-                type="number"
-                name="usage_limit"
-                value={formData.usage_limit}
-                onChange={handleChange}
-                isInvalid={!!errors.usage_limit}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.usage_limit}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Col>
-
-          <Col md={6} className="d-flex align-items-center">
-            <Form.Check
-              type="checkbox"
-              label="Đang hoạt động"
-              name="is_active"
-              checked={formData.is_active}
-              onChange={handleChange}
-            />
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Ngày bắt đầu</Form.Label>
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">Ngày bắt đầu</Form.Label>
               <Form.Control
                 type="datetime-local"
                 name="start_date"
@@ -264,8 +253,8 @@ const CreateUpdatePromotionModal = ({
           </Col>
 
           <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Ngày kết thúc</Form.Label>
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">Ngày kết thúc</Form.Label>
               <Form.Control
                 type="datetime-local"
                 name="end_date"
@@ -280,7 +269,38 @@ const CreateUpdatePromotionModal = ({
           </Col>
         </Row>
 
-        <div className="d-flex justify-content-end gap-2">
+        <Row>
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label className="mb-0">Số lượt dùng</Form.Label>
+              <Form.Control
+                type="number"
+                name="usage_limit"
+                value={formData.usage_limit}
+                onChange={handleChange}
+                isInvalid={!!errors.usage_limit}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.usage_limit}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
+          <Col md={6} className="d-flex">
+            <Form.Group>
+              <Form.Label className="mb-0">Trạng thái</Form.Label>
+              <Form.Check
+                type="checkbox"
+                label="Đang hoạt động"
+                name="is_active"
+                checked={formData.is_active}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <div className="d-flex justify-content-end gap-2 mt-2 ">
           <Button variant="secondary" onClick={onClose} size="sm">
             Hủy
           </Button>
