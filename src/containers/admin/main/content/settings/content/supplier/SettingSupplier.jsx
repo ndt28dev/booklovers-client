@@ -64,7 +64,7 @@ const SettingSupplier = () => {
     { title: "Email", style: { width: "20%" } },
     { title: "SĐT", style: { width: "10%", textAlign: "center" } },
     { title: "Địa chỉ", style: { width: "30%" } },
-    { title: "Thao tác", style: { width: "10%", textAlign: "center" } },
+    { title: "Thao tác", style: { width: "12%", textAlign: "center" } },
   ];
 
   const renderRow = (supplier, index) => (
