@@ -14,6 +14,7 @@ import orderSliceAdmin from "./slices/admin/orderSlice";
 import promotionSlice from "./slices/promotionSlice";
 import supplierSlice from "./slices/supplierSlice";
 import importsSlice from "./slices/importSlice";
+import subcategorySlice from "./slices/subcategorySlice";
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ export const store = configureStore({
     cart: cartSlice,
     order: orderSlice,
     category: categorySlice,
+    subcategory: subcategorySlice,
     vnpay: vnpaySlice,
     adminUser: adminUserSlice,
     statistics: statisticSlice,
