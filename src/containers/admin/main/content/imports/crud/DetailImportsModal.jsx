@@ -148,7 +148,8 @@ const DetailImportsModal = ({ isOpen, onClose, dataSelected }) => {
         </Table>
         <p className="text-end mb-2">
           <strong>Tổng tiền:</strong>{" "}
-          {(Number(dataSelected.total_amount) || 0).toLocaleString("vi-VN")} VNĐ
+          {(Number(dataSelected.total_amount) || 0).toLocaleString("vi-VN")}
+          (VNĐ)
         </p>
       </div>
       <div className="text-end">
