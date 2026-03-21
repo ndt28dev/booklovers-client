@@ -157,7 +157,7 @@ const Imports = () => {
       </td>
       <td className="align-middle">{imports.supplier.name}</td>
       <td className="align-middle text-center">
-        {imports.total_amount.toLocaleString("vi-VN")} ₫
+        {imports.total_amount.toLocaleString("vi-VN")}
       </td>
       <td className="align-middle text-center">
         {formatDate(imports.created_at)}
@@ -197,7 +197,7 @@ const Imports = () => {
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
           </Col>
-          <Button variant="info" onClick={handleSupplier} size="sm">
+          <Button variant="dark" onClick={handleSupplier} size="sm">
             Quản lý nhà cung cấp
           </Button>
         </div>

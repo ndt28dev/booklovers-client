@@ -17,7 +17,7 @@ import { formatDate } from "../../../../../../utils/format";
 import MyButtonEye from "../../../../../../components/button/MyButtonEye";
 import MyButtonUpdate from "../../../../../../components/button/MyButtonUpdate";
 import MyButtonDelete from "../../../../../../components/button/MyButtonDelete";
-import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const Supplier = ({ isOpen, onClose }) => {
@@ -244,55 +244,69 @@ const Supplier = ({ isOpen, onClose }) => {
         <div className="mb-3">
           <Row>
             <Col md={6}>
-              <label>Tên nhà cung cấp</label>
-              <input
-                type="text"
-                className={`form-control ${errors.name ? "is-invalid" : ""}`}
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-              />
-              {errors.name && <div className="text-danger">{errors.name}</div>}
+              <Form.Group>
+                <Form.Label>Tên nhà cung cấp</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  isInvalid={!!errors.name}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.name}
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
+
             <Col md={6}>
-              <label>Email</label>
-              <input
-                type="email"
-                className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-              />
-              {errors.email && (
-                <div className="text-danger">{errors.email}</div>
-              )}
+              <Form.Group>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col md={6}>
-              <label>Số điện thoại</label>
-              <input
-                type="text"
-                className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-              />
-              {errors.phone && (
-                <div className="text-danger">{errors.phone}</div>
-              )}
+              <Form.Group>
+                <Form.Label>Số điện thoại</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  isInvalid={!!errors.phone}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.phone}
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
+
             <Col md={6}>
-              <label>Địa chỉ</label>
-              <input
-                className={`form-control ${errors.address ? "is-invalid" : ""}`}
-                name="address"
-                value={form.address}
-                onChange={handleChange}
-              />
-              {errors.address && (
-                <div className="text-danger">{errors.address}</div>
-              )}
+              <Form.Group>
+                <Form.Label>Địa chỉ</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="address"
+                  value={form.address}
+                  onChange={handleChange}
+                  isInvalid={!!errors.address}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.address}
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
           </Row>
           <div className="text-end  mt-2">

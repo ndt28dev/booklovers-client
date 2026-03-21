@@ -168,6 +168,7 @@ const CreateUpdatePromotionModal = ({
             value={formData.code}
             onChange={handleChange}
             isInvalid={!!errors.code}
+            size="sm"
           />
           <Form.Control.Feedback type="invalid">
             {errors.code}

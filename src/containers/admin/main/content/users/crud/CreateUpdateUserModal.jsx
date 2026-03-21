@@ -11,6 +11,18 @@ import {
 } from "../../../../../../redux/slices/userSlice";
 import { toast } from "react-toastify";
 import API_URL from "../../../../../../config/api";
+import Select from "react-select";
+
+const genderOptions = [
+  { value: "", label: "Chọn giới tính" },
+  { value: "MALE", label: "Nam" },
+  { value: "FEMALE", label: "Nữ" },
+];
+
+const roleOptions = [
+  { value: "user", label: "User" },
+  { value: "admin", label: "Admin" },
+];
 
 const CreateUpdateUserModal = ({
   isOpen,
@@ -167,36 +179,39 @@ const CreateUpdateUserModal = ({
       <Form>
         <Row className="align-items-center">
           <Col md={8}>
-            <Form.Group>
-              <Form.Label>Họ và tên</Form.Label>
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">Họ và tên</Form.Label>
               <Form.Control
                 name="fullname"
                 value={form.fullname}
                 onChange={handleChange}
+                isInvalid={!!errors.fullname}
               />
               {errors.fullname && (
                 <small className="text-danger">{errors.fullname}</small>
               )}
             </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Email</Form.Label>
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">Email</Form.Label>
               <Form.Control
                 name="email"
                 value={form.email}
                 onChange={handleChange}
+                isInvalid={!!errors.email}
               />
               {errors.email && (
                 <small className="text-danger">{errors.email}</small>
               )}
             </Form.Group>
 
-            <Form.Group>
-              <Form.Label>SĐT</Form.Label>
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">SĐT</Form.Label>
               <Form.Control
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
+                isInvalid={!!errors.phone}
               />
               {errors.phone && (
                 <small className="text-danger">{errors.phone}</small>
@@ -248,11 +263,12 @@ const CreateUpdateUserModal = ({
         <Row className="mt-2">
           <Col md={4}>
             <Form.Group>
-              <Form.Label>Ngày sinh</Form.Label>
+              <Form.Label className="mb-0">Ngày sinh</Form.Label>
               <Form.Control
                 type="date"
                 name="birthday"
                 value={form.birthday}
+                size="md"
                 onChange={handleChange}
               />
             </Form.Group>
@@ -260,29 +276,43 @@ const CreateUpdateUserModal = ({
 
           <Col md={4}>
             <Form.Group>
-              <Form.Label>Giới tính</Form.Label>
-              <Form.Select
-                name="gender"
-                value={form.gender}
-                onChange={handleChange}
-              >
-                <option value="">Chọn giới tính</option>
-                <option value="MALE">Nam</option>
-                <option value="FEMALE">Nữ</option>
-              </Form.Select>
+              <Form.Label className="mb-0">Giới tính</Form.Label>
+              <Select
+                value={genderOptions.find(
+                  (option) => option.value === form.gender
+                )}
+                onChange={(selectedOption) =>
+                  handleChange({
+                    target: { name: "gender", value: selectedOption.value },
+                  })
+                }
+                options={genderOptions}
+                isClearable={false}
+                styles={{
+                  control: (provided) => ({ ...provided, minHeight: 38 }),
+                  menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                }}
+              />
             </Form.Group>
           </Col>
+
           <Col md={4}>
             <Form.Group>
-              <Form.Label>Quyền</Form.Label>
-              <Form.Select
-                name="role"
-                value={form.role}
-                onChange={handleChange}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </Form.Select>
+              <Form.Label className="mb-0">Quyền</Form.Label>
+              <Select
+                value={roleOptions.find((option) => option.value === form.role)}
+                onChange={(selectedOption) =>
+                  handleChange({
+                    target: { name: "role", value: selectedOption.value },
+                  })
+                }
+                options={roleOptions}
+                isClearable={false}
+                styles={{
+                  control: (provided) => ({ ...provided, minHeight: 38 }),
+                  menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                }}
+              />
             </Form.Group>
           </Col>
         </Row>

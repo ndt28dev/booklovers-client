@@ -14,10 +14,17 @@ import { formatDate } from "../../../../../utils/format";
 import MyButtonImport from "../../../../../components/button/MyButtonImport";
 import MyButtonExport from "../../../../../components/button/MyButtonExport";
 import DeleteUserModal from "./crud/DeleteUserModal";
-
+import Select from "react-select";
 import ImportUserModal from "./crud/ImportUserModal";
 import ExportUserModal from "./crud/ExportUserModal";
 import MyLayoutAdmin from "../../../../../components/mylayout/MyLayoutAdmin";
+
+// Tạo options
+const roleOptions = [
+  { value: "", label: "Tất cả" },
+  { value: "admin", label: "Admin" },
+  { value: "user", label: "User" },
+];
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -176,18 +183,22 @@ const Users = () => {
             <MyButtonExport onClick={handleExport} />
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
-            <Form.Select
-              value={role}
-              onChange={(e) => {
-                setRole(e.target.value);
+            <Select
+              value={roleOptions.find((option) => option.value === role)}
+              onChange={(selectedOption) => {
+                setRole(selectedOption.value);
                 setCurrentPage(1);
               }}
-              style={{ width: "110px", height: "38px" }}
-            >
-              <option value="">Tất cả</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </Form.Select>
+              options={roleOptions}
+              isClearable={false}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: 110,
+                  minHeight: 36,
+                }),
+              }}
+            />
 
             <div className="d-flex align-items-center">
               <Form.Label className="mb-0 me-2 text-nowrap">
