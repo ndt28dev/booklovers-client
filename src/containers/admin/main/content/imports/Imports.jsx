@@ -11,11 +11,13 @@ import MyButtonImport from "../../../../../components/button/MyButtonImport";
 import MyButtonExport from "../../../../../components/button/MyButtonExport";
 import CreateUpdateImportsModal from "./crud/CreateUpdateImportsModal";
 import Supplier from "./supplier/Supplier";
+import MyButtonPrint from "../../../../../components/button/MyButtonPrint";
+import DetailImportsModal from "./crud/DetailImportsModal";
 
 const Imports = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenImport, setIsOpenImport] = useState(false);
+  const [isOpenDetail, setIsOpenDetail] = useState(false);
   const [isOpenExport, setIsOpenExport] = useState(false);
   const [isOpenSupplier, setIsOpenSupplier] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
@@ -47,8 +49,9 @@ const Imports = () => {
     setIsCheck(false);
   };
 
-  const handleImport = () => {
-    setIsOpenImport(true);
+  const handleDetail = (dataSelected) => {
+    setIsOpenDetail(true);
+    setDataSelected(dataSelected);
   };
 
   const handleExport = () => {
@@ -81,7 +84,8 @@ const Imports = () => {
         {formatDate(imports.created_at)}
       </td>
       <td className="text-center align-middle">
-        <MyButtonEye />
+        <MyButtonEye onClick={() => handleDetail(imports)} />
+        <MyButtonPrint />
       </td>
     </tr>
   );
@@ -93,6 +97,14 @@ const Imports = () => {
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           currentPage={currentPage}
+        />
+      )}
+      {isOpenDetail && (
+        <DetailImportsModal
+          isOpen={isOpenDetail}
+          onClose={() => setIsOpenDetail(false)}
+          currentPage={currentPage}
+          dataSelected={dataSelected}
         />
       )}
       {isOpenSupplier && (
@@ -107,9 +119,9 @@ const Imports = () => {
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
             {/* <MyButtonImport onClick={handleImport} /> */}
-            <MyButtonExport onClick={handleExport} />
+            {/* <MyButtonExport onClick={handleExport} /> */}
           </Col>
-          <Button variant="secondary" onClick={handleSupplier} size="sm">
+          <Button variant="info" onClick={handleSupplier} size="sm">
             Quản lý nhà cung cấp
           </Button>
           {/* <div className="d-flex align-items-center" style={{ gap: "20px" }}>

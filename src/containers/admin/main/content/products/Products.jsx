@@ -106,7 +106,7 @@ const Products = () => {
     { title: "Tên sản phẩm", style: { width: "20%" } },
     { title: "Danh mục", style: { width: "12%" } },
     { title: "Thể loại", style: { width: "20%" } },
-    { title: "Giá bán", style: { width: "10%" } },
+    { title: "Giá bán", style: { width: "10%", textAlign: "center" } },
     { title: "% giảm", style: { width: "7%", textAlign: "center" } },
     { title: "SL", style: { width: "5%", textAlign: "center" } },
     { title: "SLĐB", style: { width: "5%", textAlign: "center" } },
@@ -134,7 +134,9 @@ const Products = () => {
       <td className="align-middle">{book.name}</td>
       <td className="align-middle">{book.category.name}</td>
       <td className="align-middle">{book.subcategory.name}</td>
-      <td className="align-middle">{book.price.toLocaleString("vi-VN")} ₫</td>
+      <td className="align-middle text-center">
+        {book.price.toLocaleString("vi-VN")}
+      </td>
       <td className="align-middle text-center">{book.discount}</td>
       <td className="align-middle text-center">{book.quantity}</td>
       <td className="align-middle text-center">{book.sold}</td>
