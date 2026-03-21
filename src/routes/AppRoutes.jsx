@@ -36,6 +36,7 @@ import Contacts from "../containers/admin/main/content/contacts/Contacts";
 import Promotions from "../containers/admin/main/content/promotions/Promotions";
 import NotFound from "../containers/notfound/NotFound";
 import Imports from "../containers/admin/main/content/imports/Imports";
+import Message from "../containers/admin/main/content/message/Message";
 
 const AppRoutes = () => {
   return (
@@ -101,6 +102,7 @@ const AppRoutes = () => {
         <Route path="bai-viet" element={<Blogs />} />
         <Route path="khuyen-mai" element={<Promotions />} />
         <Route path="phan-hoi" element={<Contacts />} />
+        <Route path="tin-nhan" element={<Message />} />
         <Route path="cai-dat" element={<Settings />} />
       </Route>
 
