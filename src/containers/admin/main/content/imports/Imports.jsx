@@ -74,7 +74,9 @@ const Imports = () => {
         {(page - 1) * limit + index + 1}
       </td>
       <td className="align-middle">{imports.supplier.name}</td>
-      <td className="align-middle text-center">{imports.total_amount}</td>
+      <td className="align-middle text-center">
+        {imports.total_amount.toLocaleString("vi-VN")} ₫
+      </td>
       <td className="align-middle text-center">
         {formatDate(imports.created_at)}
       </td>

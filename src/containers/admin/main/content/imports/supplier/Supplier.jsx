@@ -31,6 +31,30 @@ const Supplier = ({ isOpen, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = pagination?.totalPages || 0;
 
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  const { loading, success, error } = useSelector(
+    (state) => state.supplier.createSupplier
+  );
+
+  const {
+    loading: isLoadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = useSelector((state) => state.supplier.updateSupplier);
+
+  const {
+    loading: isLoadingDelete,
+    error: errorDelete,
+    success: successDelete,
+  } = useSelector((state) => state.supplier.deleteSupplier);
+
   useEffect(() => {
     dispatch(
       fetchSuppliers({
@@ -48,10 +72,10 @@ const Supplier = ({ isOpen, onClose }) => {
 
   const columns = [
     { title: "STT", style: { width: "3%", textAlign: "center" } },
-    { title: "Nhà cung cấp", style: { width: "25%" } },
+    { title: "Nhà cung cấp", style: { width: "20%" } },
     { title: "Email", style: { width: "20%" } },
     { title: "SĐT", style: { width: "10%", textAlign: "center" } },
-    { title: "Địa chỉ", style: { width: "25%" } },
+    { title: "Địa chỉ", style: { width: "30%" } },
     { title: "Thao tác", style: { width: "10%", textAlign: "center" } },
   ];
 
@@ -89,29 +113,23 @@ const Supplier = ({ isOpen, onClose }) => {
     </tr>
   );
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-  });
-  const [errors, setErrors] = useState({});
+  const normalizePhone = (phone) => {
+    let p = phone.replace(/\s+/g, "");
 
-  const { loading, success, error } = useSelector(
-    (state) => state.supplier.createSupplier
-  );
+    if (p.startsWith("+84")) {
+      p = "0" + p.slice(3);
+    }
 
-  const {
-    loading: isLoadingUpdate,
-    error: errorUpdate,
-    success: successUpdate,
-  } = useSelector((state) => state.supplier.updateSupplier);
+    return p;
+  };
 
-  const {
-    loading: isLoadingDelete,
-    error: errorDelete,
-    success: successDelete,
-  } = useSelector((state) => state.supplier.deleteSupplier);
+  const validatePhone = (phone) => {
+    const normalized = normalizePhone(phone);
+
+    const regex = /^(03|05|07|08|09)\d{8}$/;
+
+    return regex.test(normalized);
+  };
 
   const validate = () => {
     const newErrors = {};
@@ -124,9 +142,14 @@ const Supplier = ({ isOpen, onClose }) => {
     }
     if (!form.phone) {
       newErrors.phone = "Vui lòng nhập số điện thoại";
-    } else if (!/^0\d{9}$/.test(form.phone)) {
-      newErrors.phone = "Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)";
+    } else if (!validatePhone(form.phone)) {
+      newErrors.phone =
+        "Số điện thoại không hợp lệ (VD: 0912345678 hoặc +84912345678)";
+    } else {
+      // nếu hợp lệ thì lưu dạng chuẩn luôn
+      form.phone = normalizePhone(form.phone);
     }
+
     if (!form.address) newErrors.address = "Vui lòng nhập địa chỉ";
 
     setErrors(newErrors);

@@ -106,7 +106,11 @@ const Promotions = () => {
         )}
         {promotion.discount_type === "amount" && <Badge bg="info">VNĐ</Badge>}
       </td>
-      <td className="align-middle text-right">{promotion.discount_value}</td>
+      <td className="align-middle text-center">
+        {promotion.discount_type === "percent" && promotion.discount_value}
+        {promotion.discount_type === "amount" &&
+          promotion.discount_value.toLocaleString("vi-VN")}
+      </td>
       <td className="align-middle text-center">
         {formatDate(promotion.start_date)}
       </td>{" "}

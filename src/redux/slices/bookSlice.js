@@ -52,6 +52,21 @@ export const fetchAllBook = createAsyncThunk(
   }
 );
 
+// GET ALL BOOKS (NO PAGING)
+export const getAllBooksNoPaging = createAsyncThunk(
+  "books/getAllNoPaging",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axios.get(`${API_URL}/api/books/all`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Lỗi khi lấy danh sách sách"
+      );
+    }
+  }
+);
+
 export const fetchBookById = createAsyncThunk(
   "book/fetchBookById",
   async (bookId, thunkAPI) => {
@@ -124,6 +139,10 @@ const initialState = {
     pagination: null,
     error: null,
   },
+  fetchBookAllNoPaging: {
+    listBookAllNoPaging: [],
+    error: null,
+  },
   bookDetail: {
     book: null,
     bookDetail: null,
@@ -184,6 +203,14 @@ const bookSlice = createSlice({
         state.fetchBook.listBook = [];
         state.fetchBook.pagination = null;
         state.fetchBook.error = action.payload;
+      })
+      .addCase(getAllBooksNoPaging.fulfilled, (state, action) => {
+        state.fetchBookAllNoPaging.listBookAllNoPaging = action.payload;
+        state.fetchBookAllNoPaging.error = null;
+      })
+      .addCase(getAllBooksNoPaging.rejected, (state, action) => {
+        state.fetchBookAllNoPaging.listBookAllNoPaging = [];
+        state.fetchBookAllNoPaging.error = action.payload;
       })
       .addCase(fetchBookById.fulfilled, (state, action) => {
         state.bookDetail.book = action.payload.book;
