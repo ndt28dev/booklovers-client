@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 import MyModal from "../../../../../../components/mymodal/MyModal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSuppliers } from "../../../../../../redux/slices/supplierSlice";
+import {
+  fetchSuppliers,
+  fetchSuppliersAll,
+} from "../../../../../../redux/slices/supplierSlice";
 import { createImport } from "../../../../../../redux/slices/importSlice";
+import { Form } from "react-bootstrap";
+import Select from "react-select";
 
 const CreateUpdateImportsModal = ({ isOpen, onClose, currentPage }) => {
   const dispatch = useDispatch();
 
-  const { data: suppliers } = useSelector((state) => state.supplier.suppliers);
+  const { data: suppliers } = useSelector(
+    (state) => state.supplier.suppliersAll
+  );
 
   // state
   const [supplierId, setSupplierId] = useState("");
@@ -19,9 +26,14 @@ const CreateUpdateImportsModal = ({ isOpen, onClose, currentPage }) => {
     price: "",
   });
 
+  const options = suppliers?.map((s) => ({
+    value: s.id,
+    label: s.name,
+  }));
+
   // load supplier
   useEffect(() => {
-    dispatch(fetchSuppliers());
+    dispatch(fetchSuppliersAll());
   }, []);
 
   // thêm item vào danh sách
@@ -70,19 +82,13 @@ const CreateUpdateImportsModal = ({ isOpen, onClose, currentPage }) => {
     >
       <div>
         <div className="mb-3">
-          <label>Nhà cung cấp</label>
-          <select
-            className="form-control"
-            value={supplierId}
-            onChange={(e) => setSupplierId(e.target.value)}
-          >
-            <option value="">-- Chọn nhà cung cấp --</option>
-            {suppliers?.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          <Form.Label>Nhà cung cấp</Form.Label>
+          <Select
+            options={options}
+            value={options.find((o) => o.value === supplierId)}
+            onChange={(selected) => setSupplierId(selected.value)}
+            placeholder="-- Chọn nhà cung cấp --"
+          />
         </div>
 
         {/* Thêm sản phẩm */}

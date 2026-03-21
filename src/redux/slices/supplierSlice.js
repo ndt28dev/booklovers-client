@@ -38,6 +38,20 @@ export const fetchSuppliers = createAsyncThunk(
   }
 );
 
+export const fetchSuppliersAll = createAsyncThunk(
+  "supplier/fetchSuppliersAll",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axios.get(`${API_URL}/api/suppliers/all`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi lấy tất cả nhà cung cấp"
+      );
+    }
+  }
+);
+
 //
 // ✅ UPDATE SUPPLIER
 //
@@ -77,6 +91,12 @@ export const deleteSupplier = createAsyncThunk(
 //
 const initialState = {
   suppliers: {
+    data: [],
+    loading: false,
+    error: null,
+  },
+
+  suppliersAll: {
     data: [],
     loading: false,
     error: null,
@@ -163,6 +183,20 @@ const supplierSlice = createSlice({
       .addCase(fetchSuppliers.rejected, (state, action) => {
         state.suppliers.loading = false;
         state.suppliers.error = action.payload;
+      })
+
+      // ================= FETCH ALL =================
+      .addCase(fetchSuppliersAll.pending, (state) => {
+        state.suppliersAll.loading = true;
+        state.suppliersAll.error = null;
+      })
+      .addCase(fetchSuppliersAll.fulfilled, (state, action) => {
+        state.suppliersAll.loading = false;
+        state.suppliersAll.data = action.payload.data;
+      })
+      .addCase(fetchSuppliersAll.rejected, (state, action) => {
+        state.suppliersAll.loading = false;
+        state.suppliersAll.error = action.payload;
       })
 
       // ================= UPDATE =================
