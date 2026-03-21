@@ -13,12 +13,13 @@ import CreateUpdateImportsModal from "./crud/CreateUpdateImportsModal";
 import Supplier from "./supplier/Supplier";
 import MyButtonPrint from "../../../../../components/button/MyButtonPrint";
 import DetailImportsModal from "./crud/DetailImportsModal";
+import PrintImportsModal from "./crud/PrintImportsModal";
 
 const Imports = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
-  const [isOpenExport, setIsOpenExport] = useState(false);
+  const [isOpenPrint, setIsOpenPrint] = useState(false);
   const [isOpenSupplier, setIsOpenSupplier] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
 
@@ -54,8 +55,9 @@ const Imports = () => {
     setDataSelected(dataSelected);
   };
 
-  const handleExport = () => {
-    setIsOpenExport(true);
+  const handlePrint = (dataSelected) => {
+    setIsOpenPrint(true);
+    setDataSelected(dataSelected);
   };
 
   const handleSupplier = () => {
@@ -85,7 +87,7 @@ const Imports = () => {
       </td>
       <td className="text-center align-middle">
         <MyButtonEye onClick={() => handleDetail(imports)} />
-        <MyButtonPrint />
+        <MyButtonPrint onClick={() => handlePrint(imports)} />
       </td>
     </tr>
   );
@@ -103,7 +105,13 @@ const Imports = () => {
         <DetailImportsModal
           isOpen={isOpenDetail}
           onClose={() => setIsOpenDetail(false)}
-          currentPage={currentPage}
+          dataSelected={dataSelected}
+        />
+      )}
+      {isOpenPrint && (
+        <PrintImportsModal
+          isOpen={isOpenPrint}
+          onClose={() => setIsOpenPrint(false)}
           dataSelected={dataSelected}
         />
       )}
