@@ -13,6 +13,12 @@ import {
   updateBook,
 } from "../../../../../../redux/slices/bookSlice";
 import { toast } from "react-toastify";
+import Select from "react-select";
+
+const coverTypeOptions = [
+  { value: "Bìa mềm", label: "Bìa mềm" },
+  { value: "Bìa cứng", label: "Bìa cứng" },
+];
 
 const CreateUpdateBookModal = ({
   isOpen,
@@ -53,7 +59,7 @@ const CreateUpdateBookModal = ({
     weight_gram: "",
     dimensions: "",
     page_count: "",
-    cover_type: "",
+    cover_type: "Bìa mềm",
 
     description: "",
 
@@ -266,6 +272,22 @@ const CreateUpdateBookModal = ({
     }
   }, [errorUpdate, successUpdate]);
 
+  const categoryOptions = [
+    { value: "", label: "Chọn danh mục" },
+    ...categoriesAll.map((cat) => ({
+      value: cat.id,
+      label: cat.name,
+    })),
+  ];
+
+  const subcategoryOptions = [
+    { value: "", label: "Chọn thể loại", isDisabled: true },
+    ...subcategories.map((sub) => ({
+      value: sub.id,
+      label: sub.name,
+    })),
+  ];
+
   return (
     <MyModal show={isOpen} handleClose={onClose} title={title} size="lg">
       <Form>
@@ -275,7 +297,7 @@ const CreateUpdateBookModal = ({
         >
           <Col md={12}>
             <Form.Group className="mb-2">
-              <Form.Label>Tên sách</Form.Label>
+              <Form.Label className="mb-0">Tên sách</Form.Label>
               <Form.Control
                 name="name"
                 value={form.name}
@@ -290,45 +312,68 @@ const CreateUpdateBookModal = ({
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-2">
-                  <Form.Label>Danh mục</Form.Label>
-                  <Form.Select
-                    name="category_id"
-                    value={form.category_id}
-                    onChange={handleChange}
-                    isInvalid={!!errors.category_id}
-                  >
-                    <option disabled value="">
-                      Chọn danh mục
-                    </option>
-
-                    {categoriesAll.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  <Form.Label className="mb-0">Danh mục</Form.Label>
+                  <Select
+                    value={categoryOptions.find(
+                      (o) => o.value === form.category_id
+                    )}
+                    onChange={(selected) =>
+                      handleChange({
+                        target: {
+                          name: "category_id",
+                          value: selected.value,
+                        },
+                      })
+                    }
+                    options={categoryOptions}
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        minHeight: 38,
+                        borderColor: errors.category_id
+                          ? "red"
+                          : provided.borderColor,
+                      }),
+                      menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                    }}
+                  />
+                  {errors.category_id && (
+                    <div className="text-danger">{errors.category_id}</div>
+                  )}
                 </Form.Group>
               </Col>
+
               <Col md={6}>
                 <Form.Group className="mb-2">
-                  <Form.Label>Thể loại</Form.Label>
-                  <Form.Select
-                    name="subcategory_id"
-                    value={form.subcategory_id}
-                    onChange={handleChange}
-                    isInvalid={!!errors.subcategory_id}
-                    disabled={!form.category_id}
-                  >
-                    <option disabled value="">
-                      Chọn danh thể loại
-                    </option>
-
-                    {subcategories.map((sub) => (
-                      <option key={sub.id} value={sub.id}>
-                        {sub.name}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  <Form.Label className="mb-0">Thể loại</Form.Label>
+                  <Select
+                    value={subcategoryOptions.find(
+                      (o) => o.value === form.subcategory_id
+                    )}
+                    onChange={(selected) =>
+                      handleChange({
+                        target: {
+                          name: "subcategory_id",
+                          value: selected.value,
+                        },
+                      })
+                    }
+                    options={subcategoryOptions}
+                    isDisabled={!form.category_id}
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        minHeight: 38,
+                        borderColor: errors.subcategory_id
+                          ? "red"
+                          : provided.borderColor,
+                      }),
+                      menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                    }}
+                  />
+                  {errors.subcategory_id && (
+                    <div className="text-danger">{errors.subcategory_id}</div>
+                  )}
                 </Form.Group>
               </Col>
             </Row>
@@ -336,7 +381,7 @@ const CreateUpdateBookModal = ({
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label>Giá</Form.Label>
+                  <Form.Label className="mb-0">Giá</Form.Label>
                   <Form.Control
                     type="number"
                     name="price"
@@ -352,7 +397,7 @@ const CreateUpdateBookModal = ({
 
               <Col>
                 <Form.Group>
-                  <Form.Label>Giảm giá (%)</Form.Label>
+                  <Form.Label className="mb-0">Giảm giá (%)</Form.Label>
                   <Form.Control
                     type="number"
                     name="discount"
@@ -366,7 +411,7 @@ const CreateUpdateBookModal = ({
         </Row>
         <Row className="mt-3 mb-3">
           <Col md={3} className="position-relative text-center">
-            <label style={{ marginBottom: "5px" }}>Ảnh đại diện</label>
+            <label style={{ marginBottom: "3px" }}>Ảnh đại diện</label>
             <Image
               src={
                 form.mainImagePreview?.startsWith("blob")
@@ -414,7 +459,7 @@ const CreateUpdateBookModal = ({
           </Col>
 
           <Col md={9}>
-            <label style={{ marginBottom: "5px" }}>Ảnh liên quan</label>
+            <label style={{ marginBottom: "3px" }}>Ảnh liên quan</label>
             <Col className="d-flex gap-2 flex-wrap">
               {form.subImages &&
                 form.subImages.map((img, index) => (
@@ -476,7 +521,7 @@ const CreateUpdateBookModal = ({
             </Col>
           </Col>
         </Row>
-        <label style={{ marginBottom: "5px" }}>Mô tả</label> <br />
+        <label>Mô tả</label> <br />
         <label style={{ marginBottom: "5px" }} className="text-muted">
           Soạn thảo thuận tiện hơn{" "}
           <a href="https://docs.google.com/" target="_blank">
@@ -511,7 +556,7 @@ const CreateUpdateBookModal = ({
             <Row className="d-flex align-items-center">
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Mã vạch</Form.Label>
+                  <Form.Label className="mb-0">Mã vạch</Form.Label>
                   <Form.Control
                     name="barcode"
                     value={form.barcode}
@@ -521,7 +566,7 @@ const CreateUpdateBookModal = ({
               </Col>
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Nhà cung cấp</Form.Label>
+                  <Form.Label className="mb-0">Nhà cung cấp</Form.Label>
                   <Form.Control
                     name="supplier_name"
                     value={form.supplier_name}
@@ -534,7 +579,7 @@ const CreateUpdateBookModal = ({
             <Row className="d-flex align-items-center">
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Tác giả</Form.Label>
+                  <Form.Label className="mb-0">Tác giả</Form.Label>
                   <Form.Control
                     name="authors"
                     value={form.authors}
@@ -544,7 +589,7 @@ const CreateUpdateBookModal = ({
               </Col>
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Nhà xuất bản</Form.Label>
+                  <Form.Label className="mb-0">Nhà xuất bản</Form.Label>
                   <Form.Control
                     name="publisher"
                     value={form.publisher}
@@ -557,7 +602,7 @@ const CreateUpdateBookModal = ({
             <Row>
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Năm xuất bản</Form.Label>
+                  <Form.Label className="mb-0">Năm xuất bản</Form.Label>
                   <Form.Control
                     name="published_year"
                     value={form.published_year}
@@ -568,7 +613,7 @@ const CreateUpdateBookModal = ({
 
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Ngôn ngữ</Form.Label>
+                  <Form.Label className="mb-0">Ngôn ngữ</Form.Label>
                   <Form.Control
                     name="language"
                     value={form.language}
@@ -581,7 +626,7 @@ const CreateUpdateBookModal = ({
             <Row>
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Cân nặng (g)</Form.Label>
+                  <Form.Label className="mb-0">Cân nặng (g)</Form.Label>
                   <Form.Control
                     name="weight_gram"
                     value={form.weight_gram}
@@ -592,7 +637,7 @@ const CreateUpdateBookModal = ({
 
               <Col>
                 <Form.Group className="mb-2">
-                  <Form.Label>Số trang</Form.Label>
+                  <Form.Label className="mb-0">Số trang</Form.Label>
                   <Form.Control
                     name="page_count"
                     value={form.page_count}
@@ -604,8 +649,8 @@ const CreateUpdateBookModal = ({
 
             <Row>
               <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Kích thước</Form.Label>
+                <Form.Group>
+                  <Form.Label className="mb-0">Kích thước</Form.Label>
                   <Form.Control
                     name="dimensions"
                     value={form.dimensions}
@@ -615,23 +660,37 @@ const CreateUpdateBookModal = ({
               </Col>
 
               <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Loại bìa</Form.Label>
-                  <Form.Select
-                    name="cover_type"
-                    value={form.cover_type}
-                    onChange={handleChange}
-                  >
-                    <option value="">Chọn loại bìa</option>
-                    <option value="Bìa mềm">Bìa mềm</option>
-                    <option value="Bìa cứng">Bìa cứng</option>
-                  </Form.Select>
+                <Form.Group>
+                  <Form.Label className="mb-0">Loại bìa</Form.Label>
+                  <Select
+                    value={coverTypeOptions.find(
+                      (o) => o.value === form.cover_type
+                    )}
+                    onChange={(selected) =>
+                      handleChange({
+                        target: {
+                          name: "cover_type",
+                          value: selected.value,
+                        },
+                      })
+                    }
+                    options={coverTypeOptions}
+                    placeholder="Chọn loại bìa"
+                    menuPlacement="top"
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        minHeight: 38,
+                      }),
+                      menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                    }}
+                  />
                 </Form.Group>
               </Col>
             </Row>
           </Col>
         </Row>
-        <Row className="mt-3">
+        <Row className="mt-2">
           <Col className="d-flex justify-content-end gap-2">
             <Button variant="secondary" size="sm" onClick={onClose}>
               Huỷ

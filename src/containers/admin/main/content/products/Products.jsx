@@ -15,6 +15,8 @@ import CreateUpdateBookModal from "./crud/CreateUpdateBookModal";
 import DeleteBookModal from "./crud/DeleteBookModal";
 import { fetchCategoriesWithSub } from "../../../../../redux/slices/categorySlice";
 import ExportBookModal from "./crud/ExportBookModal";
+import Select from "react-select";
+
 const Products = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
@@ -147,6 +149,22 @@ const Products = () => {
     </tr>
   );
 
+  const categoryOptions = [
+    { value: "", label: "Tất cả danh mục" },
+    ...categoriesAll.map((cat) => ({
+      value: cat.id,
+      label: cat.name,
+    })),
+  ];
+
+  const subcategoryOptions = [
+    { value: "", label: "Tất cả thể loại" },
+    ...subcategories.map((sub) => ({
+      value: sub.id,
+      label: sub.name,
+    })),
+  ];
+
   return (
     <>
       {isOpen && (
@@ -183,33 +201,38 @@ const Products = () => {
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
             <div className="d-flex align-items-center" style={{ gap: "10px" }}>
-              <Form.Select
-                value={categoryFilter}
-                onChange={handleCategoryChange}
-                style={{ width: "160px", height: "38px" }}
-              >
-                <option value="">Tất cả danh mục</option>
+              <Select
+                value={categoryOptions.find((o) => o.value === categoryFilter)}
+                onChange={(selected) => {
+                  handleCategoryChange({ target: { value: selected.value } });
+                }}
+                options={categoryOptions}
+                styles={{
+                  control: (provided) => ({
+                    ...provided,
+                    minHeight: 38,
+                    width: 220,
+                  }),
+                  menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                }}
+              />
 
-                {categoriesAll.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </Form.Select>
-              <Form.Select
-                value={subcategoryFilter}
-                onChange={(e) => setSubcategoryFilter(e.target.value)}
-                disabled={!categoryFilter}
-                style={{ width: "180px", height: "38px" }}
-              >
-                <option value="">Tất cả thể loại</option>
-
-                {subcategories.map((sub) => (
-                  <option key={sub.id} value={sub.id}>
-                    {sub.name}
-                  </option>
-                ))}
-              </Form.Select>
+              <Select
+                value={subcategoryOptions.find(
+                  (o) => o.value === subcategoryFilter
+                )}
+                onChange={(selected) => setSubcategoryFilter(selected.value)}
+                options={subcategoryOptions}
+                isDisabled={!categoryFilter}
+                styles={{
+                  control: (provided) => ({
+                    ...provided,
+                    minHeight: 38,
+                    width: 220,
+                  }),
+                  menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                }}
+              />
             </div>
             <div className="d-flex align-items-center">
               <Form.Label className="mb-0 me-2 text-nowrap">
