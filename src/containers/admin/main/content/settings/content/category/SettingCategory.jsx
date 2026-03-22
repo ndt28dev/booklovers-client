@@ -242,9 +242,10 @@ const SettingCategory = () => {
               borderRadius: "6px",
               fontWeight: "bold",
             }}
+            onClick={() => toggle(cat.id)}
           >
             <div className="d-flex align-items-center justify-content-between">
-              <div className="flex-grow-1 " onClick={() => toggle(cat.id)}>
+              <div className="flex-grow-1">
                 <span className="d-flex align-items-center">
                   {openIds.includes(cat.id) ? (
                     <i className="bi bi-caret-down"></i>
@@ -271,14 +272,20 @@ const SettingCategory = () => {
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={() => setEditingCatId(null)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // <-- Ngăn event div cha
+                        setEditingCatId(null);
+                      }}
                     >
                       Huỷ
                     </Button>
                     <Button
                       variant="success"
                       size="sm"
-                      onClick={() => handleCatUpdate(cat)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCatUpdate(cat);
+                      }}
                     >
                       Lưu
                     </Button>
@@ -288,13 +295,26 @@ const SettingCategory = () => {
                     <Button
                       variant="primary"
                       size="sm"
-                      onClick={() => handleAddSubClick(cat.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddSubClick(cat.id);
+                      }}
                       className="me-2"
                     >
                       <i className="bi bi-plus"></i>
                     </Button>
-                    <MyButtonUpdate onClick={() => handleCatEdit(cat)} />
-                    <MyButtonDelete onClick={() => handleCatDelete(cat.id)} />
+                    <MyButtonUpdate
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCatEdit(cat);
+                      }}
+                    />
+                    <MyButtonDelete
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCatDelete(cat.id);
+                      }}
+                    />
                   </>
                 )}
               </div>
