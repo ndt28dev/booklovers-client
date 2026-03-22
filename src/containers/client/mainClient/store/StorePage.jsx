@@ -19,6 +19,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import lienheImage from "../../../../assets/image/store/lienhe.svg";
+import { fetchSystemSettings } from "../../../../redux/slices/admin/systemSlice";
+import { set } from "date-fns";
 
 const breadcrumbItems = [
   { label: "Trang chủ", link: "/" },
@@ -30,6 +32,8 @@ const StorePage = () => {
   const { isSubmitting, submitSuccess, submitError } = useSelector(
     (state) => state.contact
   );
+
+  const { settings } = useSelector((state) => state.system);
 
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -44,6 +48,18 @@ const StorePage = () => {
     email: "",
     phone: "",
   });
+
+  const { user } = useSelector((state) => state.user.profile);
+
+  useEffect(() => {
+    dispatch(fetchSystemSettings());
+  }, []);
+
+  useEffect(() => {
+    setName(user?.fullname || "");
+    setEmail(user?.email || "");
+    setPhone(user?.phone || "");
+  }, [user]);
 
   const handleinputName = (e) => {
     setName(e.target.value);
@@ -190,7 +206,7 @@ const StorePage = () => {
             <p className="text-muted mb-1">
               Giờ làm việc: 08:00–17:00 hằng ngày (trừ Thứ 7 & Chủ nhật)
             </p>
-            <p className="text-primary ">(+84) 76 45 13 977</p>
+            <p className="text-primary ">{settings?.hotline}</p>
           </Col>
           <Col lg={4} md={12} style={{ padding: "0 80px" }}>
             <i
@@ -203,7 +219,7 @@ const StorePage = () => {
             <p className="text-muted mb-1">
               Chúng tôi theo dõi hộp thư thường xuyên và sẽ phản hồi sớm nhất.
             </p>
-            <p className="text-primary ">ndt28dev@gmail.com</p>
+            <p className="text-primary ">{settings?.email}</p>
           </Col>
           <Col lg={4} md={12} style={{ padding: "0 80px" }}>
             <i
@@ -213,9 +229,7 @@ const StorePage = () => {
             <h5 className="mt-3" style={{ color: "#313E5B", fontWeight: 500 }}>
               Địa chỉ
             </h5>
-            <p className="text-muted mb-1">
-              15 Trương Hán Siêu,Phường Cư Bao,Tỉnh ĐakLak
-            </p>
+            <p className="text-muted mb-1">{settings?.address}</p>
             <a
               href="https://maps.app.goo.gl/4qe1g82VAScfXpUH9"
               target="_blank"

@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Image, Form, InputGroup } from "react-bootstrap";
 import ButtonCustom from "../../../components/button/ButtonCustom";
 import "./Footer.scss";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import API_URL from "../../../config/api";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSystemSettings } from "../../../redux/slices/admin/systemSlice";
 
 const Footer = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
+
+  const { settings } = useSelector((state) => state.system);
+
+  useEffect(() => {
+    dispatch(fetchSystemSettings());
+  }, []);
 
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -50,7 +59,7 @@ const Footer = () => {
             <i className="bi bi-telephone-fill colorPri fs-1"></i>
             <div className="colorPri">HOTLINE:</div>
             <small className="fw-normal" style={{ color: "#666666" }}>
-              0764513977
+              {settings?.hotline}
             </small>
           </Col>
         </Row>
@@ -103,33 +112,31 @@ const Footer = () => {
                   alt="Logo"
                 />
               </Link>
-              <p className="mt-3">
-                Đ/C: 15 Trương Hán Siêu,Phường Cư Bao,Tỉnh ĐakLak
-              </p>
+              <p className="mt-3">Đ/C: {settings?.address}</p>
               <div className="mt-3 d-flex gap-3">
                 <a
-                  href="https://www.facebook.com/duythuan28102002"
+                  href={settings?.facebook}
                   target="_blank"
                   className="footer-icon"
                 >
                   <i className="bi bi-facebook fs-5"></i>
                 </a>
                 <a
-                  href="https://www.instagram.com/ndt.gk.28/"
+                  href={settings?.instagram}
                   target="_blank"
                   className="footer-icon"
                 >
                   <i className="bi bi-instagram fs-5"></i>
                 </a>
                 <a
-                  href="https://www.tiktok.com/@ndt281002"
+                  href={settings?.tiktok}
                   target="_blank"
                   className="footer-icon"
                 >
                   <i className="bi bi-tiktok"></i>
                 </a>
                 <a
-                  href="https://www.youtube.com/@iamchaus2083"
+                  href={settings?.youtube}
                   target="_blank"
                   className="footer-icon"
                 >
@@ -157,7 +164,7 @@ const Footer = () => {
                     ></i>
                     <span>
                       <span className="d-none d-lg-inline">Hotline: </span>
-                      0764513977
+                      {settings?.hotline}
                     </span>
                   </p>
                   <p className="d-flex d-md-none align-items-center justify-content-start text-center text-lg-start">
@@ -167,7 +174,7 @@ const Footer = () => {
                     ></i>
                     <span className="mt-md-2 mt-lg-0">
                       <span className="d-none d-lg-inline">Email: </span>
-                      ndt28dev@gmail.com
+                      {settings?.email}
                     </span>
                   </p>
                 </Col>
@@ -194,7 +201,7 @@ const Footer = () => {
                     ></i>
                     <span className="">
                       <span className="d-none d-lg-inline">Email: </span>
-                      ndt28dev@gmail.com
+                      {settings?.email}
                     </span>
                   </p>
                 </Col>
@@ -219,33 +226,31 @@ const Footer = () => {
                   alt="Logo"
                 />
               </Link>
-              <p className="mt-3">
-                Đ/C: 15 Trương Hán Siêu,Phường Cư Bao,Tỉnh ĐakLak
-              </p>
+              <p className="mt-3">Đ/C: {settings?.address}</p>
               <div className="mt-3 d-flex gap-3">
                 <a
-                  href="https://www.facebook.com/duythuan28102002"
+                  href={settings?.facebook}
                   target="_blank"
                   className="footer-icon"
                 >
                   <i className="bi bi-facebook fs-5"></i>
                 </a>
                 <a
-                  href="https://www.instagram.com/ndt.gk.28/"
+                  href={settings?.instagram}
                   target="_blank"
                   className="footer-icon"
                 >
                   <i className="bi bi-instagram fs-5"></i>
                 </a>
                 <a
-                  href="https://www.tiktok.com/@ndt281002"
+                  href={settings?.tiktok}
                   target="_blank"
                   className="footer-icon"
                 >
                   <i className="bi bi-tiktok"></i>
                 </a>
                 <a
-                  href="https://www.youtube.com/@iamchaus2083"
+                  href={settings?.youtube}
                   target="_blank"
                   className="footer-icon"
                 >

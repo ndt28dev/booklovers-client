@@ -29,6 +29,7 @@ import {
 import { fetchCategoriesWithSub } from "../../../redux/slices/categorySlice";
 import slugify from "slugify";
 import API_URL from "../../../config/api";
+import { fetchSystemSettings } from "../../../redux/slices/admin/systemSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,8 @@ const Header = () => {
 
   const [expanded, setExpanded] = useState(false);
 
+  const { settings } = useSelector((state) => state.system);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -67,6 +70,7 @@ const Header = () => {
     }
     dispatch(fetchCartFromServer());
     dispatch(fetchCategoriesWithSub());
+    dispatch(fetchSystemSettings());
   }, []);
 
   useEffect(() => {
@@ -107,7 +111,12 @@ const Header = () => {
       >
         <Container>
           <Navbar.Brand as={Link} to="/" onClick={closeNavbar}>
-            <Image src={`${API_URL}/logo/logo-1.webp`} alt="Logo" />
+            <Image
+              src={`${API_URL}/logo/${settings?.logo}`}
+              alt="Logo"
+              width={"200px"}
+              style={{ maxHeight: "55px" }}
+            />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll" ref={collapseRef}>
