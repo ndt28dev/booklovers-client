@@ -28,7 +28,7 @@ const SettingSystemPage = () => {
     youtube: "",
   });
 
-  const [logoFile, setLogoFile] = useState(null); // lưu file để upload
+  const [logoFile, setLogoFile] = useState(null);
 
   useEffect(() => {
     dispatch(fetchSystemSettings());

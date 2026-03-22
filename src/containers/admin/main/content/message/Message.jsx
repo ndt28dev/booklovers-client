@@ -2,7 +2,7 @@ const Message = () => {
   return (
     <div
       style={{
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "#",
         padding: "16px",
         border: "1px dashed #ccc",
         borderRadius: "8px",
