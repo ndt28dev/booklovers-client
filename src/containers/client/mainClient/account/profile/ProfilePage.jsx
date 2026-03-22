@@ -17,6 +17,8 @@ import {
   updateUser,
   resetUpdateUserStatus,
   updatePassword,
+  updateUserProfile,
+  getAdminUserProfile,
 } from "../../../../../redux/slices/userSlice";
 import { toast } from "react-toastify";
 import {
@@ -36,7 +38,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user.profile);
   const { loading, success, error } = useSelector(
-    (state) => state.user.updateUser
+    (state) => state.user.updateUserProfile
   );
   const {
     loading: loadingSendCurrentEmailOtp,
@@ -120,6 +122,7 @@ const ProfilePage = () => {
       toast.success("Cập nhật thông tin thành công!");
       dispatch(resetUpdateUserStatus());
       dispatch(getUserWithAddress());
+      dispatch(getAdminUserProfile());
     }
 
     if (error) {
@@ -205,7 +208,7 @@ const ProfilePage = () => {
       dataUp.append("avatar", formData.avatarFile);
     }
 
-    dispatch(updateUser(dataUp));
+    dispatch(updateUserProfile(dataUp));
   };
 
   const handleFileChange = (e) => {

@@ -194,7 +194,7 @@ export const updateUserProfile = createAsyncThunk(
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token không tồn tại");
 
-      const response = await axios.put(`${API_URL}/api/user`, dataUp, {
+      const response = await axios.put(`${API_URL}/api/user-profile`, dataUp, {
         headers: {
           Authorization: `Bearer ${token}`,
           headers: { "Content-Type": "multipart/form-data" },
@@ -385,6 +385,11 @@ const initialState = {
     error: null,
     success: false,
   },
+  updateUserProfile: {
+    loading: false,
+    success: false,
+    error: null,
+  },
   updateUser: {
     loading: false,
     success: false,
@@ -475,6 +480,13 @@ const userSlice = createSlice({
       state.deleteAddress = {
         error: null,
         success: false,
+      };
+    },
+    resetUpdateUserProfileStatus: (state) => {
+      state.updateUserProfile = {
+        loading: false,
+        success: false,
+        error: null,
       };
     },
     resetUpdateUserStatus: (state) => {
@@ -641,21 +653,20 @@ const userSlice = createSlice({
         state.deleteAddress.error = action.payload;
       })
 
-      // // update user profile
-      // .addCase(updateUser.pending, (state) => {
-      //   state.updateUser.loading = true;
-      //   state.updateUser.success = false;
-      //   state.updateUser.error = null;
-      // })
-      // .addCase(updateUser.fulfilled, (state, action) => {
-      //   state.updateUser.loading = false;
-      //   state.updateUser.success = true;
-      //   state.profile.user = action.payload.user; // cập nhật lại thông tin user
-      // })
-      // .addCase(updateUser.rejected, (state, action) => {
-      //   state.updateUser.loading = false;
-      //   state.updateUser.error = action.payload;
-      // })
+      // update user profile
+      .addCase(updateUserProfile.pending, (state) => {
+        state.updateUserProfile.loading = true;
+        state.updateUserProfile.success = false;
+        state.updateUserProfile.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.updateUserProfile.loading = false;
+        state.updateUserProfile.success = true;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.updateUserProfile.loading = false;
+        state.updateUserProfile.error = action.payload;
+      })
 
       // update user
       .addCase(updateUser.pending, (state) => {
@@ -767,6 +778,7 @@ export const {
   resetDefaultAddressStatus,
   resetDeleteressStatus,
   resetUpdateUserStatus,
+  resetUpdateUserProfileStatus,
   resetUpdatePasswordState,
   resetDeleteUserStatus,
   logoutAdmin,
