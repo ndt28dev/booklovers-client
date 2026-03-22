@@ -3,7 +3,7 @@ import "./Main.scss";
 
 const Main = ({ children }) => {
   return (
-    <div className="px-3 py-3" style={{ width: "100%" }}>
+    <div className="px-3 py-3" style={{ width: "100%", minHeight: "90vh" }}>
       {children}
     </div>
   );

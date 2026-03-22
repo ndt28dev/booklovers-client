@@ -6,7 +6,7 @@ import SettingRoles from "./content/roles/SettingRoles";
 const menuItems = [
   { key: "category", label: "Danh mục", component: <SettingCategory /> },
   { key: "supplier", label: "Nhà cung cấp", component: <SettingSupplier /> },
-  { key: "roles", label: "Phân Quyền", component: <SettingRoles /> },
+  // { key: "roles", label: "Phân Quyền", component: <SettingRoles /> },
 ];
 
 const SettingProduct = () => {
