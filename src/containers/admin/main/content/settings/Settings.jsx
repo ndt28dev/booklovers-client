@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SettingProduct from "./SettingProduct";
+import SettingSystem from "./SettingSystem";
 
 const Settings = () => {
   const [active, setActive] = useState("product");
@@ -16,6 +17,7 @@ const Settings = () => {
           display: "inline-flex",
           background: "#fff",
           borderRadius: 10,
+          userSelect: "none",
         }}
       >
         {tabs.map((tab) => (
@@ -42,7 +44,7 @@ const Settings = () => {
       {/* Content */}
       <div style={{ marginTop: 10, background: "#fff", borderRadius: 10 }}>
         {active === "product" && <SettingProduct />}
-        {active === "system" && <div>🔒 Cài đặt bảo mật</div>}
+        {active === "system" && <SettingSystem />}
       </div>
     </div>
   );

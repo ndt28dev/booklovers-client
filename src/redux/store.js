@@ -15,6 +15,7 @@ import promotionSlice from "./slices/promotionSlice";
 import supplierSlice from "./slices/supplierSlice";
 import importsSlice from "./slices/importSlice";
 import subcategorySlice from "./slices/subcategorySlice";
+import systemSlice from "./slices/admin/systemSlice";
 
 export const store = configureStore({
   reducer: {
@@ -34,5 +35,6 @@ export const store = configureStore({
     promotion: promotionSlice,
     supplier: supplierSlice,
     imports: importsSlice,
+    system: systemSlice,
   },
 });

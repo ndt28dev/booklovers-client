@@ -14,7 +14,6 @@ const SettingProduct = () => {
 
   return (
     <div style={{ display: "flex", height: "100%" }}>
-      {/* Menu bên trái */}
       <div
         style={{
           width: "220px",
@@ -42,8 +41,7 @@ const SettingProduct = () => {
         ))}
       </div>
 
-      {/* Nội dung bên phải */}
-      <div style={{ flex: 1, padding: "10px" }}>
+      <div style={{ flex: 1, padding: "10px", minHeight: "80vh" }}>
         {menuItems.find((item) => item.key === active)?.component}
       </div>
     </div>
