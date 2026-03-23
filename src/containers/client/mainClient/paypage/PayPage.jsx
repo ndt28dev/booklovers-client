@@ -103,10 +103,18 @@ const PayPage = () => {
   const [itemUpAddress, setItemUpAddress] = useState({});
 
   useEffect(() => {
-    if (addresses && addresses.length > 0) {
-      const defaultAddr = addresses.find((addr) => addr.is_default === 1);
-      setItemAddress(defaultAddr || addresses[0]);
-    }
+    if (!addresses || addresses.length === 0) return;
+
+    setItemAddress((prev) => {
+      // ❗ nếu đã có rồi thì giữ nguyên
+      if (prev && Object.keys(prev).length > 0) return prev;
+
+      const defaultAddr = addresses.find(
+        (addr) => Number(addr.is_default) === 1
+      );
+
+      return defaultAddr || addresses[0];
+    });
   }, [addresses]);
 
   const {
@@ -277,7 +285,6 @@ const PayPage = () => {
         <AddressUser
           onClose={handleShowLocation}
           onConfirm={handleConfirm}
-          addresses={addresses}
           itemAddress={itemAddress}
           onClickAdd={handleAddLocation}
           onClickUp={handleUpAddress}

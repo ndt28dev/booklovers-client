@@ -3,11 +3,16 @@ import { Modal, Button, Form, Badge, Spinner } from "react-bootstrap";
 import { getUserWithAddress } from "../../redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const AddressUser = ({ onClose, onConfirm, onClickAdd, onClickUp }) => {
+const AddressUser = ({
+  onClose,
+  onConfirm,
+  onClickAdd,
+  onClickUp,
+  itemAddress,
+}) => {
   const dispatch = useDispatch();
 
   const [selectedItem, setSelectedItem] = useState();
-  const [isLoading, setIsLoading] = useState(false);
 
   const { addresses, user } = useSelector((state) => state.user.profile);
 
@@ -16,10 +21,22 @@ const AddressUser = ({ onClose, onConfirm, onClickAdd, onClickUp }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (addresses && addresses.length > 0) {
-      const defaultAddr = addresses.find((addr) => addr.is_default === 1);
-      setSelectedItem(defaultAddr || addresses[0]);
+    if (itemAddress) {
+      setSelectedItem(itemAddress);
     }
+  }, [itemAddress]);
+
+  useEffect(() => {
+    if (!addresses?.length) return;
+
+    setSelectedItem((prev) => {
+      if (prev) return prev; // ❗ đã có rồi thì giữ nguyên
+
+      const defaultAddr =
+        addresses.find((a) => Number(a.is_default) === 1) || addresses[0];
+
+      return defaultAddr;
+    });
   }, [addresses]);
 
   const handleConfirm = () => {
@@ -92,12 +109,12 @@ const AddressUser = ({ onClose, onConfirm, onClickAdd, onClickUp }) => {
         )}
       </Modal.Body>
       <Modal.Footer className="justify-content-between">
-        <Button variant="danger" onClick={onClickAdd}>
+        <Button variant="danger" onClick={onClickAdd} size="sm">
           + Thêm địa chỉ mới
         </Button>
 
         <div>
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose} size="sm">
             Đóng
           </Button>
           <Button
@@ -105,6 +122,7 @@ const AddressUser = ({ onClose, onConfirm, onClickAdd, onClickUp }) => {
             onClick={handleConfirm}
             className="ms-2"
             style={{ minWidth: "63px" }}
+            size="sm"
           >
             Chọn
           </Button>
