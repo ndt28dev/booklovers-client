@@ -125,9 +125,6 @@ const StorePage = () => {
 
   useEffect(() => {
     if (success) {
-      setName("");
-      setEmail("");
-      setPhone("");
       setMessage("");
 
       setErrors({
