@@ -459,11 +459,7 @@ const PayPage = () => {
                       <strong>{item.name}</strong>
                       <div>
                         <span style={{ color: "#E35765", fontWeight: "600" }}>
-                          {(
-                            (item.price -
-                              (item.price * (item.discount || 0)) / 100) *
-                            item.quantity
-                          ).toLocaleString("vi-VN")}
+                          {item.price.toLocaleString("vi-VN")}(VNĐ)
                         </span>
                         <span className="ms-3" style={{ fontSize: "14px" }}>
                           Số lượng: {item.quantity}
@@ -510,11 +506,11 @@ const PayPage = () => {
 
                 <div className="d-flex justify-content-between mb-1">
                   <span>Tạm tính</span>
-                  <span>{subtotal.toLocaleString("vi-VN")}</span>
+                  <span>{subtotal.toLocaleString("vi-VN")}(VNĐ)</span>
                 </div>
                 <div className="d-flex justify-content-between mb-1">
                   <span>Phí vận chuyển</span>
-                  <span>{shippingFee.toLocaleString("vi-VN")}</span>
+                  <span>{shippingFee.toLocaleString("vi-VN")}(VNĐ)</span>
                 </div>
                 {discountValue && discountValue.description ? (
                   <div
