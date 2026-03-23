@@ -23,11 +23,7 @@ const AddressUser = ({ onClose, onConfirm, onClickAdd, onClickUp }) => {
   }, [addresses]);
 
   const handleConfirm = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      onConfirm(selectedItem);
-    }, 800);
+    onConfirm(selectedItem);
   };
 
   return (
@@ -101,29 +97,16 @@ const AddressUser = ({ onClose, onConfirm, onClickAdd, onClickUp }) => {
         </Button>
 
         <div>
-          <Button variant="secondary" onClick={onClose} disabled={isLoading}>
+          <Button variant="secondary" onClick={onClose}>
             Đóng
           </Button>
           <Button
             variant="success"
             onClick={handleConfirm}
-            disabled={isLoading || !selectedItem}
             className="ms-2"
             style={{ minWidth: "63px" }}
           >
-            {isLoading ? (
-              <>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />{" "}
-              </>
-            ) : (
-              "Chọn"
-            )}
+            Chọn
           </Button>
         </div>
       </Modal.Footer>
