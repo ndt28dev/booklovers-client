@@ -552,6 +552,7 @@ const PayPage = () => {
                       backgroundColor: "#E35765",
                       borderColor: "#E35765",
                     }}
+                    size="md"
                   >
                     {fakeLoading ? (
                       <>

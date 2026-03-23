@@ -86,6 +86,7 @@ const Footer = () => {
                 aria-label="Đăng ký bản tin"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                size="sm"
               />
               <ButtonCustom
                 bgrColor="#E14654"

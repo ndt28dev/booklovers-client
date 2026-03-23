@@ -422,7 +422,7 @@ const AboutPage = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button variant="secondary" onClick={handleCloseModal} size="sm">
             Hủy
           </Button>
 

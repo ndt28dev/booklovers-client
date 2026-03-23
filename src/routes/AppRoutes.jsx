@@ -6,7 +6,6 @@ import Dashboard from "../containers/admin/main/content/dashboard/Dashboard";
 import Orders from "../containers/admin/main/content/orders/Orders";
 import Products from "../containers/admin/main/content/products/Products";
 import Users from "../containers/admin/main/content/users/Users";
-import AddUser from "../containers/admin/main/content/addUser/AddUser";
 import Client from "../containers/client/Client";
 import HomePage from "../containers/client/mainClient/home/HomePage";
 import ProductPage from "../containers/client/mainClient/product/ProductPage";
@@ -98,7 +97,6 @@ const AppRoutes = () => {
         <Route path="san-pham" element={<Products />} />
         <Route path="nhap-hang" element={<Imports />} />
         <Route path="nguoi-dung" element={<Users />} />
-        <Route path="nguoi-dung/them" element={<AddUser />} />
         <Route path="bai-viet" element={<Blogs />} />
         <Route path="khuyen-mai" element={<Promotions />} />
         <Route path="phan-hoi" element={<Contacts />} />

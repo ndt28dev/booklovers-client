@@ -583,6 +583,7 @@ const CartPage = () => {
                     }}
                     disabled={totalPrice === 0}
                     onClick={handlepay}
+                    size="md"
                   >
                     Thanh toán
                   </Button>

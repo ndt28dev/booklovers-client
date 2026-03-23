@@ -22,15 +22,13 @@ const ButtonCustom = ({
         border: border || "none",
         backgroundColor: bgrColor || "primary",
         color: color || "#fff",
-        minHeight: "42px",
       }}
       onClick={onClick}
       disabled={disabled}
+      size="sm"
     >
-      {/* Nếu text là chuỗi và có icon thì hiển thị icon */}
       {!isReactElement && icon && <i className={`me-1 ${icon}`}></i>}
 
-      {/* Nội dung nút */}
       <div style={{ display: "flex", alignItems: "center" }}>{text}</div>
     </Button>
   );

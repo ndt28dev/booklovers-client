@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./ContactIcon.scss";
 import facebook from "../../assets/image/logoicon/facebook.png";
 import chat from "../../assets/image/logoicon/chat.png";
 import mail from "../../assets/image/logoicon/mail.webp";
 import phone from "../../assets/image/logoicon/phone.png";
 import zalo from "../../assets/image/logoicon/zalo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSystemSettings } from "../../redux/slices/admin/systemSlice";
 
 const ContactIcon = ({ openChat }) => {
+  const dispatch = useDispatch();
+
+  const { settings } = useSelector((state) => state.system);
+
+  useEffect(() => {
+    dispatch(fetchSystemSettings());
+  }, []);
   return (
     <div className="contactIcon p-1">
       <a
-        href="https://www.facebook.com/duythuan28102002"
+        href={`${settings?.facebook}`}
         target="_blank"
         rel="noopener noreferrer"
         className="p-2"
@@ -22,7 +31,7 @@ const ContactIcon = ({ openChat }) => {
         />
       </a>
       <a
-        href="https://zalo.me/0764513977"
+        href={`https://zalo.me/${settings?.zalo}`}
         target="_blank"
         rel="noopener noreferrer"
         className="p-2"

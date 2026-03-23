@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import aboutbanner from "../../../../../assets/image/aboutbanner1.jpg";
 import ButtonCustom from "../../../../../components/button/ButtonCustom";
 import "./AboutBanner.scss";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSystemSettings } from "../../../../../redux/slices/admin/systemSlice";
 
 const AboutBanner = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { settings } = useSelector((state) => state.system);
+
+  useEffect(() => {
+    dispatch(fetchSystemSettings());
+  }, []);
   return (
     <Container className="py-4">
       <Row className="align-items-center">
@@ -63,16 +72,16 @@ const AboutBanner = () => {
           />
 
           <div className="d-flex gap-3 mt-4">
-            <a href="https://www.facebook.com/duythuan28102002" target="_blank">
+            <a href={settings?.facebook} target="_blank">
               <i className="aboutbanner-icon bi bi-facebook"></i>
             </a>
-            <a href="https://www.instagram.com/ndt.gk.28/" target="_blank">
+            <a href={settings?.instagram} target="_blank">
               <i className="aboutbanner-icon bi bi-instagram"></i>
             </a>
-            <a href="https://www.tiktok.com/@ndt281002" target="_blank">
+            <a href={settings?.tiktok} target="_blank">
               <i className="aboutbanner-icon bi bi-tiktok"></i>
             </a>
-            <a href="https://www.youtube.com/@iamchaus2083" target="_blank">
+            <a href={settings?.youtube} target="_blank">
               <i className="aboutbanner-icon bi bi-youtube"></i>
             </a>
           </div>

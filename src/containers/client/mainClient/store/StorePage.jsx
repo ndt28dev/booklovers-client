@@ -29,8 +29,8 @@ const breadcrumbItems = [
 
 const StorePage = () => {
   const dispatch = useDispatch();
-  const { isSubmitting, submitSuccess, submitError } = useSelector(
-    (state) => state.contact
+  const { isSubmitting, success, error } = useSelector(
+    (state) => state.contact.createContact
   );
 
   const { settings } = useSelector((state) => state.system);
@@ -124,7 +124,7 @@ const StorePage = () => {
   };
 
   useEffect(() => {
-    if (submitSuccess) {
+    if (success) {
       setName("");
       setEmail("");
       setPhone("");
@@ -143,7 +143,7 @@ const StorePage = () => {
     } else if (isSubmitting) {
       console.log("thất bại");
     }
-  }, [submitSuccess, isSubmitting]);
+  }, [success, isSubmitting]);
 
   const validateForm = () => {
     const newErrors = {};

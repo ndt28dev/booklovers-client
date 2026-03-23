@@ -112,7 +112,7 @@ const LocationPage = () => {
             >
               <Card.Body className="p-2 border-bottom">
                 <Row>
-                  <Col md={10}>
+                  <Col md={9}>
                     <h6 className="mb-2">
                       {item.fullname}{" "}
                       {item.is_default ? (
@@ -133,7 +133,7 @@ const LocationPage = () => {
                       <span className="fw-semibold">{item.phone}</span>
                     </div>
                   </Col>
-                  <Col md={2} className="text-end">
+                  <Col md={3} className="text-end">
                     <div className="d-flex flex-column align-items-end gap-1">
                       {!item.is_default && (
                         <Button
