@@ -361,7 +361,6 @@ const CartPage = () => {
                               item.price -
                               (item.price * item.discount) / 100
                             ).toLocaleString("vi-VN")}
-                            đ
                           </div>
 
                           <div style={{}} className="text-center ms-lg-3">
@@ -412,7 +411,6 @@ const CartPage = () => {
                                 (item.price * (item.discount || 0)) / 100) *
                               item.quantity
                             ).toLocaleString("vi-VN")}
-                            đ
                           </div>
 
                           <div
@@ -510,7 +508,6 @@ const CartPage = () => {
                                       item.price -
                                       (item.price * (item.discount || 0)) / 100
                                     ).toLocaleString("vi-VN")}
-                                    đ
                                   </span>
                                   <span
                                     className="text-muted me-2"
@@ -522,7 +519,6 @@ const CartPage = () => {
                                     {parseInt(item.price).toLocaleString(
                                       "vi-VN"
                                     )}
-                                    đ
                                   </span>
                                   <span
                                     className="fw-semibold"
@@ -543,7 +539,6 @@ const CartPage = () => {
                                   style={{ fontSize: "15px" }}
                                 >
                                   {parseInt(item.price).toLocaleString("vi-VN")}
-                                  đ
                                 </span>
                               )}
                             </div>
@@ -566,7 +561,6 @@ const CartPage = () => {
                             (item.price -
                               (item.price * (item.discount || 0)) / 100)
                           ).toLocaleString("vi-VN")}
-                          đ
                         </div>
                       </div>
                     ))
@@ -575,7 +569,7 @@ const CartPage = () => {
                   <div className="d-flex justify-content-between fw-bold mb-3">
                     <span className="text-dark">Tổng cộng:</span>
                     <span style={{ color: "#D14552" }}>
-                      {totalPrice.toLocaleString("vi-VN")}đ
+                      {totalPrice.toLocaleString("vi-VN")}(VNĐ)
                     </span>
                   </div>
 

@@ -202,7 +202,6 @@ const SettingCategory = () => {
     );
   };
 
-  // ========== JSX ==========
   return (
     <div>
       <div className="d-flex align-items-center justify-content-between mb-3">

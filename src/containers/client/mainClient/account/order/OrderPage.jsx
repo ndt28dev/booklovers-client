@@ -224,7 +224,7 @@ const OrderPage = () => {
                         {(item.unit_price * item.quantity).toLocaleString(
                           "vi-VN"
                         )}
-                        đ
+                        (VNĐ)
                       </Col>
                     </Row>
                   ))}
@@ -249,7 +249,7 @@ const OrderPage = () => {
                     style={{ color: "#E35765" }}
                   >
                     Tổng cộng:{" "}
-                    {parseInt(order.total_price).toLocaleString("vi-VN")}₫
+                    {parseInt(order.total_price).toLocaleString("vi-VN")}(VNĐ)
                   </div>
                   <div className="d-flex justify-content-end gap-2 mt-2">
                     <Button
