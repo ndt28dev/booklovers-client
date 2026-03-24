@@ -242,7 +242,10 @@ const DetailProduct = () => {
                   <div className="d-flex align-items-center gap-2 mb-2">
                     <span className="text-warning fw-bold">5★</span>
                     <span className="text-muted">(99 đánh giá)</span>
-                    <span className="text-muted">| Đã bán 99</span>
+                    <span className="text-muted">
+                      | Số lượng: {book.quantity}
+                    </span>
+                    <span className="text-muted">| Đã bán: {book.sold}</span>
                   </div>
 
                   <div>
