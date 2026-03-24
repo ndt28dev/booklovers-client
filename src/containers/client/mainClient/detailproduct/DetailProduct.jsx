@@ -256,7 +256,7 @@ const DetailProduct = () => {
                       {Math.round(
                         book.price - book.price * (book.discount / 100)
                       ).toLocaleString("vi-VN")}
-                      ₫
+                      (VNĐ)
                     </span>{" "}
                     {book.discount ? (
                       <span
