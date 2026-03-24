@@ -40,9 +40,17 @@ const DetailProduct = () => {
     (state) => state.book.bookDetail
   );
 
+  const { cartItems } = useSelector((state) => state.cart.cart);
+
   const [quantity, setQuantity] = useState(1);
 
   const [mainImage, setMainImage] = useState(null);
+
+  const maxQuantity = book ? book.quantity - book.sold : 0;
+
+  const currentCartItem = cartItems?.find((item) => item?.book_id === book?.id);
+
+  const currentQuantityInCart = currentCartItem?.quantity || 0;
 
   useEffect(() => {
     if (bookId) {
@@ -52,6 +60,7 @@ const DetailProduct = () => {
 
   useEffect(() => {
     dispatch(getUserWithAddress());
+    dispatch(fetchCartFromServer());
   }, [dispatch]);
 
   useEffect(() => {
@@ -61,8 +70,17 @@ const DetailProduct = () => {
     }
   }, [bookImages]);
 
+  useEffect(() => {
+    if (maxQuantity > 0 && quantity > maxQuantity) {
+      setQuantity(maxQuantity);
+    }
+  }, [maxQuantity]);
+
   const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+    setQuantity((prev) => {
+      if (prev >= maxQuantity) return maxQuantity;
+      return prev + 1;
+    });
   };
 
   const handleDecrease = () => {
@@ -72,55 +90,68 @@ const DetailProduct = () => {
   const handleAddCart = async () => {
     const token = localStorage.getItem("token");
 
-    if (token) {
-      try {
-        await dispatch(
-          addItemToCartAsync({ bookId: book.id, quantity })
-        ).unwrap();
+    if (!token) {
+      toast.error("Vui lòng đăng nhập trước!");
+      return;
+    }
 
-        dispatch(fetchCartFromServer());
-        toast.success("Đã thêm sản phẩm vào giỏ hàng!", {
-          position: "top-right",
-          autoClose: 1000,
-          theme: "light",
-        });
-      } catch (error) {
-        toast.error("Vui lòng đăng nhập trước!", {
-          position: "top-right",
-          autoClose: 1000,
-          theme: "light",
-        });
-      }
-    } else {
-      toast.error("Vui lòng đăng nhập trước!", {
-        position: "top-right",
+    const currentCartItem = cartItems?.find((item) => item.book_id === book.id);
+
+    const currentQuantityInCart = currentCartItem?.quantity || 0;
+
+    // 🚨 check vượt tồn kho
+    if (currentQuantityInCart + quantity > maxQuantity) {
+      toast.warning(
+        `Bạn chỉ có thể mua tối đa ${maxQuantity} sản phẩm. Trong giỏ đã có ${currentQuantityInCart}`,
+        {
+          autoClose: 2000,
+        }
+      );
+      return;
+    }
+
+    try {
+      await dispatch(
+        addItemToCartAsync({ bookId: book.id, quantity })
+      ).unwrap();
+
+      dispatch(fetchCartFromServer());
+
+      toast.success("Đã thêm sản phẩm vào giỏ hàng!", {
         autoClose: 1000,
-        theme: "light",
       });
+    } catch (error) {
+      toast.error("Có lỗi xảy ra!");
     }
   };
 
   const handleBuyNow = async () => {
     const token = localStorage.getItem("token");
 
-    if (token) {
-      try {
-        await dispatch(
-          addItemToCartAsync({ bookId: book.id, quantity })
-        ).unwrap();
-        navigate("/gio-hang", { state: { from: "buyNow", bookId: book.id } });
-      } catch (error) {
-        toast.error("Có lỗi khi thêm sản phẩm vào giỏ hàng", {
-          position: "top-right",
-          autoClose: 1000,
-          theme: "light",
-        });
-      }
-    } else {
-      toast.error("Vui lòng đăng nhập trước!", {
-        position: "top-right",
+    if (!token) {
+      toast.error("Vui lòng đăng nhập trước!");
+      return;
+    }
+
+    // 🚨 nếu đã full trong giỏ
+    if (currentQuantityInCart >= maxQuantity) {
+      toast.warning("Sản phẩm đã đạt số lượng tối đa trong giỏ hàng", {
+        autoClose: 2000,
+      });
+      return;
+    }
+
+    try {
+      await dispatch(
+        addItemToCartAsync({ bookId: book.id, quantity })
+      ).unwrap();
+
+      navigate("/gio-hang", {
+        state: { from: "buyNow", bookId: book.id },
+      });
+    } catch (error) {
+      toast.error("Có lỗi khi thêm sản phẩm vào giỏ hàng", {
         autoClose: 1000,
-        theme: "light",
       });
     }
   };
@@ -239,72 +270,92 @@ const DetailProduct = () => {
                     </Col>
                   </Row>
 
-                  <div className="d-flex align-items-center gap-2 mb-2">
+                  <div className="d-flex align-items-center mb-2">
                     <span className="text-warning fw-bold">5★</span>
                     <span className="text-muted">(99 đánh giá)</span>
-                    <span className="text-muted">
-                      | Số lượng: {book.quantity}
-                    </span>
-                    <span className="text-muted">| Đã bán: {book.sold}</span>
                   </div>
 
-                  <div>
-                    <span
-                      className="fw-bold"
-                      style={{ color: "#E35765", fontSize: "22px" }}
-                    >
-                      {Math.round(
-                        book.price - book.price * (book.discount / 100)
-                      ).toLocaleString("vi-VN")}
-                      (VNĐ)
-                    </span>{" "}
-                    {book.discount ? (
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div>
                       <span
-                        className="text-decoration-line-through me-2"
-                        style={{ fontSize: "14px", color: "#888" }}
+                        className="fw-bold"
+                        style={{ color: "#E35765", fontSize: "22px" }}
                       >
-                        {Number(book.price).toLocaleString("vi-VN")}
-                      </span>
-                    ) : null}
-                    {book.discount ? (
-                      <span
-                        style={{
-                          backgroundColor: "#E35765",
-                          color: "white",
-                          borderRadius: "5px",
-                          fontSize: "16px",
-                          fontWeight: "bold",
-                          padding: "1px 6px 2px 6px",
-                        }}
-                      >
-                        -{book.discount}%
-                      </span>
-                    ) : null}
+                        {Math.round(
+                          book.price - book.price * (book.discount / 100)
+                        ).toLocaleString("vi-VN")}
+                        (VNĐ)
+                      </span>{" "}
+                      {book.discount ? (
+                        <span
+                          className="text-decoration-line-through me-2"
+                          style={{ fontSize: "14px", color: "#888" }}
+                        >
+                          {Number(book.price).toLocaleString("vi-VN")}
+                        </span>
+                      ) : null}
+                      {book.discount ? (
+                        <span
+                          style={{
+                            backgroundColor: "#E35765",
+                            color: "white",
+                            borderRadius: "5px",
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            padding: "1px 6px 2px 6px",
+                          }}
+                        >
+                          -{book.discount}%
+                        </span>
+                      ) : null}
+                    </div>
+                    <span className="fw-semibold text-muted">
+                      Đã bán: {book.sold}
+                    </span>
                   </div>
                 </div>
 
                 <div className="p-3 bg-white mt-3 border rounded ">
-                  <div className="mb-3 d-flex align-items-center">
-                    <strong>Số lượng:</strong>{" "}
-                    <InputGroup className="ipQuantity ms-3 mt-2">
-                      <Button className="btnDecrease" onClick={handleDecrease}>
-                        <i className="bi bi-dash btnDecrease-icon"></i>
-                      </Button>
-                      <FormControl
-                        value={quantity}
-                        onChange={(e) => {
-                          const val = parseInt(e.target.value);
-                          setQuantity(isNaN(val) || val < 1 ? 1 : val);
-                        }}
-                        type="text"
-                        min={1}
-                        className="ipQuantity-input"
-                      />
-                      <Button className="btnIncrease" onClick={handleIncrease}>
-                        <i className="bi bi-plus btnIncrease-icon"></i>
-                      </Button>
-                    </InputGroup>
-                  </div>
+                  {book.quantity <= book.sold ? (
+                    <Badge className="mb-3" bg="secondary">
+                      Hết hàng
+                    </Badge>
+                  ) : (
+                    <div className="mb-3 d-flex align-items-center">
+                      <strong>Số lượng:</strong>
+                      <InputGroup className="ipQuantity ms-3 mt-2">
+                        <Button
+                          className="btnDecrease"
+                          onClick={handleDecrease}
+                        >
+                          <i className="bi bi-dash btnDecrease-icon"></i>
+                        </Button>
+                        <FormControl
+                          value={quantity}
+                          onChange={(e) => {
+                            let val = parseInt(e.target.value);
+
+                            if (isNaN(val) || val < 1) val = 1;
+                            if (val > maxQuantity) val = maxQuantity;
+
+                            setQuantity(val);
+                          }}
+                          type="text"
+                          className="ipQuantity-input"
+                        />
+                        <Button
+                          className="btnIncrease"
+                          onClick={handleIncrease}
+                        >
+                          <i className="bi bi-plus btnIncrease-icon"></i>
+                        </Button>
+                      </InputGroup>
+                      <span className="ms-2 text-success fw-semibold">
+                        Còn lại {maxQuantity}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="d-flex gap-2">
                     <ButtonCustom
                       text="Thêm vào giỏ hàng"
@@ -314,6 +365,7 @@ const DetailProduct = () => {
                       fontWeight="bold"
                       icon="bi bi-cart-plus"
                       onClick={handleAddCart}
+                      disabled={book.quantity <= book.sold}
                     />
                     <ButtonCustom
                       text="Mua ngay"
@@ -323,6 +375,7 @@ const DetailProduct = () => {
                       fontWeight="bold"
                       icon="bi bi-cart3"
                       onClick={handleBuyNow}
+                      disabled={book.quantity <= book.sold}
                     />
                   </div>
                 </div>

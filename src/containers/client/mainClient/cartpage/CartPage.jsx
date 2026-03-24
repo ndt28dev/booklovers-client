@@ -20,6 +20,7 @@ import {
   removeItemFromCart,
 } from "../../../../redux/slices/cartSlice";
 import API_URL from "../../../../config/api";
+import { toast } from "react-toastify";
 
 const breadcrumbItems = [
   { label: "Trang chủ", link: "/" },
@@ -125,18 +126,28 @@ const CartPage = () => {
 
   const handleIncrease = (cartItemId) => {
     setIsLoading(true);
+
     setTimeout(() => {
       const item = cartItems.find((i) => i.cart_item_id === cartItemId);
       if (!item) return;
 
+      const maxQuantity = item.stock - item.sold;
+
+      if (item.quantity >= maxQuantity) {
+        toast.warning(`Chỉ còn tối đa ${maxQuantity} sản phẩm`, {
+          autoClose: 2000,
+        });
+        setIsLoading(false);
+        return;
+      }
+
       const newQty = item.quantity + 1;
 
       dispatch(updateItemQuantity({ itemId: cartItemId, quantity: newQty }));
-
       updateItemSelectQuantity(cartItemId, newQty);
 
       setIsLoading(false);
-    }, 500);
+    }, 300);
   };
 
   const handleDecrease = (cartItemId) => {
@@ -157,7 +168,7 @@ const CartPage = () => {
       updateItemSelectQuantity(cartItemId, newQty);
 
       setIsLoading(false);
-    }, 500);
+    }, 300);
   };
 
   const handleQuantityInput = (e, cartItemId) => {
@@ -172,12 +183,25 @@ const CartPage = () => {
   };
 
   const handleQuantityBlur = (cartItemId, currentQuantity) => {
-    let quantityRaw = localQuantities[cartItemId];
+    const item = cartItems.find((i) => i.cart_item_id === cartItemId);
+    if (!item) return;
 
+    const maxQuantity = item.stock - item.sold;
+
+    let quantityRaw = localQuantities[cartItemId];
     let quantity = quantityRaw === "" ? 1 : Math.max(1, parseInt(quantityRaw));
+
+    // 🔥 Nếu vượt thì set về max luôn
+    if (quantity > maxQuantity) {
+      quantity = maxQuantity;
+      toast.warning(`Chỉ còn ${maxQuantity} sản phẩm`, {
+        autoClose: 2000,
+      });
+    }
 
     if (quantity !== currentQuantity) {
       setIsLoading(true);
+
       setTimeout(() => {
         dispatch(updateItemQuantity({ itemId: cartItemId, quantity })).finally(
           () => {
@@ -190,7 +214,12 @@ const CartPage = () => {
             });
           }
         );
-      }, 500);
+      }, 300);
+    } else {
+      setLocalQuantities((prev) => {
+        const { [cartItemId]: _, ...rest } = prev;
+        return rest;
+      });
     }
   };
 
