@@ -208,7 +208,7 @@ const LoginPage = () => {
                           "Đăng nhập"
                         )
                       }
-                      icon={!isLoading && "bi bi-box-arrow-in-right fs-5 me-2"}
+                      icon={!isLoading && "bi bi-box-arrow-in-right me-2"}
                       onClick={handleLogin}
                       disabled={isLoading}
                     />
@@ -259,8 +259,9 @@ const LoginPage = () => {
                   <Link to="/dang-ky">
                     <Button
                       variant="light"
-                      className="fw-bold px-4 py-2"
+                      className="fw-bold "
                       style={{ color: "#E14654", border: "2px solid white" }}
+                      size="sm"
                     >
                       Tạo tài khoản mới
                     </Button>

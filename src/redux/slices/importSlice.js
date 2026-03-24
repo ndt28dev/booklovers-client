@@ -24,9 +24,20 @@ export const createImport = createAsyncThunk(
 //
 export const fetchImports = createAsyncThunk(
   "import/fetchImports",
-  async (_, thunkAPI) => {
+  async (
+    { page = 1, limit = 10, supplierId, startDate, endDate } = {},
+    thunkAPI
+  ) => {
     try {
-      const res = await axios.get(`${API_URL}/api/imports`);
+      const params = {
+        page,
+        limit,
+        ...(supplierId && { supplierId }),
+        ...(startDate && { startDate }),
+        ...(endDate && { endDate }),
+      };
+
+      const res = await axios.get(`${API_URL}/api/imports`, { params });
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(

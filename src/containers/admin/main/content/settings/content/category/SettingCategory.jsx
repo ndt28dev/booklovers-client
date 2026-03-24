@@ -227,7 +227,13 @@ const SettingCategory = () => {
             </Button>
           </div>
         ) : (
-          <MyButtonCreate onClick={() => setAddingCat(true)} />
+          <Button
+            variant="primary"
+            onClick={() => setAddingCat(true)}
+            size="sm"
+          >
+            <i className="bi bi-plus me-2"></i>Thêm danh mục
+          </Button>
         )}
       </div>
 

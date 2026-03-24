@@ -14,12 +14,22 @@ import Supplier from "./supplier/Supplier";
 import MyButtonPrint from "../../../../../components/button/MyButtonPrint";
 import DetailImportsModal from "./crud/DetailImportsModal";
 import API_URL from "../../../../../config/api";
+import { fetchSuppliersAll } from "../../../../../redux/slices/supplierSlice";
 
 const Imports = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
+
+  const { data: suppliers } = useSelector(
+    (state) => state.supplier.suppliersAll
+  );
+
+  // data search
+  const [selectedSupplierId, setSelectedSupplierId] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const { data, pagination } = useSelector((state) => state.imports.imports);
   const page = pagination?.page || 1;
@@ -29,13 +39,21 @@ const Imports = () => {
   const totalPages = pagination?.totalPages || 0;
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedSupplierId, startDate, endDate]);
+
+  useEffect(() => {
     dispatch(
       fetchImports({
         page: currentPage,
-        limit: 10,
+        limit,
+        supplierId: selectedSupplierId || undefined,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
       })
     );
-  }, [currentPage]);
+    dispatch(fetchSuppliersAll());
+  }, [currentPage, selectedSupplierId, startDate, endDate]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -185,6 +203,34 @@ const Imports = () => {
           <Col className="d-flex align-items-center  gap-3">
             <MyButtonCreate onClick={handleCreate} />
           </Col>
+          <div className="d-flex gap-2 mb-2">
+            <Form.Select
+              value={selectedSupplierId}
+              onChange={(e) => setSelectedSupplierId(e.target.value)}
+              style={{ width: "200px" }}
+            >
+              <option value="">Tất cả nhà cung cấp</option>
+              {suppliers?.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </Form.Select>
+            <Form.Control
+              type="date"
+              placeholder="Từ ngày"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              style={{ width: "150px" }}
+            />
+            <Form.Control
+              type="date"
+              placeholder="Đến ngày"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              style={{ width: "150px" }}
+            />
+          </div>
         </div>
         <div style={{ minHeight: "722px" }}>
           <MyDataTable

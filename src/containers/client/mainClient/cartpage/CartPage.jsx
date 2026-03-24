@@ -331,7 +331,6 @@ const CartPage = () => {
                                   }}
                                 >
                                   {parseInt(item.price).toLocaleString("vi-VN")}
-                                  đ
                                 </span>
                                 <span
                                   className="fw-semibold"
@@ -355,7 +354,7 @@ const CartPage = () => {
                         <div className="d-flex  justify-content-end align-items-center mt-2 mt-md-0">
                           <div
                             style={{ width: "100px" }}
-                            className="text-center text-danger fw-bold"
+                            className="text-center "
                           >
                             {(
                               item.price -
@@ -404,7 +403,7 @@ const CartPage = () => {
 
                           <div
                             style={{ width: "100px" }}
-                            className="text-center text-danger fw-bold "
+                            className="text-center"
                           >
                             {(
                               (item.price -
@@ -480,7 +479,7 @@ const CartPage = () => {
                     itemSelect.map((item, index) => (
                       <div
                         key={index}
-                        className="d-flex justify-content-between mb-3 align-items-start  border-bottom pb-2"
+                        className="d-flex justify-content-between mb-3 align-items-start  border-bottom pb-2 gap-1"
                       >
                         <div className="d-flex gap-3" style={{ flex: 1 }}>
                           <Image
@@ -501,7 +500,7 @@ const CartPage = () => {
                               {item.discount > 0 ? (
                                 <>
                                   <span
-                                    className="fw-bold text-danger me-2"
+                                    className="me-2"
                                     style={{ fontSize: "15px" }}
                                   >
                                     {(
@@ -534,10 +533,7 @@ const CartPage = () => {
                                   </span>
                                 </>
                               ) : (
-                                <span
-                                  className="fw-bold text-danger"
-                                  style={{ fontSize: "15px" }}
-                                >
+                                <span style={{ fontSize: "15px" }}>
                                   {parseInt(item.price).toLocaleString("vi-VN")}
                                 </span>
                               )}
@@ -552,10 +548,7 @@ const CartPage = () => {
                           </div>
                         </div>
 
-                        <div
-                          className="fw-bold text-end"
-                          style={{ color: "#D14552" }}
-                        >
+                        <div className="fw-bold text-end">
                           {(
                             item.quantity *
                             (item.price -
@@ -568,9 +561,7 @@ const CartPage = () => {
 
                   <div className="d-flex justify-content-between fw-bold mb-3">
                     <span className="text-dark">Tổng cộng:</span>
-                    <span style={{ color: "#D14552" }}>
-                      {totalPrice.toLocaleString("vi-VN")}(VNĐ)
-                    </span>
+                    <span>{totalPrice.toLocaleString("vi-VN")}(VNĐ)</span>
                   </div>
 
                   <Button

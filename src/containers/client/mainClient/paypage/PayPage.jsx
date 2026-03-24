@@ -330,7 +330,7 @@ const PayPage = () => {
                       ) : (
                         <>
                           <strong>{shippingInfo.dateString}</strong> |{" "}
-                          <del>{Number(30000).toLocaleString("vi-VN")}đ</del>
+                          <del>{Number(30000).toLocaleString("vi-VN")}</del>
                           <span className="ms-2 badge bg-success mb-1">
                             Freeship
                           </span>
@@ -458,8 +458,8 @@ const PayPage = () => {
                     <div>
                       <strong>{item.name}</strong>
                       <div>
-                        <span style={{ color: "#E35765", fontWeight: "600" }}>
-                          {item.price.toLocaleString("vi-VN")}(VNĐ)
+                        <span style={{ fontWeight: "600" }}>
+                          {item.price.toLocaleString("vi-VN")}
                         </span>
                         <span className="ms-3" style={{ fontSize: "14px" }}>
                           Số lượng: {item.quantity}

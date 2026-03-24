@@ -263,7 +263,7 @@ const Register = () => {
                         "Đăng ký"
                       )
                     }
-                    icon={!isLoading && "bi bi-person-plus-fill fs-5 me-2"}
+                    icon={!isLoading && "bi bi-person-plus-fill  me-2"}
                     onClick={handleRegister}
                     disabled={isLoading}
                   />
