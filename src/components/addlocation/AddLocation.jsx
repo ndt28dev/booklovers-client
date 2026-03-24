@@ -252,10 +252,20 @@ const AddLocation = ({ show, handleClose, user, itemUpAddress }) => {
           </Form.Group>
 
           <div className="text-end">
-            <Button variant="secondary" className="me-2" onClick={handleCancel}>
+            <Button
+              variant="secondary"
+              className="me-2"
+              onClick={handleCancel}
+              size="sm"
+            >
               Hủy
             </Button>
-            <Button variant="success" onClick={handleSubmit} disabled={loading}>
+            <Button
+              variant="success"
+              onClick={handleSubmit}
+              disabled={loading}
+              size="sm"
+            >
               {loading || loadingUp ? (
                 <>
                   <Spinner
