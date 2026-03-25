@@ -211,6 +211,27 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+export const updateAdminProfile = createAsyncThunk(
+  "admin/updateAdminProfile",
+  async (dataUp, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("tokenAdmin");
+      if (!token) throw new Error("Token không tồn tại");
+
+      const response = await axios.put(`${API_URL}/api/user-profile`, dataUp, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (dataUp, { rejectWithValue }) => {
@@ -393,6 +414,11 @@ const initialState = {
     success: false,
     error: null,
   },
+  updateAdminProfile: {
+    loading: false,
+    success: false,
+    error: null,
+  },
   updateUser: {
     loading: false,
     success: false,
@@ -487,6 +513,13 @@ const userSlice = createSlice({
     },
     resetUpdateUserProfileStatus: (state) => {
       state.updateUserProfile = {
+        loading: false,
+        success: false,
+        error: null,
+      };
+    },
+    resetUpdateAdminProfileStatus: (state) => {
+      state.updateAdminProfile = {
         loading: false,
         success: false,
         error: null,
@@ -671,6 +704,21 @@ const userSlice = createSlice({
         state.updateUserProfile.error = action.payload;
       })
 
+      // update admin profile
+      .addCase(updateAdminProfile.pending, (state) => {
+        state.updateAdminProfile.loading = true;
+        state.updateAdminProfile.success = false;
+        state.updateAdminProfile.error = null;
+      })
+      .addCase(updateAdminProfile.fulfilled, (state, action) => {
+        state.updateAdminProfile.loading = false;
+        state.updateAdminProfile.success = true;
+      })
+      .addCase(updateAdminProfile.rejected, (state, action) => {
+        state.updateAdminProfile.loading = false;
+        state.updateAdminProfile.error = action.payload;
+      })
+
       // update user
       .addCase(updateUser.pending, (state) => {
         state.updateUser.loading = true;
@@ -786,6 +834,7 @@ export const {
   resetDeleteUserStatus,
   logoutAdmin,
   resetImportUserStatus,
+  resetUpdateAdminProfileStatus,
 } = userSlice.actions;
 
 export default userSlice.reducer;

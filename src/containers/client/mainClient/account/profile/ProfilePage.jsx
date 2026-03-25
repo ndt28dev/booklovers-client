@@ -19,6 +19,7 @@ import {
   updatePassword,
   updateUserProfile,
   getAdminUserProfile,
+  resetUpdateUserProfileStatus,
 } from "../../../../../redux/slices/userSlice";
 import { toast } from "react-toastify";
 import {
@@ -33,6 +34,22 @@ import {
 } from "../../../../../redux/slices/authSlice";
 import "./ProfilePage.scss";
 import API_URL from "../../../../../config/api";
+import Select from "react-select";
+
+const dayOptions = Array.from({ length: 31 }, (_, i) => ({
+  value: i + 1,
+  label: `${i + 1}`,
+}));
+
+const monthOptions = Array.from({ length: 12 }, (_, i) => ({
+  value: i + 1,
+  label: `${i + 1}`,
+}));
+
+const yearOptions = Array.from({ length: 2015 - 1960 + 1 }, (_, i) => ({
+  value: 1960 + i,
+  label: `${1960 + i}`,
+}));
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -120,7 +137,7 @@ const ProfilePage = () => {
   useEffect(() => {
     if (success) {
       toast.success("Cập nhật thông tin thành công!");
-      dispatch(resetUpdateUserStatus());
+      dispatch(resetUpdateUserProfileStatus());
       dispatch(getUserWithAddress());
       dispatch(getAdminUserProfile());
     }
@@ -140,9 +157,9 @@ const ProfilePage = () => {
         email: user.email || "",
         phone: user.phone || "",
         gender: user.gender || "",
-        day: birthdayDate ? birthdayDate.getDate().toString() : "",
-        month: birthdayDate ? (birthdayDate.getMonth() + 1).toString() : "",
-        year: birthdayDate ? birthdayDate.getFullYear().toString() : "",
+        day: birthdayDate ? birthdayDate.getDate() : "",
+        month: birthdayDate ? birthdayDate.getMonth() + 1 : "",
+        year: birthdayDate ? birthdayDate.getFullYear() : "",
       });
     }
   }, [user]);
@@ -194,10 +211,9 @@ const ProfilePage = () => {
     if (!validateFormData()) return;
 
     const { day, month, year, ...rest } = formData;
-    const birthday = `${year}-${month.padStart(2, "0")}-${day.padStart(
-      2,
-      "0"
-    )}`;
+    const birthday = `${year}-${month.toString().padStart(2, "0")}-${day
+      .toString()
+      .padStart(2, "0")}`;
 
     const dataUp = new FormData();
     dataUp.append("fullname", formData.fullName);
@@ -221,18 +237,6 @@ const ProfilePage = () => {
         avatarFile: file,
       }));
     }
-  };
-
-  const renderOptions = (start, end) => {
-    const options = [];
-    for (let i = start; i <= end; i++) {
-      options.push(
-        <option key={i} value={i}>
-          {i}
-        </option>
-      );
-    }
-    return options;
   };
 
   const [loadingFakeOtp, setLoadingFakeOtp] = useState(false);
@@ -457,41 +461,74 @@ const ProfilePage = () => {
                         <Form.Label>Ngày sinh</Form.Label>
                         <Row>
                           <Col>
-                            <Form.Select
-                              name="day"
-                              value={formData.day}
-                              onChange={handleChange}
-                              isInvalid={!!errors.birthday}
-                              style={{ textAlign: "center" }}
-                            >
-                              <option value="">Ngày</option>
-                              {renderOptions(1, 31)}
-                            </Form.Select>
+                            <Select
+                              options={dayOptions}
+                              value={
+                                dayOptions.find(
+                                  (opt) => opt.value === formData.day
+                                ) || null
+                              }
+                              onChange={(selected) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  day: selected?.value || "",
+                                }));
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  birthday: null,
+                                }));
+                              }}
+                              placeholder="Ngày"
+                              className={errors.birthday ? "is-invalid" : ""}
+                            />
                           </Col>
+
                           <Col>
-                            <Form.Select
-                              name="month"
-                              value={formData.month}
-                              onChange={handleChange}
-                              isInvalid={!!errors.birthday}
-                              style={{ textAlign: "center" }}
-                            >
-                              <option value="">Tháng</option>
-                              {renderOptions(1, 12)}
-                            </Form.Select>
+                            <Select
+                              options={monthOptions}
+                              value={
+                                monthOptions.find(
+                                  (opt) => opt.value === formData.month
+                                ) || null
+                              }
+                              onChange={(selected) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  month: selected?.value || "",
+                                }));
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  birthday: null,
+                                }));
+                              }}
+                              placeholder="Tháng"
+                              className={errors.birthday ? "is-invalid" : ""}
+                            />
                           </Col>
+
                           <Col>
-                            <Form.Select
-                              name="year"
-                              value={formData.year}
-                              onChange={handleChange}
-                              isInvalid={!!errors.birthday}
-                              style={{ textAlign: "center" }}
-                            >
-                              <option value="">Năm</option>
-                              {renderOptions(1960, 2015)}
-                            </Form.Select>
+                            <Select
+                              options={yearOptions}
+                              value={
+                                yearOptions.find(
+                                  (opt) => opt.value === formData.year
+                                ) || null
+                              }
+                              onChange={(selected) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  year: selected?.value || "",
+                                }));
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  birthday: null,
+                                }));
+                              }}
+                              placeholder="Năm"
+                              className={errors.birthday ? "is-invalid" : ""}
+                            />
                           </Col>
+
                           {errors.birthday && (
                             <Col xs={12}>
                               <div className="text-danger mt-1">
