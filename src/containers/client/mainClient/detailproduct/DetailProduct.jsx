@@ -284,14 +284,14 @@ const DetailProduct = () => {
                         {Math.round(
                           book.price - book.price * (book.discount / 100)
                         ).toLocaleString("vi-VN")}
-                        (VNĐ)
+                        đ
                       </span>{" "}
                       {book.discount ? (
                         <span
                           className="text-decoration-line-through me-2"
                           style={{ fontSize: "14px", color: "#888" }}
                         >
-                          {Number(book.price).toLocaleString("vi-VN")}
+                          {Number(book.price).toLocaleString("vi-VN")}đ
                         </span>
                       ) : null}
                       {book.discount ? (

@@ -324,13 +324,13 @@ const PayPage = () => {
                         <>
                           <strong>{shippingInfo.dateString}</strong> |{" "}
                           <span>
-                            {Number(shippingFee).toLocaleString("vi-VN")}
+                            {Number(shippingFee).toLocaleString("vi-VN")}đ
                           </span>
                         </>
                       ) : (
                         <>
                           <strong>{shippingInfo.dateString}</strong> |{" "}
-                          <del>{Number(30000).toLocaleString("vi-VN")}</del>
+                          <del>{Number(30000).toLocaleString("vi-VN")}đ</del>
                           <span className="ms-2 badge bg-success mb-1">
                             Freeship
                           </span>
@@ -459,7 +459,7 @@ const PayPage = () => {
                       <strong>{item.name}</strong>
                       <div>
                         <span style={{ fontWeight: "600" }}>
-                          {item.price.toLocaleString("vi-VN")}
+                          {item.price.toLocaleString("vi-VN")}đ
                         </span>
                         <span className="ms-3" style={{ fontSize: "14px" }}>
                           Số lượng: {item.quantity}
@@ -506,11 +506,11 @@ const PayPage = () => {
 
                 <div className="d-flex justify-content-between mb-1">
                   <span>Tạm tính</span>
-                  <span>{subtotal.toLocaleString("vi-VN")}(VNĐ)</span>
+                  <span>{subtotal.toLocaleString("vi-VN")}đ</span>
                 </div>
                 <div className="d-flex justify-content-between mb-1">
                   <span>Phí vận chuyển</span>
-                  <span>{shippingFee.toLocaleString("vi-VN")}(VNĐ)</span>
+                  <span>{shippingFee.toLocaleString("vi-VN")}đ</span>
                 </div>
                 {discountValue && discountValue.description ? (
                   <div
@@ -526,7 +526,7 @@ const PayPage = () => {
                         {Number(discountValue.discount_value).toLocaleString(
                           "vi-VN"
                         )}
-                        (VNĐ)
+                        đ
                       </span>
                     )}
                   </div>
@@ -538,7 +538,7 @@ const PayPage = () => {
                     {Number(total) > 0
                       ? Number(total).toLocaleString("vi-VN")
                       : "0"}
-                    (VNĐ)
+                    đ
                   </span>
                 </div>
 

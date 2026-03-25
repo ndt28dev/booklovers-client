@@ -17,7 +17,7 @@ const SettingSystemPage = () => {
   );
 
   const [form, setForm] = useState({
-    logo: null, // sẽ lưu URL
+    logo: null,
     hotline: "",
     email: "",
     address: "",
@@ -26,6 +26,7 @@ const SettingSystemPage = () => {
     instagram: "",
     tiktok: "",
     youtube: "",
+    google_map_link: "",
   });
 
   const [logoFile, setLogoFile] = useState(null);
@@ -42,6 +43,8 @@ const SettingSystemPage = () => {
       });
     }
   }, [settings]);
+
+  console.log(settings);
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -68,6 +71,7 @@ const SettingSystemPage = () => {
       data.append("instagram", form.instagram);
       data.append("tiktok", form.tiktok);
       data.append("youtube", form.youtube);
+      data.append("google_map_link", form.google_map_link);
       await dispatch(updateSystemSettings(data));
     } catch (error) {
       console.error(error);
@@ -86,6 +90,7 @@ const SettingSystemPage = () => {
       instagram: settings.instagram,
       tiktok: settings.tiktok,
       youtube: settings.youtube,
+      google_map_link: settings.google_map_link,
     });
   };
 
@@ -156,13 +161,26 @@ const SettingSystemPage = () => {
             </Form.Group>
           </Col>
           <Col md={6}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-2">
               <Form.Label className="mb-0">Zalo</Form.Label>
               <Form.Control
                 name="zalo"
                 value={form.zalo}
                 onChange={handleChange}
                 placeholder="Nhập số zalo"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-2">
+              <Form.Label className="mb-0">Link google map</Form.Label>
+              <Form.Control
+                name="google_map_link"
+                value={form.google_map_link}
+                onChange={handleChange}
+                placeholder="Nhập link google map"
               />
             </Form.Group>
           </Col>

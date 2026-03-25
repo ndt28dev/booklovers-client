@@ -228,7 +228,7 @@ const StorePage = () => {
             </h5>
             <p className="text-muted mb-1">{settings?.address}</p>
             <a
-              href="https://maps.app.goo.gl/4qe1g82VAScfXpUH9"
+              href={settings?.google_map_link}
               target="_blank"
               className="text-primary text-decoration-none "
             >

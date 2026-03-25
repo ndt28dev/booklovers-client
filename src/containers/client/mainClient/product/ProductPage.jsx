@@ -320,12 +320,6 @@ const ProductPage = () => {
                     value={searchKeyword}
                     onChange={(e) => setSearchKeyword(e.target.value)}
                   />
-                  {/* <InputGroup.Text
-                    className="bg-white icon-search-btn"
-                    onClick={handleSearchSubmit}
-                  >
-                    <i className="bi bi-search fs-6"></i>
-                  </InputGroup.Text> */}
                 </InputGroup>
               </Col>
               <Col md={checkedswitch === true ? 4 : 3} className="mt-2 mt-md-0">
@@ -411,12 +405,12 @@ const ProductPage = () => {
                           {Math.round(
                             book.price - book.price * (book.discount / 100)
                           ).toLocaleString("vi-VN")}
-                          (VNĐ)
+                          đ
                         </p>
                         {book.discount ? (
                           <p className="text-muted m-0">
                             <del>
-                              {Number(book.price).toLocaleString("vi-VN")}
+                              {Number(book.price).toLocaleString("vi-VN")}đ
                             </del>
                           </p>
                         ) : null}
