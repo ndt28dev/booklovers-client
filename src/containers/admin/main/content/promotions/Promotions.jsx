@@ -22,6 +22,13 @@ const discountOptions = [
   { value: "amount", label: "Số tiền (VNĐ)" },
 ];
 
+const statusOptions = [
+  { value: "", label: "Tất cả trạng thái" },
+  { value: "upcoming", label: "Chưa bắt đầu" },
+  { value: "active", label: "Đang diễn ra" },
+  { value: "expired", label: "Hết hạn" },
+];
+
 const Promotions = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +37,7 @@ const Promotions = () => {
   const [isOpenExport, setIsOpenExport] = useState(false);
   const [isCheck, setIsCheck] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
+  const [status, setStatus] = useState("");
 
   const [search, setSearch] = useState("");
   const [discountType, setDiscountType] = useState("");
@@ -51,9 +59,10 @@ const Promotions = () => {
         limit: 10,
         search,
         discount_type: discountType,
+        status,
       })
     );
-  }, [currentPage, search, discountType]);
+  }, [currentPage, search, discountType, status]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -125,10 +134,12 @@ const Promotions = () => {
         {formatDate(promotion.end_date)}
       </td>
       <td className="align-middle text-center">
-        {promotion.is_active === 1 ? (
-          <Badge bg="success">Đang hoạt động</Badge>
+        {promotion.status === "upcoming" ? (
+          <Badge bg="secondary">Chưa bắt đầu</Badge>
+        ) : promotion.status === "active" ? (
+          <Badge bg="success">Đang diễn ra</Badge>
         ) : (
-          <Badge bg="danger">Hết hạn</Badge>
+          promotion.status === "expired" && <Badge bg="danger">Hết hạn</Badge>
         )}
       </td>
       <td className="align-middle text-center">{promotion.usage_limit}</td>
@@ -182,6 +193,23 @@ const Promotions = () => {
             <MyButtonExport onClick={handleExport} />
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+            <Select
+              options={statusOptions}
+              value={statusOptions.find((opt) => opt.value === status)}
+              onChange={(selected) => {
+                setStatus(selected?.value || "");
+                setCurrentPage(1);
+              }}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  minHeight: 38,
+                  width: 200,
+                }),
+                menu: (provided) => ({ ...provided, zIndex: 9999 }),
+              }}
+              placeholder="Chọn trạng thái"
+            />
             <Select
               value={discountOptions.find(
                 (option) => option.value === discountType

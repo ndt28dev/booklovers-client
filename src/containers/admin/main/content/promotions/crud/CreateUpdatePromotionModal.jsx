@@ -14,7 +14,7 @@ import Select from "react-select";
 
 const discountTypeOptions = [
   { value: "percent", label: "Phần trăm (%)" },
-  { value: "fixed", label: "Số tiền" },
+  { value: "amount", label: "Số tiền" },
 ];
 
 const CreateUpdatePromotionModal = ({
@@ -36,7 +36,6 @@ const CreateUpdatePromotionModal = ({
     usage_limit: "",
     start_date: "",
     end_date: "",
-    is_active: true,
   });
 
   const [errors, setErrors] = useState({});
@@ -98,7 +97,6 @@ const CreateUpdatePromotionModal = ({
         usage_limit: dataSelected.usage_limit || "",
         start_date: dataSelected.start_date?.slice(0, 16) || "",
         end_date: dataSelected.end_date?.slice(0, 16) || "",
-        is_active: dataSelected.is_active === 1,
       });
     }
   }, [dataSelected, isCheck]);
@@ -130,7 +128,6 @@ const CreateUpdatePromotionModal = ({
       usage_limit: formData.usage_limit,
       start_date: formData.start_date,
       end_date: formData.end_date,
-      is_active: formData.is_active ? 1 : 0,
     };
 
     if (isCheck) {
@@ -270,7 +267,7 @@ const CreateUpdatePromotionModal = ({
         </Row>
 
         <Row>
-          <Col md={6}>
+          <Col md={12}>
             <Form.Group>
               <Form.Label className="mb-0">Giới hạn lượt sử dụng</Form.Label>
               <Form.Control
@@ -283,19 +280,6 @@ const CreateUpdatePromotionModal = ({
               <Form.Control.Feedback type="invalid">
                 {errors.usage_limit}
               </Form.Control.Feedback>
-            </Form.Group>
-          </Col>
-
-          <Col md={6} className="d-flex">
-            <Form.Group>
-              <Form.Label className="mb-0">Trạng thái</Form.Label>
-              <Form.Check
-                type="checkbox"
-                label="Đang hoạt động"
-                name="is_active"
-                checked={formData.is_active}
-                onChange={handleChange}
-              />
             </Form.Group>
           </Col>
         </Row>

@@ -15,62 +15,31 @@
           }
       
           &:hover {
-            color: #de3241;
+            color: #E35765;
           }
         }
       }
-      
-    .category-list {
+    
+      ul .filter-section-li:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+        color: #E35765;
 
+        span {
+          color: #E35765;
+        }
 
+         i {
+          color: #E35765;
+        }
+      }
 
-        .category-item {
-            position: relative;
-            cursor: pointer;
-            padding-left: 10px;
-            color: black;
-        
-            .category-item-icon {
-                padding: 8px 10px;
-                font-weight: bold;
-                font-size: 14px;
-            }
-
-            &:hover  {
-              color: #E35765;
-            }
-
-            &:hover  .submenu{
-              color: #333;
-            }
-        
-            &:hover .category-item-icon{
-                background-color: #EEEEEE;
-            }
-            
-            .submenu {
-              position: absolute;
-              top: 0;
-              left: 100%;
-              min-width: 180px;
-              background: #fff;
-              border: 5px solid #eee;
-              padding: 10px;
-              list-style: none;
-              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-              z-index: 1;
-          
-              li {
-                padding: 6px 0;
-                white-space: nowrap;
-          
-                &:hover {
-                  color: #de3241;
-                }
-              }
-            }
-          }
-    }
+      .active-sub {
+        background-color: #f1f1f1 !important;
+        font-weight: 600;
+        color: #E35765 !important;
+      }
+    
 }
 
 .filter-result {
@@ -88,12 +57,11 @@
       color: #fff;
       padding: 0 6px;
       border-radius: 5px;
-      font-weight: bold;
       display: inline-flex;
       align-items: center;
   
       .remove-tag {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         cursor: pointer;
         padding: 2px

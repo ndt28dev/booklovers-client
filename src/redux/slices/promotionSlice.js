@@ -5,7 +5,7 @@ import API_URL from "../../config/api";
 export const fetchAllPromotion = createAsyncThunk(
   "promotion/fetchAllPromotion",
   async (
-    { page = 1, limit = 10, discount_type = "", search = "" },
+    { page = 1, limit = 10, discount_type = "", search = "", status = "" },
     thunkAPI
   ) => {
     try {
@@ -17,6 +17,10 @@ export const fetchAllPromotion = createAsyncThunk(
 
       if (search) {
         url += `&search=${encodeURIComponent(search)}`;
+      }
+
+      if (status) {
+        url += `&status=${status}`;
       }
 
       const res = await axios.get(url);

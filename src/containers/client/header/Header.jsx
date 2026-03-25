@@ -177,7 +177,14 @@ const Header = () => {
                                     locale: "vi",
                                   }
                                 )}`}
-                                state={{ idSub: sub.id, nameSub: sub.name }}
+                                state={{
+                                  idSub: sub.id,
+                                  nameSub: sub.name,
+                                  tempCateSlug: slugify(cat.name, {
+                                    lower: true,
+                                    locale: "vi",
+                                  }),
+                                }}
                                 className="dropdown-item"
                               >
                                 {sub.name}

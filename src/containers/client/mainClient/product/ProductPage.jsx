@@ -21,12 +21,21 @@ import { fetchCategoriesWithSub } from "../../../../redux/slices/categorySlice";
 import { NavLink } from "react-router-dom";
 import { useParams, useLocation } from "react-router-dom";
 import API_URL from "../../../../config/api";
+import Select from "react-select";
 
 const priceOptions = [
   { label: "Dưới 100,000₫", value: "under-100" },
   { label: "100,000₫ - 400,000₫", value: "100-400" },
   { label: "400,000₫ - 800,000₫", value: "400-800" },
   { label: "Trên 800,000₫", value: "above-800" },
+];
+
+const sortOptions = [
+  { value: "", label: "Mặc định" },
+  { value: "newest", label: "Sách mới" },
+  { value: "discount-desc", label: "Giảm giá" },
+  { value: "price-asc", label: "Giá: tăng dần" },
+  { value: "price-desc", label: "Giá: giảm dần" },
 ];
 
 const ProductPage = () => {
@@ -38,7 +47,6 @@ const ProductPage = () => {
 
   const { id, name } = location.state || {};
   const { idSub, nameSub, tempCateSlug } = location.state || {};
-  // const tempCateSlug = categorySlug || "";
 
   let parentCategory = null;
 
@@ -173,85 +181,23 @@ const ProductPage = () => {
           {!categorySlug && !subcategorySlug && (
             <div className="filter-section d-none d-md-block">
               <h5 className="filter-section-title mb-2 fw-bold">Danh mục</h5>
-              <ul className="list-unstyled category-list">
+              <ul className="list-unstyled px-3">
                 {categories.map((cat, idx) => (
-                  <li
-                    key={cat.id}
-                    className={`category-item ${
-                      activeCategory === idx ? "active" : ""
-                    }`}
-                    onMouseEnter={() => setActiveCategory(idx)}
-                    onMouseLeave={() => setActiveCategory(null)}
-                  >
-                    <div className="d-flex justify-content-between align-items-center">
-                      <NavLink
-                        to={`/san-pham/danh-muc/${slugify(cat.name, {
-                          lower: true,
-                          locale: "vi",
-                        })}`}
-                        state={{
-                          id: cat.id,
-                          name: cat.name,
-                        }}
-                        className="dropdown-item flex-grow-1"
-                      >
-                        {cat.name}
-                      </NavLink>
+                  <li key={cat.id}>
+                    <NavLink
+                      to={`/san-pham/danh-muc/${slugify(cat.name, {
+                        lower: true,
+                        locale: "vi",
+                      })}`}
+                      state={{
+                        id: cat.id,
+                        name: cat.name,
+                      }}
+                      className="dropdown-item flex-grow-1 py-2 px-3 filter-section-li d-flex justify-content-between align-items-center"
+                    >
+                      <span>{cat.name}</span>
                       <i className="bi bi-chevron-right category-item-icon"></i>
-                    </div>
-
-                    {activeCategory === idx && (
-                      <ul className="submenu">
-                        {cat.subcategories.map((sub) => (
-                          <li key={sub.id}>
-                            <NavLink
-                              to={`/san-pham/danh-muc-con/${slugify(sub.name, {
-                                lower: true,
-                                locale: "vi",
-                              })}`}
-                              state={{ idSub: sub.id, nameSub: sub.name }}
-                              className="dropdown-item"
-                            >
-                              {sub.name}
-                            </NavLink>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {!categorySlug && !subcategorySlug && (
-            <div className="filter-section d-block d-md-none">
-              <h5 className="filter-section-title mb-2 fw-bold">Danh mục</h5>
-              <ul className="list-unstyled category-list">
-                {categories.map((cat, idx) => (
-                  <li
-                    key={cat.id}
-                    className={`category-item ${
-                      activeCategory === idx ? "active" : ""
-                    }`}
-                    onMouseEnter={() => setActiveCategory(idx)}
-                    onMouseLeave={() => setActiveCategory(null)}
-                  >
-                    <div className="d-flex justify-content-between align-items-center">
-                      <NavLink
-                        to={`/san-pham/danh-muc/${slugify(cat.name, {
-                          lower: true,
-                          locale: "vi",
-                        })}`}
-                        state={{
-                          id: cat.id,
-                          name: cat.name,
-                        }}
-                        className="dropdown-item flex-grow-1"
-                      >
-                        {cat.name}
-                      </NavLink>
-                      <i className="bi bi-chevron-right category-item-icon"></i>
-                    </div>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -260,7 +206,7 @@ const ProductPage = () => {
           {!categorySlug && subcategorySlug && (
             <div className="filter-section">
               <h5 className="filter-section-title mb-2 fw-bold">Thể loại</h5>
-              <ul className="list-unstyled category-list">
+              <ul className="list-unstyled px-3">
                 {categories
                   .filter(
                     (cat) =>
@@ -280,21 +226,12 @@ const ProductPage = () => {
                             nameSub: sub.name,
                             tempCateSlug: categorySlug || tempCateSlug,
                           }}
-                          className={`dropdown-item ${
+                          className={`dropdown-item filter-section-li py-2 px-3  ${
                             slugify(sub.name, { lower: true, locale: "vi" }) ===
                             subcategorySlug
-                              ? "fw-bold"
+                              ? "active-sub"
                               : ""
                           }`}
-                          style={{
-                            color:
-                              slugify(sub.name, {
-                                lower: true,
-                                locale: "vi",
-                              }) === subcategorySlug
-                                ? "#E35765"
-                                : "inherit",
-                          }}
                         >
                           {sub.name}
                         </NavLink>
@@ -304,11 +241,10 @@ const ProductPage = () => {
               </ul>
             </div>
           )}
-
           {categorySlug && (
             <div className="filter-section">
               <h5 className="filter-section-title mb-2 fw-bold">Thể loại</h5>
-              <ul className="list-unstyled category-list">
+              <ul className="list-unstyled px-3">
                 {categories
                   .filter(
                     (cat) =>
@@ -328,7 +264,7 @@ const ProductPage = () => {
                             nameSub: sub.name,
                             tempCateSlug: categorySlug,
                           }}
-                          className="dropdown-item"
+                          className="dropdown-item py-2 px-3 filter-section-li"
                         >
                           {sub.name}
                         </NavLink>
@@ -393,19 +329,15 @@ const ProductPage = () => {
                 </InputGroup>
               </Col>
               <Col md={checkedswitch === true ? 4 : 3} className="mt-2 mt-md-0">
-                <Form.Select
-                  value={sort}
-                  onChange={(e) => {
-                    setSort(e.target.value);
-                    setCurrentPage(1); // Reset về trang 1 khi thay đổi sort
+                <Select
+                  options={sortOptions}
+                  value={sortOptions.find((opt) => opt.value === sort)}
+                  onChange={(selected) => {
+                    setSort(selected.value);
+                    setCurrentPage(1); // reset trang
                   }}
-                >
-                  <option value="">Mặc định</option>
-                  <option value="newest">Sách mới</option>
-                  <option value="discount-desc">Giảm giá</option>
-                  <option value="price-asc">Giá: tăng dần</option>
-                  <option value="price-desc">Giá: giảm dần</option>
-                </Form.Select>
+                  placeholder="Chọn sắp xếp"
+                />
               </Col>
             </Row>
 
@@ -424,9 +356,11 @@ const ProductPage = () => {
                       key={index}
                       className="filter-tag d-flex align-items-center"
                     >
-                      <span>{matched?.label || value}</span>
+                      <span style={{ fontSize: "14px" }}>
+                        {matched?.label || value}
+                      </span>
                       <span
-                        className="remove-tag ms-2"
+                        className="remove-tag ms-1"
                         onClick={() => handleRemoveTag(value)}
                       >
                         ×
@@ -477,12 +411,12 @@ const ProductPage = () => {
                           {Math.round(
                             book.price - book.price * (book.discount / 100)
                           ).toLocaleString("vi-VN")}
-                          ₫
+                          (VNĐ)
                         </p>
                         {book.discount ? (
                           <p className="text-muted m-0">
                             <del>
-                              {Number(book.price).toLocaleString("vi-VN")}₫
+                              {Number(book.price).toLocaleString("vi-VN")}
                             </del>
                           </p>
                         ) : null}
@@ -502,11 +436,6 @@ const ProductPage = () => {
           </Container>
 
           <div className="d-lg-flex justify-content-center mt-1 d-none ">
-            {totalPages < 1 && (
-              <div className="d-flex justify-content-end">
-                <Pagination></Pagination>
-              </div>
-            )}
             {totalPages > 1 && (
               <Pagination className="pagination-book">
                 <Pagination.First
@@ -518,15 +447,61 @@ const ProductPage = () => {
                   disabled={currentPage === 1}
                 />
 
-                {[...Array(totalPages)].map((_, idx) => (
-                  <Pagination.Item
-                    key={idx}
-                    active={idx + 1 === currentPage}
-                    onClick={() => handlePageChange(idx + 1)}
-                  >
-                    {idx + 1}
-                  </Pagination.Item>
-                ))}
+                {(() => {
+                  const pages = [];
+
+                  // Trang 1
+                  pages.push(
+                    <Pagination.Item
+                      key={1}
+                      active={currentPage === 1}
+                      onClick={() => handlePageChange(1)}
+                    >
+                      1
+                    </Pagination.Item>
+                  );
+
+                  // ...
+                  if (currentPage > 3) {
+                    pages.push(<Pagination.Ellipsis key="start-ellipsis" />);
+                  }
+
+                  // Các trang giữa
+                  let start = Math.max(2, currentPage - 1);
+                  let end = Math.min(totalPages - 1, currentPage + 1);
+
+                  for (let i = start; i <= end; i++) {
+                    pages.push(
+                      <Pagination.Item
+                        key={i}
+                        active={i === currentPage}
+                        onClick={() => handlePageChange(i)}
+                      >
+                        {i}
+                      </Pagination.Item>
+                    );
+                  }
+
+                  // ...
+                  if (currentPage < totalPages - 2) {
+                    pages.push(<Pagination.Ellipsis key="end-ellipsis" />);
+                  }
+
+                  // Trang cuối
+                  if (totalPages > 1) {
+                    pages.push(
+                      <Pagination.Item
+                        key={totalPages}
+                        active={currentPage === totalPages}
+                        onClick={() => handlePageChange(totalPages)}
+                      >
+                        {totalPages}
+                      </Pagination.Item>
+                    );
+                  }
+
+                  return pages;
+                })()}
 
                 <Pagination.Next
                   onClick={() =>

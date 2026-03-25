@@ -526,6 +526,7 @@ const PayPage = () => {
                         {Number(discountValue.discount_value).toLocaleString(
                           "vi-VN"
                         )}
+                        (VNĐ)
                       </span>
                     )}
                   </div>
