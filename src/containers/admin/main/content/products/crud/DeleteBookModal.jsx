@@ -21,6 +21,10 @@ const DeleteBookModal = ({ isOpen, onClose, id, currentPage }) => {
   };
 
   useEffect(() => {
+    dispatch(resetDeleteBookStatus());
+  }, []);
+
+  useEffect(() => {
     if (success) {
       toast.success("Xoá sản phẩm thành công!");
       dispatch(resetDeleteBookStatus());

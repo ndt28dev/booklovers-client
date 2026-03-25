@@ -33,6 +33,7 @@ const SettingSystemPage = () => {
 
   useEffect(() => {
     dispatch(fetchSystemSettings());
+    dispatch(clearUpdateSuccess());
   }, [dispatch]);
 
   useEffect(() => {

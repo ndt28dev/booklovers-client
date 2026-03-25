@@ -69,6 +69,7 @@ const CreateUpdateImportsModal = ({ isOpen, onClose, currentPage }) => {
   useEffect(() => {
     dispatch(fetchSuppliersAll());
     dispatch(getAllBooksNoPaging());
+    dispatch(resetCreateImport());
   }, []);
 
   useEffect(() => {

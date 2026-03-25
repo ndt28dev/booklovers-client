@@ -59,6 +59,11 @@ const CreateUpdateUserModal = ({
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
 
+  useEffect(() => {
+    dispatch(resetCreateUserStatus());
+    dispatch(resetUpdateUserStatus());
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 

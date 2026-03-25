@@ -21,6 +21,10 @@ const DeletePromotionModal = ({ isOpen, onClose, id, currentPage }) => {
   };
 
   useEffect(() => {
+    dispatch(resetDeletePromotion());
+  }, []);
+
+  useEffect(() => {
     if (success) {
       toast.success("Xoá khuyến mãi thành công!");
       dispatch(resetDeletePromotion());

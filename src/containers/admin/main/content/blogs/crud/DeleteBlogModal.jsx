@@ -21,6 +21,10 @@ const DeleteBlogModal = ({ isOpen, onClose, id, currentPage }) => {
   };
 
   useEffect(() => {
+    dispatch(resetDeleteBlogState());
+  }, []);
+
+  useEffect(() => {
     if (success) {
       toast.success("Xoá sản phẩm thành công!");
       dispatch(resetDeleteBlogState());

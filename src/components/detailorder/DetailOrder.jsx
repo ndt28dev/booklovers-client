@@ -114,11 +114,12 @@ const DetailOrderModal = ({ show, handleClose, order }) => {
                 <td className="align-middle text-start">{item.book_name}</td>
 
                 <td>{item.quantity}</td>
-                <td>{parseInt(item.unit_price).toLocaleString("vi-VN")}</td>
+                <td>{parseInt(item.unit_price).toLocaleString("vi-VN")}đ</td>
                 <td>
                   {(item.quantity * parseInt(item.unit_price)).toLocaleString(
                     "vi-VN"
                   )}
+                  đ
                 </td>
               </tr>
             ))}
@@ -138,11 +139,11 @@ const DetailOrderModal = ({ show, handleClose, order }) => {
           <Col md={6} className="d-flex flex-column align-items-end">
             <div className="mb-1" style={{ fontSize: "18px" }}>
               <span className="fw-semibold">Phí ship:</span>{" "}
-              {parseInt(order.shipping_fee).toLocaleString("vi-VN")}(VNĐ)
+              {parseInt(order.shipping_fee).toLocaleString("vi-VN")}đ
             </div>
             <div style={{ color: "#E35765", fontSize: "18px" }}>
               <span className="fw-semibold text-black">Tổng tiền:</span>{" "}
-              {parseInt(order.total_price).toLocaleString("vi-VN")}(VNĐ)
+              {parseInt(order.total_price).toLocaleString("vi-VN")}đ
             </div>
           </Col>
         </Row>

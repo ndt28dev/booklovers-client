@@ -50,6 +50,11 @@ const CreateUpdatePromotionModal = ({
     success: successUpdate,
   } = useSelector((state) => state.promotion.update);
 
+  useEffect(() => {
+    dispatch(resetCreatePromotion());
+    dispatch(resetUpdatePromotion());
+  }, []);
+
   const validatePromotion = (data) => {
     const errors = {};
 

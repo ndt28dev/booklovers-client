@@ -39,6 +39,11 @@ const CreateUpdateSupplier = ({
   } = useSelector((state) => state.supplier.updateSupplier);
 
   useEffect(() => {
+    dispatch(resetCreateSupplier());
+    dispatch(resetUpdateSupplier());
+  }, []);
+
+  useEffect(() => {
     if (isCheck && dataSelected) {
       setForm({
         name: dataSelected.name || "",

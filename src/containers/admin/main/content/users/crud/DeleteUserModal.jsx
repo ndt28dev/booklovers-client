@@ -21,6 +21,10 @@ const DeleteUserModal = ({ isOpen, onClose, id, currentPage }) => {
   };
 
   useEffect(() => {
+    dispatch(resetDeleteUserStatus());
+  }, []);
+
+  useEffect(() => {
     if (success) {
       toast.success("Xoá người dùng thành công!");
       dispatch(resetDeleteUserStatus());

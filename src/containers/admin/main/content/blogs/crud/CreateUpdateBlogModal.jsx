@@ -47,6 +47,11 @@ const CreateUpdateBlogModal = ({
     success: successUpdate,
   } = useSelector((state) => state.blog.updateState);
 
+  useEffect(() => {
+    dispatch(resetCreateBlogState());
+    dispatch(resetUpdateBlogState());
+  }, []);
+
   const validate = () => {
     let newErrors = {};
 

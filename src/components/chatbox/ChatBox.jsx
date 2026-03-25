@@ -177,7 +177,7 @@ const ChatBox = ({ onClose }) => {
       const result = await response.json();
       const reply =
         result?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Xin lỗi, tôi chưa hiểu yêu cầu của bạn.";
+        "Xin lỗi, hiện tại hệ thống ChatBox của Booklovers đang bị lỗi.";
 
       setMessages((prev) => [...prev, { from: "bot", text: reply }]);
     } catch (err) {

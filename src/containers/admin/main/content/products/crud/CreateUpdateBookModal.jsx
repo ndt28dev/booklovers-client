@@ -98,9 +98,8 @@ const CreateUpdateBookModal = ({
 
   useEffect(() => {
     dispatch(fetchCategoriesWithSub());
-
-    // resetCreateBookStatus,
-    // resetUpdateBookStatus,
+    dispatch(resetCreateBookStatus());
+    dispatch(resetUpdateBookStatus());
   }, [dispatch]);
 
   const handleChange = (e) => {

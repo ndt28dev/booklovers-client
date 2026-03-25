@@ -55,6 +55,12 @@ const SettingCategory = () => {
   // ========== EFFECTS ==========
   useEffect(() => {
     dispatch(fetchCategoriesWithSub());
+    dispatch(resetCreate());
+    dispatch(resetUpdate());
+    dispatch(resetDelete());
+    dispatch(resetSubCreate());
+    dispatch(resetSubUpdate());
+    dispatch(resetSubDelete());
   }, [dispatch]);
 
   // ===== Category Toasts =====
