@@ -18,12 +18,19 @@ import Select from "react-select";
 import ImportUserModal from "./crud/ImportUserModal";
 import ExportUserModal from "./crud/ExportUserModal";
 import MyLayoutAdmin from "../../../../../components/mylayout/MyLayoutAdmin";
+import { set } from "date-fns";
 
 // Tạo options
 const roleOptions = [
   { value: "", label: "Tất cả" },
   { value: "admin", label: "Admin" },
   { value: "user", label: "User" },
+];
+
+const genderOptions = [
+  { value: "", label: "Tất cả" },
+  { value: "MALE", label: "Nam" },
+  { value: "FEMALE", label: "Nữ" },
 ];
 
 const Users = () => {
@@ -37,6 +44,8 @@ const Users = () => {
 
   const [role, setRole] = useState("");
   const [search, setSearch] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
 
   const { list, error, pagination } = useSelector((state) => state.user.users);
 
@@ -54,9 +63,11 @@ const Users = () => {
         limit: 10,
         role: role,
         search: search,
+        phone: phone,
+        gender: gender,
       })
     );
-  }, [currentPage, role, search]);
+  }, [currentPage, role, search, phone, gender]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -182,7 +193,7 @@ const Users = () => {
             <MyButtonImport onClick={handleImport} />
             <MyButtonExport onClick={handleExport} />
           </Col>
-          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+          <div className="d-flex align-items-center gap-2">
             <Select
               value={roleOptions.find((option) => option.value === role)}
               onChange={(selectedOption) => {
@@ -200,10 +211,32 @@ const Users = () => {
               }}
             />
 
-            <div className="d-flex align-items-center">
-              <Form.Label className="mb-0 me-2 text-nowrap">
-                Tìm kiếm
-              </Form.Label>
+            <Select
+              options={genderOptions}
+              value={genderOptions.find((opt) => opt.value === gender) || null}
+              onChange={(selectedOption) => {
+                setGender(selectedOption ? selectedOption.value : "");
+                setCurrentPage(1);
+              }}
+              isClearable={false}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: 110,
+                  minHeight: 36,
+                }),
+              }}
+            />
+            <div className="d-flex align-items-center gap-2">
+              <Form.Control
+                type="text"
+                placeholder="Tìm theo số điện thoại"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
               <Form.Control
                 type="text"
                 placeholder="Nhập từ khóa..."

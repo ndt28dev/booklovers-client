@@ -142,7 +142,7 @@ const CreateUpdateUserModal = ({
           ? `${API_URL}/avatar/${dataSelected.avatar}`
           : `${API_URL}/avatar/default.jpg`,
         birthday: dataSelected?.birthday
-          ? new Date(dataSelected.birthday).toISOString().split("T")[0]
+          ? new Date(dataSelected?.birthday).toISOString().split("T")[0]
           : "",
         gender: dataSelected?.gender || "",
         phone: dataSelected?.phone || "",

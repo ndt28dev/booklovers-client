@@ -6,10 +6,13 @@ import { data } from "react-router-dom";
 
 export const fetchAllUser = createAsyncThunk(
   "user/fetchAllUser",
-  async ({ page = 1, limit = 5, role = "", search = "" }, thunkAPI) => {
+  async (
+    { page = 1, limit = 5, role = "", search = "", phone = "", gender = "" },
+    thunkAPI
+  ) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/users?page=${page}&limit=${limit}&role=${role}&search=${search}`
+        `${API_URL}/api/users?page=${page}&limit=${limit}&role=${role}&search=${search}&phone=${phone}&gender=${gender}`
       );
 
       return {
