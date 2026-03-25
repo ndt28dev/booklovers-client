@@ -21,6 +21,13 @@ const featuredOptions = [
   { value: "0", label: "Không nổi bật" },
 ];
 
+const statusOptions = [
+  { value: "", label: "Tất cả" },
+  { value: "DRAFT", label: "Bản nháp" },
+  { value: "PUBLISHED", label: "Đã công khai" },
+  { value: "ARCHIVED", label: "Đã ẩn" },
+];
+
 const Blogs = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +36,7 @@ const Blogs = () => {
   const [isCheck, setIsCheck] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
 
+  const [status, setStatus] = useState("");
   const [featured, setFeatured] = useState("");
   const [search, setSearch] = useState("");
 
@@ -49,9 +57,10 @@ const Blogs = () => {
         limit: 10,
         is_featured: featured,
         search: search,
+        status,
       })
     );
-  }, [currentPage, featured, search]);
+  }, [currentPage, featured, search, status]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -83,8 +92,9 @@ const Blogs = () => {
     { title: "STT", style: { width: "3%", textAlign: "center" } },
     { title: "Tiêu đề" },
     { title: "Ngày đăng", style: { width: "10%", textAlign: "center" } },
-    { title: "Tác giả", style: { width: "18%" } },
+    { title: "Tác giả", style: { width: "12%" } },
     { title: "Ảnh", style: { width: "15%", textAlign: "center" } },
+    { title: "Trạng thái", style: { width: "15%", textAlign: "center" } },
     { title: "Nổi bật", style: { width: "10%", textAlign: "center" } },
     { title: "Thao tác", style: { width: "10%", textAlign: "center" } },
   ];
@@ -99,18 +109,29 @@ const Blogs = () => {
       <td className="align-middle text-center">{formatDate(blog.date)}</td>
       <td className="align-middle">{blog.author}</td>
       <td className="text-center align-middle">
-        <Image
-          src={
-            blog?.image && blog.image?.startsWith("http")
-              ? blog.image
-              : `${API_URL}/blogs/${blog?.image}`
-          }
-          style={{ width: "150px", height: "80px" }}
-        />
+        {blog?.image ? (
+          <Image
+            src={
+              blog.image.startsWith("http")
+                ? blog.image
+                : `${API_URL}/blogs/${blog.image}`
+            }
+            style={{ width: "150px", height: "80px" }}
+          />
+        ) : null}
+      </td>
+      <td className="align-middle text-center">
+        {blog.status === "DRAFT" ? (
+          <Badge bg="secondary">Bản nháp</Badge>
+        ) : blog.status === "PUBLISHED" ? (
+          <Badge bg="success">Đã công khai</Badge>
+        ) : (
+          blog.status === "ARCHIVED" && <Badge bg="warning">Đã ẩn</Badge>
+        )}
       </td>
       <td className="align-middle text-center">
         {blog.is_featured === 1 ? (
-          <Badge bg="success">Nổi bật</Badge>
+          <Badge bg="primary">Nổi bật</Badge>
         ) : (
           <Badge bg="secondary">Không</Badge>
         )}
@@ -159,6 +180,23 @@ const Blogs = () => {
           </Col>
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
             <Select
+              options={statusOptions}
+              value={statusOptions.find((option) => option.value === status)}
+              onChange={(selectedOption) => {
+                setStatus(selectedOption.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Chọn trạng thái"
+              isClearable={false}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  minWidth: 200,
+                  height: 36,
+                }),
+              }}
+            />
+            <Select
               value={featuredOptions.find(
                 (option) => option.value === featured
               )}
@@ -184,12 +222,13 @@ const Blogs = () => {
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Nhập tiêu đề..."
+                placeholder="Nhập tiêu đề hoặc tác giả..."
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
                   setCurrentPage(1);
                 }}
+                style={{ width: "230px" }}
               />
             </div>
           </div>

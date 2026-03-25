@@ -4,7 +4,10 @@ import API_URL from "../../config/api";
 
 export const fetchAllBlog = createAsyncThunk(
   "blogs/fetchAllBlog",
-  async ({ page = 1, limit = 6, is_featured = "", search = "" }, thunkAPI) => {
+  async (
+    { page = 1, limit = 6, is_featured = "", search = "", status = "" },
+    thunkAPI
+  ) => {
     try {
       let url = `${API_URL}/api/blogs?page=${page}&limit=${limit}`;
 
@@ -16,6 +19,10 @@ export const fetchAllBlog = createAsyncThunk(
         url += `&search=${encodeURIComponent(search)}`;
       }
 
+      if (status) {
+        url += `&status=${encodeURIComponent(status)}`;
+      }
+
       const response = await axios.get(url);
 
       return {
@@ -25,6 +32,26 @@ export const fetchAllBlog = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Lỗi khi lấy danh sách blog"
+      );
+    }
+  }
+);
+
+export const fetchAllBlogForClient = createAsyncThunk(
+  "blogs/fetchAllBlogForClient",
+  async ({ page = 1, limit = 6 } = {}, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/blogs/for-client?page=${page}&limit=${limit}`
+      );
+
+      return {
+        blogs: response.data.data,
+        pagination: response.data.pagination,
+      };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Lỗi khi lấy danh sách blog cho client"
       );
     }
   }
@@ -120,6 +147,12 @@ const initialState = {
     pagination: null,
     error: null,
   },
+  clientState: {
+    listBlog: [],
+    pagination: null,
+    isLoading: false,
+    error: null,
+  },
   detailState: {
     blogDetail: null,
     isLoading: false,
@@ -181,6 +214,21 @@ const blogSlice = createSlice({
       .addCase(fetchAllBlog.rejected, (state, action) => {
         state.listState.isLoading = false;
         state.listState.error = action.payload;
+      })
+
+      // Fetch blogs for client
+      .addCase(fetchAllBlogForClient.pending, (state) => {
+        state.clientState.isLoading = true;
+        state.clientState.error = null;
+      })
+      .addCase(fetchAllBlogForClient.fulfilled, (state, action) => {
+        state.clientState.isLoading = false;
+        state.clientState.listBlog = action.payload.blogs;
+        state.clientState.pagination = action.payload.pagination;
+      })
+      .addCase(fetchAllBlogForClient.rejected, (state, action) => {
+        state.clientState.isLoading = false;
+        state.clientState.error = action.payload;
       })
 
       // Fetch blog by ID

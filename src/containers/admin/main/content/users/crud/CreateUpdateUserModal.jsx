@@ -139,7 +139,7 @@ const CreateUpdateUserModal = ({
         role: dataSelected?.role || "user",
         avatarFile: null,
         avatarPreview: dataSelected?.avatar
-          ? `${API_URL}/avatar/${dataSelected.avatar}`
+          ? `${API_URL}/avatar/${dataSelected?.avatar}`
           : `${API_URL}/avatar/default.jpg`,
         birthday: dataSelected?.birthday
           ? new Date(dataSelected?.birthday).toISOString().split("T")[0]

@@ -31,6 +31,7 @@ const CreateUpdateBlogModal = ({
     description: "",
     image: null,
     is_featured: 0,
+    is_hidden: 0,
   });
 
   const [preview, setPreview] = useState(null);
@@ -84,6 +85,7 @@ const CreateUpdateBlogModal = ({
         description: dataSelected.description || "",
         image: null,
         is_featured: dataSelected.is_featured || 0,
+        is_hidden: dataSelected.status === "ARCHIVED" ? 1 : 0,
       });
 
       if (dataSelected.image) {
@@ -147,11 +149,12 @@ const CreateUpdateBlogModal = ({
       data.append("image", formData.image);
     }
 
+    data.append("is_hidden", formData.is_hidden);
+
     if (isCheck) {
       data.append("id", formData.id);
       dispatch(updateBlog(data));
     } else {
-      // console.log("Create Blog", formData.description);
       dispatch(createBlog(data));
     }
   };
@@ -299,7 +302,15 @@ const CreateUpdateBlogModal = ({
               </Row>
             </Form.Group>
           </Col>
-
+          <div className="p-3 pt-0">
+            <Form.Check
+              type="switch"
+              id="featured-switch"
+              label="Bài viết nổi bật"
+              checked={formData.is_featured === 1}
+              onChange={handleToggleFeatured}
+            />
+          </div>
           <Col md={12}>
             <div className="mb-3">
               <label className="mb-0" style={{ marginBottom: "5px" }}>
@@ -357,10 +368,15 @@ const CreateUpdateBlogModal = ({
         <div className="d-flex justify-content-between align-items-center ">
           <Form.Check
             type="switch"
-            id="featured-switch"
-            label="Bài viết nổi bật"
-            checked={formData.is_featured === 1}
-            onChange={handleToggleFeatured}
+            id="hide-switch"
+            label="Ẩn bài viết"
+            checked={formData.is_hidden === 1}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                is_hidden: e.target.checked ? 1 : 0,
+              }))
+            }
           />
 
           <div>

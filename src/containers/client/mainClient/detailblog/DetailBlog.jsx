@@ -75,16 +75,23 @@ const DetailBlog = () => {
                     margin: "10px 0 20px",
                   }}
                 />
-                <Card.Text style={{ color: "#757575", whiteSpace: "pre-line" }}>
-                  {blogDetail.description}
-                </Card.Text>
+                <Card.Text
+                  style={{ color: "#757575", whiteSpace: "pre-line" }}
+                  dangerouslySetInnerHTML={{ __html: blogDetail.description }}
+                ></Card.Text>
               </Card.Body>
             </Card>
           </Col>
         )}
 
         <Col md={4}>
-          <div style={{ backgroundColor: "white", padding: "14px 10px 5px" }}>
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "14px 10px 5px",
+              borderRadius: "4px",
+            }}
+          >
             <h5 className="m2-4">Bài Viết Nổi Bật</h5>
             {listFeatured &&
               listFeatured.map((blog, idx) => (

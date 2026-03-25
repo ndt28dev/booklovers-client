@@ -9,13 +9,12 @@ const BlogPostCard = ({ post }) => {
   const navigate = useNavigate();
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm border-0">
       <Card.Body>
         <Card.Text
           style={{
             color: "#a7a7a7",
             fontSize: "12px",
-            padding: "5px 0",
             margin: "0",
             fontWeight: "500",
           }}
@@ -47,9 +46,11 @@ const BlogPostCard = ({ post }) => {
           src={`${API_URL}/blogs/${post.image}`}
           style={{ height: "150px", objectFit: "cover", margin: "10px 0 20px" }}
         />
-        <Card.Text style={{ color: "#757575" }} className="card-description">
-          {post.description}
-        </Card.Text>
+        <Card.Text
+          style={{ color: "#757575" }}
+          className="card-description"
+          dangerouslySetInnerHTML={{ __html: post.description }}
+        ></Card.Text>
         <ButtonCustom
           text="Xem chi tiết →"
           onClick={() => {

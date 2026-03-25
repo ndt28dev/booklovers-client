@@ -8,11 +8,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllBlog,
   fetchAllBlogFeatured,
+  fetchAllBlogForClient,
 } from "../../../../redux/slices/blogSlice";
 
 const BlogPage = () => {
   const dispatch = useDispatch();
-  const { listBlog, pagination } = useSelector((state) => state.blog.listState);
+  const { listBlog, pagination } = useSelector(
+    (state) => state.blog.clientState
+  );
   const { listFeatured } = useSelector((state) => state.blog.featuredState);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,7 +26,7 @@ const BlogPage = () => {
   const page = pagination?.page || 1;
 
   useEffect(() => {
-    dispatch(fetchAllBlog({ page: currentPage, limit: postsPerPage }));
+    dispatch(fetchAllBlogForClient({ page: currentPage, limit: postsPerPage }));
     dispatch(fetchAllBlogFeatured());
   }, [dispatch, currentPage]);
 
@@ -55,26 +58,18 @@ const BlogPage = () => {
 
       <Row>
         <Col md={12} lg={8}>
-          <h3 className="mb-4">Tất cả Bài Viết</h3>
+          <h5 className="mb-4">Tất cả Bài Viết</h5>
 
-          <Row className="g-4">
+          <Row className="g-3">
             {listBlog &&
               listBlog.map((post, idx) => (
-                <Col key={idx} xs={12} md={6} lg={4}>
+                <Col key={idx} xs={12} md={6} lg={4} className="p-2 mt-0">
                   <BlogPostCard post={post} />
                 </Col>
               ))}
           </Row>
 
-          <div className="d-flex justify-content-between align-items-center mt-1">
-            <div>
-              {/* <span>
-                Hiển thị{" "}
-                {total === 0 ? 0 : (currentPage - 1) * postsPerPage + 1} đến{" "}
-                {Math.min(currentPage * postsPerPage, total)} trong tổng {total}{" "}
-                bài viết
-              </span> */}
-            </div>
+          <div className="d-flex justify-content-center align-items-center ">
             {totalPages < 1 && (
               <div className="d-flex justify-content-end">
                 <Pagination></Pagination>
@@ -115,15 +110,19 @@ const BlogPage = () => {
         </Col>
 
         <Col md={12} lg={4}>
-          <h3 className="mb-4">Bài Viết Nổi Bật</h3>
-          <Row className="g-3">
+          <h5 className="mb-3">Bài Viết Nổi Bật</h5>
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "14px 10px 5px",
+              borderRadius: "4px",
+            }}
+          >
             {listFeatured &&
               listFeatured.map((blog, idx) => (
-                <Col key={idx} md={6} lg={12}>
-                  <FeaturedPostCard blog={blog} />
-                </Col>
+                <FeaturedPostCard key={idx} blog={blog} />
               ))}
-          </Row>
+          </div>
         </Col>
       </Row>
     </Container>
