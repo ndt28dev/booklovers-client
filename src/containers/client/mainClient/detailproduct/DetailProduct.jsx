@@ -28,6 +28,8 @@ import {
   fetchCartFromServer,
 } from "../../../../redux/slices/cartSlice";
 import API_URL from "../../../../config/api";
+import ReviewsBooks from "../reviewsbook/ReviewsBooks";
+import { getReviewsByBookId } from "../../../../redux/slices/reviewSlice";
 
 const DetailProduct = () => {
   const navigate = useNavigate();
@@ -52,9 +54,12 @@ const DetailProduct = () => {
 
   const currentQuantityInCart = currentCartItem?.quantity || 0;
 
+  const { data } = useSelector((state) => state.review.bookReviews);
+
   useEffect(() => {
     if (bookId) {
       dispatch(fetchBookById(bookId));
+      dispatch(getReviewsByBookId({ book_id: bookId }));
     }
   }, [dispatch, bookId]);
 
@@ -269,11 +274,16 @@ const DetailProduct = () => {
                       </div>
                     </Col>
                   </Row>
-
-                  <div className="d-flex align-items-center mb-2">
-                    <span className="text-warning fw-bold">5★</span>
-                    <span className="text-muted">(99 đánh giá)</span>
-                  </div>
+                  {data?.rating_summary?.total > 0 ? (
+                    <div className="d-flex align-items-center mb-2">
+                      <span className="text-warning fw-bold">
+                        {data?.rating_summary?.average}★
+                      </span>
+                      <span className="text-muted">
+                        ({data?.rating_summary?.total} đánh giá)
+                      </span>
+                    </div>
+                  ) : null}
 
                   <div className="d-flex align-items-center justify-content-between">
                     <div>
@@ -382,7 +392,7 @@ const DetailProduct = () => {
               </Col>
             </Row>
 
-            <Row className="mt-5">
+            <Row className="mt-3">
               <Col>
                 <Tabs
                   defaultActiveKey="description"
@@ -391,14 +401,17 @@ const DetailProduct = () => {
                 >
                   <Tab eventKey="description" title="Mô tả sản phẩm">
                     <div
-                      className="p-3 bg-white rounded"
-                      style={{ textAlign: "justify" }}
+                      className="p-3 bg-white "
+                      style={{ textAlign: "justify", borderRadius: "10px" }}
                       dangerouslySetInnerHTML={{ __html: book.description }}
                     ></div>
                   </Tab>
 
                   <Tab eventKey="details" title="Thông tin chi tiết">
-                    <div className="p-3 bg-white border rounded">
+                    <div
+                      className="p-3 bg-white  "
+                      style={{ borderRadius: "10px" }}
+                    >
                       <h6 className="fw-bold mb-3">Thông tin chi tiết</h6>
 
                       {[
@@ -469,27 +482,7 @@ const DetailProduct = () => {
                 </Tabs>
               </Col>
             </Row>
-
-            <Row className="mt-2 mb-4">
-              <Col>
-                <div
-                  style={{
-                    backgroundColor: "#f8f9fa",
-                    padding: "16px",
-                    border: "1px dashed #ccc",
-                    borderRadius: "8px",
-                    color: "#555",
-                    fontSize: "16px",
-                    fontStyle: "italic",
-                    textAlign: "center",
-                    marginTop: "20px",
-                  }}
-                >
-                  Phần bình luận và đánh giá sẽ được phát triển trong thời gian
-                  tới.
-                </div>
-              </Col>
-            </Row>
+            <ReviewsBooks bookId={bookId} />
           </Container>
         </>
       )}

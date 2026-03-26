@@ -8,27 +8,32 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import MyModal from "../../../../../../components/mymodal/MyModal";
 import { Button, Col, Row } from "react-bootstrap";
+import {
+  adminDeleteReview,
+  getAllReviews,
+  resetAdminDeleteReview,
+} from "../../../../../../redux/slices/reviewSlice";
 
-const DeletePromotionModal = ({ isOpen, onClose, id, currentPage }) => {
+const DeleteReviewModal = ({ isOpen, onClose, id, currentPage }) => {
   const dispatch = useDispatch();
 
-  const { isLoading, error, success } = useSelector(
-    (state) => state.promotion.delete
+  const { loading, error, success } = useSelector(
+    (state) => state.review.adminDeleteReview
   );
 
   const handleSubmit = () => {
-    dispatch(deletePromotion(id));
+    dispatch(adminDeleteReview(id));
   };
 
   useEffect(() => {
-    dispatch(resetDeletePromotion());
+    dispatch(resetAdminDeleteReview());
   }, []);
 
   useEffect(() => {
     if (success) {
       toast.success("Xoá khuyến mãi thành công!");
-      dispatch(resetDeletePromotion());
-      dispatch(fetchAllPromotion({ page: currentPage, limit: 10 }));
+      dispatch(resetAdminDeleteReview());
+      dispatch(getAllReviews({ page: currentPage, limit: 10 }));
       onClose();
     } else if (error) {
       toast.error(error);
@@ -36,7 +41,7 @@ const DeletePromotionModal = ({ isOpen, onClose, id, currentPage }) => {
   }, [error, success]);
   return (
     <MyModal show={isOpen} handleClose={onClose} title={"Xác nhận xoá"}>
-      <span>Bạn có chắc muốn xoá khuyến mãi có id = {id} không?</span>
+      <span>Bạn có chắc muốn xoá đánh giá có id = {id} không?</span>
       <Row className="d-flex align-items-end justify-content-end mt-3">
         <Col md={4} className="d-flex justify-content-end gap-2">
           <Button variant="secondary" onClick={onClose} size="sm">
@@ -50,4 +55,4 @@ const DeletePromotionModal = ({ isOpen, onClose, id, currentPage }) => {
     </MyModal>
   );
 };
-export default DeletePromotionModal;
+export default DeleteReviewModal;

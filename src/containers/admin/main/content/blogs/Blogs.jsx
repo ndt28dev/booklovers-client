@@ -178,7 +178,7 @@ const Blogs = () => {
             {/* <MyButtonImport onClick={handleImport} /> */}
             <MyButtonExport onClick={handleExport} />
           </Col>
-          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+          <div className="d-flex align-items-center" style={{ gap: "10px" }}>
             <Select
               options={statusOptions}
               value={statusOptions.find((option) => option.value === status)}
@@ -217,9 +217,6 @@ const Blogs = () => {
             />
 
             <div className="d-flex align-items-center">
-              <Form.Label className="mb-0 me-2 text-nowrap">
-                Tìm kiếm
-              </Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Nhập tiêu đề hoặc tác giả..."

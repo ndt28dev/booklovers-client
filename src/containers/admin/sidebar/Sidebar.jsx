@@ -55,6 +55,10 @@ const Sidebar = ({ show }) => {
           <i className="bi bi-chat-dots"></i>
           {show && <span className="ms-2">Tin nhắn</span>}
         </NavLink>
+        <NavLink to="/admin/danh-gia" className="sidebar-link mb-2">
+          <i className="bi bi-star"></i>
+          {show && <span className="ms-2">Đánh giá</span>}
+        </NavLink>
         <NavLink to="/admin/cai-dat" className="sidebar-link mb-2">
           <i className="bi bi-gear"></i>
           {show && <span className="ms-2">Cài đặt</span>}

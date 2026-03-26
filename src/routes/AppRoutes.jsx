@@ -36,6 +36,7 @@ import Promotions from "../containers/admin/main/content/promotions/Promotions";
 import NotFound from "../containers/notfound/NotFound";
 import Imports from "../containers/admin/main/content/imports/Imports";
 import Message from "../containers/admin/main/content/message/Message";
+import Reviews from "../containers/admin/main/content/reviews/Reviews";
 
 const AppRoutes = () => {
   return (
@@ -101,6 +102,7 @@ const AppRoutes = () => {
         <Route path="khuyen-mai" element={<Promotions />} />
         <Route path="phan-hoi" element={<Contacts />} />
         <Route path="tin-nhan" element={<Message />} />
+        <Route path="danh-gia" element={<Reviews />} />
         <Route path="cai-dat" element={<Settings />} />
       </Route>
 

@@ -199,7 +199,7 @@ const Products = () => {
             {/* <MyButtonImport onClick={handleImport} /> */}
             <MyButtonExport onClick={handleExport} />
           </Col>
-          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+          <div className="d-flex align-items-center" style={{ gap: "10px" }}>
             <div className="d-flex align-items-center" style={{ gap: "10px" }}>
               <Select
                 value={categoryOptions.find((o) => o.value === categoryFilter)}
@@ -235,10 +235,6 @@ const Products = () => {
               />
             </div>
             <div className="d-flex align-items-center">
-              <Form.Label className="mb-0 me-2 text-nowrap">
-                Tìm kiếm
-              </Form.Label>
-
               <Form.Control
                 type="text"
                 placeholder="Nhập từ khóa..."

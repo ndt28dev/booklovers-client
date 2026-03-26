@@ -14,8 +14,6 @@ import ButtonCustom from "../../../../../components/button/ButtonCustom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserWithAddress,
-  updateUser,
-  resetUpdateUserStatus,
   updatePassword,
   updateUserProfile,
   getAdminUserProfile,

@@ -20,6 +20,7 @@ import {
 import { toast } from "react-toastify";
 import DetailOrderModal from "../../../../../components/detailorder/DetailOrder";
 import API_URL from "../../../../../config/api";
+import ReviewForm from "../../reviewsbook/ReviewForm";
 const OrderPage = () => {
   const dispatch = useDispatch();
   const { loading: loadingGetOrder, orders } = useSelector(
@@ -35,6 +36,10 @@ const OrderPage = () => {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  const [bookId, setBookId] = useState(null);
+  const [orderItemId, setOrderItemId] = useState(null);
+  const [showFormReview, setShowFormReview] = useState(false);
 
   useEffect(() => {
     dispatch(getUserOrders());
@@ -135,6 +140,14 @@ const OrderPage = () => {
 
   return (
     <>
+      {showFormReview && (
+        <ReviewForm
+          isOpen={showFormReview}
+          onClose={() => setShowFormReview(false)}
+          productId={bookId}
+          orderItemId={orderItemId}
+        />
+      )}
       <Card className="p-3 border-0" style={{ borderRadius: "5px" }}>
         <h5 className="mb-3">Đơn hàng của tôi</h5>
 
@@ -220,11 +233,31 @@ const OrderPage = () => {
                           Số lượng: {item.quantity}
                         </div>
                       </Col>
-                      <Col xs="auto" className="text-end fw-bold">
-                        {(item.unit_price * item.quantity).toLocaleString(
-                          "vi-VN"
-                        )}
-                        đ
+                      <Col
+                        xs="auto"
+                        className="text-end fw-bold d-flex align-items-center"
+                      >
+                        <span>
+                          {(item.unit_price * item.quantity).toLocaleString(
+                            "vi-VN"
+                          )}
+                          đ
+                        </span>
+                        {order.status === "delivered" &&
+                          item.is_reviewed === 0 && (
+                            <Button
+                              variant="warning"
+                              size="sm"
+                              className="ms-2"
+                              onClick={() => {
+                                setShowFormReview(true);
+                                setBookId(item.book_id);
+                                setOrderItemId(item.order_item_id);
+                              }}
+                            >
+                              Đánh giá
+                            </Button>
+                          )}
                       </Col>
                     </Row>
                   ))}

@@ -192,7 +192,7 @@ const Promotions = () => {
             <MyButtonImport onClick={handleImport} />
             <MyButtonExport onClick={handleExport} />
           </Col>
-          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+          <div className="d-flex align-items-center" style={{ gap: "10px" }}>
             <Select
               options={statusOptions}
               value={statusOptions.find((opt) => opt.value === status)}
@@ -231,9 +231,6 @@ const Promotions = () => {
             />
 
             <div className="d-flex align-items-center">
-              <Form.Label className="mb-0 me-2 text-nowrap">
-                Tìm kiếm
-              </Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Nhập code hoặc mô tả..."
