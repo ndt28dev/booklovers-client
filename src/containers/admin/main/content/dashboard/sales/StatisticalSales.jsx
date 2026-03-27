@@ -7,7 +7,7 @@ const StatisticalSales = () => {
     <div>
       <RevenueOverview />
       <RevenueGrowth />
-      {/* <OrderStatusOverview /> */}
+      <OrderStatusOverview />
     </div>
   );
 };

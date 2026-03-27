@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API_URL from "../../../config/api";
 import axios from "axios";
 
-// 👉 revenue
 export const fetchRevenueStats = createAsyncThunk(
   "sales/fetchRevenueStats",
   async (_, { rejectWithValue }) => {
@@ -18,9 +17,8 @@ export const fetchRevenueStats = createAsyncThunk(
   }
 );
 
-// 👉 order status
-export const fetchOrderStatusOverview = createAsyncThunk(
-  "sales/fetchOrderStatusOverview",
+export const fetchRevenueGrowth = createAsyncThunk(
+  "sales/fetchRevenueGrowth",
   async (year = new Date().getFullYear(), thunkAPI) => {
     try {
       const res = await axios.get(
@@ -39,6 +37,23 @@ export const fetchOrderStatusOverview = createAsyncThunk(
   }
 );
 
+export const fetchOrderStatusOverview = createAsyncThunk(
+  "sales/fetchOrderStatusOverview",
+  async (year, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/admin/statistics/order-status-overview`,
+        {
+          params: { year },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Server error");
+    }
+  }
+);
+
 const salesSlice = createSlice({
   name: "sales",
   initialState: {
@@ -47,8 +62,14 @@ const salesSlice = createSlice({
       loading: false,
       error: null,
     },
-    orderStatusOverview: {
+    revenueGrowth: {
       data: null,
+      loading: false,
+      error: null,
+    },
+
+    orderStatusOverview: {
+      data: [],
       loading: false,
       error: null,
     },
@@ -73,6 +94,20 @@ const salesSlice = createSlice({
       })
 
       // ===== ORDER STATUS =====
+      .addCase(fetchRevenueGrowth.pending, (state) => {
+        state.revenueGrowth.loading = true;
+        state.revenueGrowth.error = null;
+      })
+      .addCase(fetchRevenueGrowth.fulfilled, (state, action) => {
+        state.revenueGrowth.loading = false;
+        state.revenueGrowth.data = action.payload;
+      })
+      .addCase(fetchRevenueGrowth.rejected, (state, action) => {
+        state.revenueGrowth.loading = false;
+        state.revenueGrowth.error = action.payload;
+      })
+
+      // Order  status overview
       .addCase(fetchOrderStatusOverview.pending, (state) => {
         state.orderStatusOverview.loading = true;
         state.orderStatusOverview.error = null;

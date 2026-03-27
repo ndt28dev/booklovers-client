@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { fetchRevenueStats } from "../../../../../../../redux/slices/admin/SalesSlice";
 
 const RevenueOverview = () => {

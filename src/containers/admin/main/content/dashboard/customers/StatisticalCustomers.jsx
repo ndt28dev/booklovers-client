@@ -4,7 +4,7 @@ import StatisticalTopUser from "../statisticaltopuser/StatisticalTopUser";
 const StatisticalCustomers = () => {
   return (
     <div>
-      <StatisticalTopUser />
+      {/* <StatisticalTopUser /> */}
       <StatisticalTopOrder />
     </div>
   );

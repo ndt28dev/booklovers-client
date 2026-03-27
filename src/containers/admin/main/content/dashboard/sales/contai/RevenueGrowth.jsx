@@ -15,25 +15,25 @@ import {
 } from "recharts";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import { fetchOrderStatusOverview } from "../../../../../../../redux/slices/admin/SalesSlice";
+import { fetchRevenueGrowth } from "../../../../../../../redux/slices/admin/SalesSlice";
 
 const RevenueGrowth = () => {
   const dispatch = useDispatch();
   const { loading, data, error } = useSelector(
-    (state) => state.adminSales.orderStatusOverview
+    (state) => state.adminSales.revenueGrowth
   );
 
   const currentYear = new Date().getFullYear();
-  const startYear = 2024;
+  const startYear = 2023;
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
   useEffect(() => {
-    dispatch(fetchOrderStatusOverview(currentYear));
+    dispatch(fetchRevenueGrowth(currentYear));
   }, []);
 
   const handleYearSelect = (year) => {
     setSelectedYear(year);
-    dispatch(fetchOrderStatusOverview(year));
+    dispatch(fetchRevenueGrowth(year));
   };
 
   const years = [];
@@ -93,10 +93,14 @@ const RevenueGrowth = () => {
                 styles={{
                   control: (base) => ({
                     ...base,
-                    minHeight: "30px",
+                    minHeight: "34px",
                     fontSize: "16px",
                     cursor: "pointer",
                     width: "100px",
+                  }),
+                  dropdownIndicator: (base) => ({
+                    ...base,
+                    padding: "4px",
                   }),
                 }}
               />
