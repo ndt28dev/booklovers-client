@@ -262,7 +262,18 @@ const Orders = () => {
   useEffect(() => {
     if (success) {
       toast.success("Cập nhật trạng thái thành công!");
-      dispatch(fetchOrders({ page }));
+      dispatch(
+        fetchOrders({
+          page: currentPage,
+          limit: 10,
+          search,
+          paymentMethod,
+          status,
+          priceFilter,
+          fromDate: fromDate ? formatDateTime(fromDate, true) : "",
+          toDate: toDate ? formatDateTime(toDate, false) : "",
+        })
+      );
       dispatch(resetUpdateStatus());
     }
 

@@ -511,85 +511,94 @@ const CartPage = () => {
                     itemSelect.map((item, index) => (
                       <div
                         key={index}
-                        className="d-flex justify-content-between mb-3 align-items-start  border-bottom pb-2 gap-1"
+                        className="mb-3 border-bottom pb-2 gap-1"
                       >
-                        <div className="d-flex gap-3" style={{ flex: 1 }}>
+                        <div
+                          className="d-flex align-items-center gap-2"
+                          style={{ flex: 1 }}
+                        >
                           <Image
                             src={`${API_URL}/uploads/${item.image}`}
                             width={70}
                             height={90}
                             className="rounded border"
                           />
-                          <div className="d-flex flex-column justify-content-between">
-                            <div
-                              className="fw-semibold"
-                              style={{ color: "#333" }}
-                            >
-                              {item.name}
+                          <div>
+                            <div className="d-flex gap-1 justify-content-between">
+                              <div
+                                className="fw-semibold"
+                                style={{ color: "#333" }}
+                              >
+                                {item.name}
+                              </div>
+                              <div className="fw-bold text-end">
+                                {(
+                                  item.quantity *
+                                  (item.price -
+                                    (item.price * (item.discount || 0)) / 100)
+                                ).toLocaleString("vi-VN")}
+                                đ
+                              </div>
                             </div>
 
-                            <div className="mt-1">
-                              {item.discount > 0 ? (
-                                <>
-                                  <span
-                                    className="me-2"
-                                    style={{ fontSize: "15px" }}
-                                  >
-                                    {(
-                                      item.price -
-                                      (item.price * (item.discount || 0)) / 100
-                                    ).toLocaleString("vi-VN")}
-                                    đ
-                                  </span>
-                                  <span
-                                    className="text-muted me-2"
-                                    style={{
-                                      textDecoration: "line-through",
-                                      fontSize: "14px",
-                                    }}
-                                  >
+                            <div className="d-flex align-items-center justify-content-between">
+                              <div className="mt-1">
+                                {item.discount > 0 ? (
+                                  <>
+                                    <span
+                                      className="me-2"
+                                      style={{ fontSize: "16px" }}
+                                    >
+                                      {(
+                                        item.price -
+                                        (item.price * (item.discount || 0)) /
+                                          100
+                                      ).toLocaleString("vi-VN")}
+                                      đ
+                                    </span>
+                                    <span
+                                      className="text-muted me-2"
+                                      style={{
+                                        textDecoration: "line-through",
+                                        fontSize: "16px",
+                                      }}
+                                    >
+                                      {parseInt(item.price).toLocaleString(
+                                        "vi-VN"
+                                      )}
+                                      đ
+                                    </span>
+                                    <span
+                                      className="fw-semibold"
+                                      style={{
+                                        fontSize: "14px",
+                                        padding: "2px 6px",
+                                        backgroundColor: "#E35765",
+                                        color: "white",
+                                        borderRadius: "5px",
+                                      }}
+                                    >
+                                      -{item.discount}%
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span style={{ fontSize: "16px" }}>
                                     {parseInt(item.price).toLocaleString(
                                       "vi-VN"
                                     )}
                                     đ
                                   </span>
-                                  <span
-                                    className="fw-semibold"
-                                    style={{
-                                      fontSize: "14px",
-                                      padding: "2px 6px",
-                                      backgroundColor: "#E35765",
-                                      color: "white",
-                                      borderRadius: "5px",
-                                    }}
-                                  >
-                                    -{item.discount}%
-                                  </span>
-                                </>
-                              ) : (
-                                <span style={{ fontSize: "15px" }}>
-                                  {parseInt(item.price).toLocaleString("vi-VN")}
-                                  đ
-                                </span>
-                              )}
-                            </div>
+                                )}
+                              </div>
 
-                            <div
-                              className="text-muted mt-1"
-                              style={{ fontSize: "14px" }}
-                            >
-                              Số lượng: {item.quantity}
+                              <div
+                                className="text-muted mt-1"
+                                style={{ fontSize: "16px" }}
+                              >
+                                Số lượng: {item.quantity}
+                              </div>
                             </div>
                           </div>
-                        </div>
-
-                        <div className="fw-bold text-end">
-                          {(
-                            item.quantity *
-                            (item.price -
-                              (item.price * (item.discount || 0)) / 100)
-                          ).toLocaleString("vi-VN")}
-                          đ
                         </div>
                       </div>
                     ))

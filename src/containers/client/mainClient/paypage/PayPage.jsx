@@ -447,7 +447,7 @@ const PayPage = () => {
                 <Card.Title>Đơn hàng ({itemSelect.length} sản phẩm)</Card.Title>
 
                 {itemSelect.map((item, index) => (
-                  <div className="d-flex mb-3 border-bottom pb-2" key={index}>
+                  <div className="d-flex mb-3 border-bottom pb-2 " key={index}>
                     <Image
                       src={`${API_URL}/uploads/${item.image}`}
                       width={50}
@@ -455,15 +455,55 @@ const PayPage = () => {
                       rounded
                       className="me-2"
                     />
-                    <div>
+
+                    <div style={{ width: "100%" }}>
                       <strong>{item.name}</strong>
-                      <div>
-                        <span style={{ fontWeight: "600" }}>
-                          {item.price.toLocaleString("vi-VN")}đ
-                        </span>
-                        <span className="ms-3" style={{ fontSize: "14px" }}>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div className="mt-1">
+                          {item.discount > 0 ? (
+                            <>
+                              <span
+                                className="me-2"
+                                style={{ fontSize: "16px" }}
+                              >
+                                {(
+                                  item.price -
+                                  (item.price * (item.discount || 0)) / 100
+                                ).toLocaleString("vi-VN")}
+                                đ
+                              </span>
+                              <span
+                                className="text-muted me-2"
+                                style={{
+                                  textDecoration: "line-through",
+                                  fontSize: "16px",
+                                }}
+                              >
+                                {parseInt(item.price).toLocaleString("vi-VN")}đ
+                              </span>
+                              <span
+                                className="fw-semibold"
+                                style={{
+                                  fontSize: "14px",
+                                  padding: "2px 6px",
+                                  backgroundColor: "#E35765",
+                                  color: "white",
+                                  borderRadius: "5px",
+                                }}
+                              >
+                                -{item.discount}%
+                              </span>
+                            </>
+                          ) : (
+                            <span style={{ fontSize: "16px" }}>
+                              {parseInt(item.price).toLocaleString("vi-VN")}đ
+                            </span>
+                          )}
+                        </div>
+
+                        <div className=" mt-1" style={{ fontSize: "16px" }}>
                           Số lượng: {item.quantity}
-                        </span>
+                        </div>
                       </div>
                     </div>
                   </div>

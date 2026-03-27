@@ -1,22 +1,38 @@
-import React from "react";
-import { Row, Form, Spinner, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Tabs, Tab } from "react-bootstrap";
 import "./Dashboard.scss";
-import StatisticalHeader from "./statisticalheader/StatisticalHeader";
-import StatisticalOverview from "./statisticaloverview/StatisticalOverview";
-import StatisticalTopUser from "./statisticaltopuser/StatisticalTopUser";
-import StatisticalTopOrder from "./statisticaltoporder/StatisticalTopOrder";
+import StatisticalSales from "./sales/StatisticalSales";
+import StatisticalReviews from "./reviews/StatisticalReviews";
+import StatisticalCustomers from "./customers/StatisticalCustomers";
+import StatisticalProducts from "./products/StatisticalProducts";
 
 const Dashboard = () => {
-  return (
-    <div>
-      <h4 className="fw-bold mb-3" style={{ color: "#E35765" }}>
-        Trang chủ
-      </h4>
+  const [activeTab, setActiveTab] = useState("sales");
 
-      <StatisticalHeader />
-      <StatisticalOverview />
-      <StatisticalTopUser />
-      <StatisticalTopOrder />
+  return (
+    <div className="dashboard-container">
+      <Tabs
+        activeKey={activeTab}
+        onSelect={(k) => setActiveTab(k)}
+        className="mb-3"
+        id="dashboard-tabs"
+      >
+        <Tab eventKey="sales" title="Thống kê bán hàng">
+          <StatisticalSales />
+        </Tab>
+
+        <Tab eventKey="customers" title="Thống kê khách hàng">
+          <StatisticalCustomers />
+        </Tab>
+
+        <Tab eventKey="products" title="Thống kê sản phẩm / kho hàng">
+          <StatisticalProducts />
+        </Tab>
+
+        <Tab eventKey="reviews" title="Thống kê phản hồi & đánh giá">
+          <StatisticalReviews />
+        </Tab>
+      </Tabs>
     </div>
   );
 };
