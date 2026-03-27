@@ -130,8 +130,6 @@ const ProductPage = () => {
     idSub,
   ]);
 
-  console.log("listBook", listBook);
-
   const handlePriceChange = (priceValue) => {
     setSelectedPrices((prev) =>
       prev.includes(priceValue)

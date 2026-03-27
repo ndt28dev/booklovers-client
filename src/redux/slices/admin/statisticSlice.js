@@ -46,23 +46,6 @@ export const fetchOrderById = createAsyncThunk(
   }
 );
 
-export const fetchMonthlyRevenue = createAsyncThunk(
-  "statistics/fetchMonthlyRevenue",
-  async (year, thunkAPI) => {
-    try {
-      const res = await axios.get(
-        `${API_URL}/api/admin/statistics/monthly-revenue`,
-        {
-          params: { year },
-        }
-      );
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || err.message);
-    }
-  }
-);
-
 export const fetchTopOrders = createAsyncThunk(
   "statistics/fetchTopOrders",
   async ({ startDate, endDate, sortType = "top" }, thunkAPI) => {
@@ -134,11 +117,7 @@ const statisticSlice = createSlice({
       currentOrder: null,
       error: null,
     },
-    monthlyRevenue: {
-      loading: false,
-      data: null,
-      error: null,
-    },
+
     toporder: {
       topOrders: [],
       loading: false,
@@ -214,19 +193,6 @@ const statisticSlice = createSlice({
       .addCase(fetchOrderById.rejected, (state, action) => {
         state.orderDetail.loading = false;
         state.orderDetail.error = action.payload;
-      })
-      // Monthly Revenue
-      .addCase(fetchMonthlyRevenue.pending, (state) => {
-        state.monthlyRevenue.loading = true;
-        state.monthlyRevenue.error = null;
-      })
-      .addCase(fetchMonthlyRevenue.fulfilled, (state, action) => {
-        state.monthlyRevenue.loading = false;
-        state.monthlyRevenue.data = action.payload;
-      })
-      .addCase(fetchMonthlyRevenue.rejected, (state, action) => {
-        state.monthlyRevenue.loading = false;
-        state.monthlyRevenue.error = action.payload;
       })
 
       // top orders
