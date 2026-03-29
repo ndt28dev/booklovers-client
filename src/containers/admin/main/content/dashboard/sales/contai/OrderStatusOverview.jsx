@@ -17,9 +17,8 @@ import { fetchOrderStatusOverview } from "../../../../../../../redux/slices/admi
 const StatusCard = ({ title, value, color, icon, bg }) => {
   return (
     <Card
-      className="p-3 border-0"
+      className="p-3 border-0 rounded"
       style={{
-        borderRadius: "12px",
         background: bg,
         boxShadow: "rgba(0, 0, 0, 0.05) 0px 2px 8px",
         transition: "0.2s",
