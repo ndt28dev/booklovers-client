@@ -17,7 +17,7 @@ const RevenueOverview = () => {
   return (
     <>
       {data && (
-        <Row className="mb-2">
+        <Row>
           <Col md={3}>
             <Card
               className=" mb-3 "
