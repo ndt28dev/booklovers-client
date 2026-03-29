@@ -57,7 +57,7 @@ const RevenueOfTheDay = () => {
                 }}
                 onClick={() => navigate("/admin/don-hang")}
               >
-                Quản lý đơn hàng<i class="bi bi-chevron-double-right"></i>
+                Quản lý đơn hàng<i className="bi bi-chevron-double-right"></i>
               </span>
             </div>
             <Row className="align-items-center d-flex">

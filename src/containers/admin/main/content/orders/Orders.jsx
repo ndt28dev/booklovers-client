@@ -19,7 +19,6 @@ import {
   updateOrderStatus,
   resetUpdateStatus,
 } from "../../../../../redux/slices/admin/orderSlice";
-import { fetchOrderById } from "../../../../../redux/slices/admin/statisticSlice";
 import DetailOrderModal from "../../../../../components/detailorder/DetailOrder";
 import StatusModal from "../../../../../components/statusmodal/StatusModal";
 import { toast } from "react-toastify";
@@ -32,6 +31,7 @@ import MyButtonCreate from "../../../../../components/button/MyButtonCreate";
 import MyDataTable from "../../../../../components/mytable/MyDataTable";
 import { formatDate } from "../../../../../utils/format";
 import MyButtonExport from "../../../../../components/button/MyButtonExport";
+import { fetchOrderById } from "../../../../../redux/slices/orderSlice";
 
 const paymentOptions = [
   { value: "", label: "Phương thức thanh toán" },
@@ -88,7 +88,7 @@ const Orders = () => {
     (state) => state.adminOrder.updateStatus
   );
 
-  const { currentOrder } = useSelector((state) => state.statistics.orderDetail);
+  const { currentOrder } = useSelector((state) => state.order.orderDetail);
 
   useEffect(() => {
     dispatch(

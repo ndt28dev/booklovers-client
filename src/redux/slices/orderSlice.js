@@ -61,6 +61,18 @@ export const cancelOrder = createAsyncThunk(
   }
 );
 
+export const fetchOrderById = createAsyncThunk(
+  "orders/fetchById",
+  async (orderId, thunkAPI) => {
+    try {
+      const res = await axios.get(`${API_URL}/api/orders/${orderId}`);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "order",
   initialState: {
@@ -81,6 +93,11 @@ const orderSlice = createSlice({
       error: null,
       success: null,
     },
+    orderDetail: {
+      loading: false,
+      currentOrder: null,
+      error: null,
+    },
   },
   reducers: {
     resetCreateOrderStatus: (state) => {
@@ -98,6 +115,13 @@ const orderSlice = createSlice({
       state.cancel.loading = false;
       state.cancel.error = null;
       state.cancel.success = null;
+    },
+    resetCurrentOrder: (state) => {
+      state.orderDetail = {
+        loading: false,
+        currentOrder: null,
+        error: null,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -145,6 +169,20 @@ const orderSlice = createSlice({
       .addCase(cancelOrder.rejected, (state, action) => {
         state.cancel.loading = false;
         state.cancel.error = action.payload || "Huỷ đơn hàng thất bại";
+      })
+
+      // Order detail
+      .addCase(fetchOrderById.pending, (state) => {
+        state.orderDetail.loading = true;
+        state.orderDetail.error = null;
+      })
+      .addCase(fetchOrderById.fulfilled, (state, action) => {
+        state.orderDetail.loading = false;
+        state.orderDetail.currentOrder = action.payload;
+      })
+      .addCase(fetchOrderById.rejected, (state, action) => {
+        state.orderDetail.loading = false;
+        state.orderDetail.error = action.payload;
       });
   },
 });
@@ -153,5 +191,6 @@ export const {
   resetCreateOrderStatus,
   resetCancelStatus,
   resetOrderListStatus,
+  resetCurrentOrder,
 } = orderSlice.actions;
 export default orderSlice.reducer;

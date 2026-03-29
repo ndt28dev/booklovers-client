@@ -3,6 +3,7 @@ import OrderStatusOverview from "./contai/OrderStatusOverview";
 import RevenueGrowth from "./contai/RevenueGrowth";
 import RevenueByCategory from "./contai/RevenueByCategory";
 import RevenueOfTheDay from "./contai/RevenueOfTheDay";
+import TopOrderByYear from "./contai/TopOrderByYear";
 
 const StatisticalSales = () => {
   return (
@@ -12,6 +13,7 @@ const StatisticalSales = () => {
       <RevenueGrowth />
       <OrderStatusOverview />
       <RevenueByCategory />
+      <TopOrderByYear />
     </div>
   );
 };

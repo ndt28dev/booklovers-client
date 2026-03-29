@@ -8,8 +8,6 @@ import cartSlice from "./slices/cartSlice";
 import orderSlice from "./slices/orderSlice";
 import categorySlice from "./slices/categorySlice";
 import vnpaySlice from "./slices/vnpaySlice";
-import adminUserSlice from "./slices/admin/userSlice";
-import statisticSlice from "./slices/admin/statisticSlice";
 import orderSliceAdmin from "./slices/admin/orderSlice";
 import promotionSlice from "./slices/promotionSlice";
 import supplierSlice from "./slices/supplierSlice";
@@ -18,6 +16,7 @@ import subcategorySlice from "./slices/subcategorySlice";
 import systemSlice from "./slices/admin/systemSlice";
 import reviewSlice from "./slices/reviewSlice";
 import salesSlice from "./slices/admin/SalesSlice";
+import customerReducer from "./slices/admin/CustomerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -31,8 +30,6 @@ export const store = configureStore({
     category: categorySlice,
     subcategory: subcategorySlice,
     vnpay: vnpaySlice,
-    adminUser: adminUserSlice,
-    statistics: statisticSlice,
     adminOrder: orderSliceAdmin,
     promotion: promotionSlice,
     supplier: supplierSlice,
@@ -40,5 +37,6 @@ export const store = configureStore({
     review: reviewSlice,
     system: systemSlice,
     adminSales: salesSlice,
+    adminCustomer: customerReducer,
   },
 });

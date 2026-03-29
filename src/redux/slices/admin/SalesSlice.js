@@ -87,6 +87,24 @@ export const fetchTodayDashboard = createAsyncThunk(
   }
 );
 
+export const fetchTopOrdersByYear = createAsyncThunk(
+  "sales/fetchTopOrdersByYear",
+  async ({ year, page = 1, limit = 5 }, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/statistics/top-orders-by-year`,
+        {
+          params: { year, page, limit },
+        }
+      );
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 const salesSlice = createSlice({
   name: "sales",
   initialState: {
@@ -114,6 +132,13 @@ const salesSlice = createSlice({
     },
     todayDashboard: {
       data: null,
+      loading: false,
+      error: null,
+    },
+
+    topOrdersByYear: {
+      data: [],
+      pagination: null,
       loading: false,
       error: null,
     },
@@ -191,6 +216,21 @@ const salesSlice = createSlice({
       .addCase(fetchTodayDashboard.rejected, (state, action) => {
         state.todayDashboard.loading = false;
         state.todayDashboard.error = action.payload;
+      })
+
+      // ===== TOP ORDERS BY YEAR =====
+      .addCase(fetchTopOrdersByYear.pending, (state) => {
+        state.topOrdersByYear.loading = true;
+        state.topOrdersByYear.error = null;
+      })
+      .addCase(fetchTopOrdersByYear.fulfilled, (state, action) => {
+        state.topOrdersByYear.loading = false;
+        state.topOrdersByYear.data = action.payload.data;
+        state.topOrdersByYear.pagination = action.payload.pagination;
+      })
+      .addCase(fetchTopOrdersByYear.rejected, (state, action) => {
+        state.topOrdersByYear.loading = false;
+        state.topOrdersByYear.error = action.payload;
       });
   },
 });

@@ -1,83 +1,102 @@
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCustomerOverview } from "../../../../../../../redux/slices/admin/CustomerSlice";
 
 const CustomersOverview = () => {
-  const [data, setData] = useState({
-    totalCustomers: 1200,
-    newCustomers: 120,
-    returningCustomers: 340,
-    aov: 250000,
+  const dispatch = useDispatch();
 
-    avgCLV: 1200000,
-    maxCLV: 15000000,
-    topCustomerName: "Nguyễn Văn A",
+  const { data, loading } = useSelector(
+    (state) => state.adminCustomer.overview
+  );
 
-    topCustomers: [
-      { id: 1, name: "Nguyễn Văn A", total_orders: 12, total_spent: 15000000 },
-      { id: 2, name: "Trần Thị B", total_orders: 10, total_spent: 12000000 },
-      { id: 3, name: "Lê Văn C", total_orders: 8, total_spent: 9000000 },
-    ],
+  useEffect(() => {
+    dispatch(fetchCustomerOverview());
+  }, []);
 
-    topOrders: [
-      { name: "Nguyễn Văn A", total: 5000000 },
-      { name: "Trần Thị B", total: 4200000 },
-    ],
-
-    hourData: Array.from({ length: 24 }, (_, i) => ({
-      hour: i,
-      orders: Math.floor(Math.random() * 20),
-    })),
-
-    topBooks: [
-      { title: "Đắc Nhân Tâm", sold: 120 },
-      { title: "Nhà Giả Kim", sold: 100 },
-      { title: "Dám Nghĩ Lớn", sold: 80 },
-    ],
-
-    vipCustomers: [
-      { id: 1, name: "Nguyễn Văn A", orders: 12, spent: 15000000 },
-      { id: 2, name: "Trần Thị B", orders: 10, spent: 12000000 },
-    ],
-  });
+  const cards = [
+    {
+      title: "Tổng khách",
+      value: data?.totalCustomers,
+      icon: "bi-people",
+      bg: "#eef2ff",
+      color: "#6366f1",
+    },
+    {
+      title: "Khách mới",
+      value: data?.newCustomers,
+      icon: "bi-person-plus",
+      bg: "#ecfdf5",
+      color: "#10b981",
+    },
+    {
+      title: "Khách quay lại",
+      value: data?.returningCustomers,
+      icon: "bi-arrow-repeat",
+      bg: "#fff7ed",
+      color: "#f97316",
+    },
+    {
+      title: "AOV",
+      value: data?.aov.toLocaleString() + "đ",
+      icon: "bi-currency-dollar",
+      bg: "#fff1f3",
+      color: "#e11d48",
+    },
+  ];
 
   return (
-    <div className="container mt-4">
-      <Row className="mb-4">
-        <Col md={3}>
-          <Card className="p-3 shadow-sm">
-            👥 Tổng khách
-            <h4>{data.totalCustomers}</h4>
-          </Card>
-        </Col>
+    <div className="mt-4">
+      <Row>
+        {cards.map((item, index) => (
+          <Col md={3} key={index}>
+            <Card
+              className="mb-3"
+              style={{
+                border: "none",
+                boxShadow:
+                  "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+              }}
+            >
+              <Card.Body>
+                <div className="d-flex align-items-center">
+                  <div
+                    style={{
+                      background: item.bg,
+                      color: item.color,
+                      borderRadius: "50%",
+                      padding: "12px 16px",
+                      fontSize: "18px",
+                      marginRight: "15px",
+                    }}
+                  >
+                    <i className={`bi ${item.icon}`}></i>
+                  </div>
 
-        <Col md={3}>
-          <Card className="p-3 shadow-sm">
-            🆕 Khách mới
-            <h4>{data.newCustomers}</h4>
-          </Card>
-        </Col>
+                  <div>
+                    <h6
+                      className="fw-bold mb-0"
+                      style={{
+                        color: "#E35765",
+                      }}
+                    >
+                      {item.title}
+                    </h6>
 
-        <Col md={3}>
-          <Card className="p-3 shadow-sm">
-            🔁 Khách quay lại
-            <h4>{data.returningCustomers}</h4>
-          </Card>
-        </Col>
-
-        <Col md={3}>
-          <Card className="p-3 shadow-sm">
-            💸 AOV
-            <h4>{data.aov.toLocaleString()} đ</h4>
-          </Card>
-        </Col>
+                    <div
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.value}
+                    </div>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
       </Row>
     </div>
   );

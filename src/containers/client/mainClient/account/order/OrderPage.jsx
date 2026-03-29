@@ -340,7 +340,6 @@ const OrderPage = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal chi tiết đơn */}
       <DetailOrderModal
         show={showModal}
         handleClose={handleClose}
