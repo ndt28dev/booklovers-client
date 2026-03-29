@@ -237,7 +237,7 @@ const RevenueByCategory = () => {
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis />
+                <YAxis width={80} />
                 <Tooltip />
 
                 <Line

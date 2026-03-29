@@ -72,6 +72,21 @@ export const fetchRevenueByCategory = createAsyncThunk(
   }
 );
 
+export const fetchTodayDashboard = createAsyncThunk(
+  "sales/fetchTodayDashboard",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/statistics/revenue-of-the-day`
+      );
+
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 const salesSlice = createSlice({
   name: "sales",
   initialState: {
@@ -94,6 +109,11 @@ const salesSlice = createSlice({
 
     revenueByCategory: {
       data: [],
+      loading: false,
+      error: null,
+    },
+    todayDashboard: {
+      data: null,
       loading: false,
       error: null,
     },
@@ -157,6 +177,20 @@ const salesSlice = createSlice({
       .addCase(fetchRevenueByCategory.rejected, (state, action) => {
         state.revenueByCategory.loading = false;
         state.revenueByCategory.error = action.payload;
+      })
+
+      // ===== TODAY DASHBOARD =====
+      .addCase(fetchTodayDashboard.pending, (state) => {
+        state.todayDashboard.loading = true;
+        state.todayDashboard.error = null;
+      })
+      .addCase(fetchTodayDashboard.fulfilled, (state, action) => {
+        state.todayDashboard.loading = false;
+        state.todayDashboard.data = action.payload;
+      })
+      .addCase(fetchTodayDashboard.rejected, (state, action) => {
+        state.todayDashboard.loading = false;
+        state.todayDashboard.error = action.payload;
       });
   },
 });

@@ -191,14 +191,14 @@ const RevenueOverview = () => {
                       {Number(data.quarter.growth) > 0 && (
                         <>
                           <i className="bi bi-graph-up-arrow me-1"></i>
-                          {Number(data.quarter.growth)}% so với ngày trước
+                          {Number(data.quarter.growth)}% so với quý trước
                         </>
                       )}
 
                       {Number(data.quarter.growth) < 0 && (
                         <>
                           <i className="bi bi-graph-down-arrow me-1"></i>
-                          {Math.abs(Number(data.quarter.growth))}% so với ngày
+                          {Math.abs(Number(data.quarter.growth))}% so với quý
                           trước
                         </>
                       )}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import React from "react";
-import { Card, Col, Dropdown, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import {
   LineChart,
   Line,
@@ -20,6 +20,7 @@ import { fetchRevenueGrowth } from "../../../../../../../redux/slices/admin/Sale
 
 const RevenueGrowth = () => {
   const dispatch = useDispatch();
+
   const { loading, data, error } = useSelector(
     (state) => state.adminSales.revenueGrowth
   );
@@ -30,7 +31,7 @@ const RevenueGrowth = () => {
 
   useEffect(() => {
     dispatch(fetchRevenueGrowth(currentYear));
-  }, []);
+  }, [dispatch]);
 
   const handleYearSelect = (year) => {
     setSelectedYear(year);
@@ -47,138 +48,149 @@ const RevenueGrowth = () => {
     label: year,
   }));
 
-  // Chỉ lấy các tháng có giá trị > 0
-  const pieData = data
-    ?.filter((item) => item.value > 0)
-    ?.map((item) => ({
-      name: item.name,
-      value: parseFloat(item.value),
-    }));
+  const chartData =
+    data?.map((item) => ({
+      month: Number(item.month),
+      value: Number(item.value),
+    })) || [];
+
+  const pieData =
+    chartData
+      ?.filter((item) => item.value > 0)
+      ?.map((item) => ({
+        name: `T${item.month}`,
+        value: item.value,
+      })) || [];
 
   const COLORS = [
-    "#8884d8",
-    "#82ca9d",
-    "#ffc658",
-    "#ff8042",
-    "#8dd1e1",
-    "#a4de6c",
-    "#d0ed57",
-    "#d88884",
-    "#c45888",
-    "#84c2d8",
-    "#da88d8",
-    "#4e73df",
+    "#6366f1",
+    "#22c55e",
+    "#f59e0b",
+    "#ef4444",
+    "#0ea5e9",
+    "#a855f7",
+    "#14b8a6",
+    "#f43f5e",
+    "#84cc16",
+    "#eab308",
+    "#3b82f6",
+    "#ec4899",
   ];
 
   return (
-    data && (
-      <Card
-        className="mb-4"
-        style={{
-          border: "none",
-          boxShadow:
-            "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
-        }}
-      >
-        <Card.Body>
-          <div className="d-flex  align-items-center gap-2 mb-3">
-            <h6 style={{ color: "#E35765", margin: 0, fontWeight: "bold" }}>
-              Tổng quan doanh thu theo năm
-            </h6>
-            <Select
-              options={options}
-              value={options.find((opt) => opt.value === selectedYear)}
-              onChange={(selected) => handleYearSelect(selected.value)}
-              isSearchable={false}
-              styles={{
-                control: (base) => ({
-                  ...base,
-                  minHeight: "34px",
-                  fontSize: "16px",
-                  cursor: "pointer",
-                  width: "100px",
-                }),
-                dropdownIndicator: (base) => ({
-                  ...base,
-                  padding: "4px",
-                }),
-              }}
-            />
-          </div>
+    <Card
+      className="mb-3"
+      style={{
+        border: "none",
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+      }}
+    >
+      <Card.Body>
+        <div className="d-flex align-items-center gap-2 mb-3">
+          <h6 style={{ color: "#E35765", margin: 0, fontWeight: "bold" }}>
+            Tổng quan doanh thu theo năm
+          </h6>
 
-          <Row>
-            <Col md={8}>
-              <div style={{ width: "100%", height: "320px" }} className="mt-3">
-                {data.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={data}
-                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+          <Select
+            options={options}
+            value={options.find((opt) => opt.value === selectedYear)}
+            onChange={(selected) => handleYearSelect(selected.value)}
+            isSearchable={false}
+            styles={{
+              control: (base) => ({
+                ...base,
+                minHeight: "34px",
+                fontSize: "14px",
+                cursor: "pointer",
+                width: "100px",
+              }),
+            }}
+          />
+        </div>
+
+        <Row>
+          <Col md={8}>
+            <div style={{ width: "100%", height: "320px" }}>
+              {chartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+
+                    <XAxis
+                      dataKey="month"
+                      tickFormatter={(value) => `T${value}`}
+                    />
+
+                    <YAxis
+                      width={100}
+                      tickFormatter={(value) => value.toLocaleString("vi-VN")}
+                    />
+
+                    <Tooltip
+                      formatter={(value) =>
+                        Number(value).toLocaleString("vi-VN") + " đ"
+                      }
+                      labelFormatter={(label) => `Tháng ${label}`}
+                    />
+
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#6366f1"
+                      strokeWidth={3}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="d-flex align-items-center justify-content-center h-100 text-muted">
+                  Không có dữ liệu cho năm {selectedYear}
+                </div>
+              )}
+            </div>
+          </Col>
+
+          <Col md={4}>
+            <div style={{ width: "100%", height: "300px" }}>
+              {pieData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      outerRadius={100}
+                      label
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      {pieData.map((entry, index) => (
+                        <Cell
+                          key={index}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
 
-                      <XAxis dataKey="name" />
-                      <YAxis />
-
-                      <Tooltip
-                        formatter={(value) => Number(value).toLocaleString()}
-                      />
-
-                      <Line
-                        type="monotone"
-                        dataKey="value"
-                        stroke="#6366f1"
-                        strokeWidth={3}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="d-flex align-items-center justify-content-center h-100 text-muted">
-                    Không có dữ liệu biểu đồ đường cho năm {selectedYear}
-                  </div>
-                )}
-              </div>
-            </Col>
-
-            <Col md={4}>
-              <div style={{ width: "100%", height: "300px" }}>
-                {pieData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart width={300} height={300}>
-                      <Pie
-                        data={pieData}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={110}
-                        fill="#8884d8"
-                        label
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Legend />
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="d-flex align-items-center justify-content-center h-100 text-muted">
-                    Không có dữ liệu biểu đồ tròn cho năm {selectedYear}
-                  </div>
-                )}
-              </div>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
-    )
+                    <Legend />
+                    <Tooltip
+                      formatter={(value) =>
+                        Number(value).toLocaleString("vi-VN") + " đ"
+                      }
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="d-flex align-items-center justify-content-center h-100 text-muted">
+                  Không có dữ liệu biểu đồ tròn
+                </div>
+              )}
+            </div>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
   );
 };
+
 export default RevenueGrowth;

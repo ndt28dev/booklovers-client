@@ -241,7 +241,10 @@ const OrderStatusOverview = () => {
                     margin={{ top: 5, right: 30, left: 20, bottom: 20 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
+                    <XAxis
+                      dataKey="month"
+                      tickFormatter={(value) => `T${parseInt(value)}`}
+                    />
                     <YAxis />
                     <Tooltip />
                     <Legend />
