@@ -278,7 +278,7 @@ const ReviewsBooks = ({ bookId }) => {
                     </div>
                   )}
 
-                  {item.user.id === user.id && (
+                  {item.user.id === user?.id && (
                     <span
                       className="text-danger"
                       style={{

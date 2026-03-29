@@ -12,6 +12,7 @@ import {
   Pie,
   Cell,
   Legend,
+  CartesianGrid,
 } from "recharts";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
@@ -80,51 +81,56 @@ const RevenueGrowth = () => {
         }}
       >
         <Card.Body>
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <div className="d-flex justify-content-between align-items-center ">
-              <h6 className="mb-0 me-2 fw-bold" style={{ color: "#E35765" }}>
-                Tổng quan doanh thu
-              </h6>
-              <Select
-                options={options}
-                placeholder="Year"
-                value={options.find((opt) => opt.value === selectedYear)}
-                onChange={(selected) => handleYearSelect(selected.value)}
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    minHeight: "34px",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    width: "100px",
-                  }),
-                  dropdownIndicator: (base) => ({
-                    ...base,
-                    padding: "4px",
-                  }),
-                }}
-              />
-            </div>
+          <div className="d-flex  align-items-center gap-2 mb-3">
+            <h6 style={{ color: "#E35765", margin: 0, fontWeight: "bold" }}>
+              Tổng quan doanh thu theo năm
+            </h6>
+            <Select
+              options={options}
+              value={options.find((opt) => opt.value === selectedYear)}
+              onChange={(selected) => handleYearSelect(selected.value)}
+              isSearchable={false}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  minHeight: "34px",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  width: "100px",
+                }),
+                dropdownIndicator: (base) => ({
+                  ...base,
+                  padding: "4px",
+                }),
+              }}
+            />
           </div>
 
           <Row>
             <Col md={8}>
-              <div style={{ width: "100%", height: "300px" }}>
+              <div style={{ width: "100%", height: "320px" }} className="mt-3">
                 {data.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                       data={data}
-                      margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                     >
+                      <CartesianGrid strokeDasharray="3 3" />
+
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <Tooltip />
+
+                      <Tooltip
+                        formatter={(value) => Number(value).toLocaleString()}
+                      />
+
                       <Line
                         type="monotone"
                         dataKey="value"
-                        stroke="#4e73df"
+                        stroke="#6366f1"
                         strokeWidth={3}
-                        dot={false}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
                       />
                     </LineChart>
                   </ResponsiveContainer>

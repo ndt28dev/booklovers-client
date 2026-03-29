@@ -54,6 +54,24 @@ export const fetchOrderStatusOverview = createAsyncThunk(
   }
 );
 
+export const fetchRevenueByCategory = createAsyncThunk(
+  "sales/fetchRevenueByCategory",
+  async (year = new Date().getFullYear(), { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/statistics/revenue-by-category`,
+        {
+          params: { year },
+        }
+      );
+
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 const salesSlice = createSlice({
   name: "sales",
   initialState: {
@@ -69,6 +87,12 @@ const salesSlice = createSlice({
     },
 
     orderStatusOverview: {
+      data: [],
+      loading: false,
+      error: null,
+    },
+
+    revenueByCategory: {
       data: [],
       loading: false,
       error: null,
@@ -119,6 +143,20 @@ const salesSlice = createSlice({
       .addCase(fetchOrderStatusOverview.rejected, (state, action) => {
         state.orderStatusOverview.loading = false;
         state.orderStatusOverview.error = action.payload;
+      })
+
+      // ===== REVENUE BY CATEGORY =====
+      .addCase(fetchRevenueByCategory.pending, (state) => {
+        state.revenueByCategory.loading = true;
+        state.revenueByCategory.error = null;
+      })
+      .addCase(fetchRevenueByCategory.fulfilled, (state, action) => {
+        state.revenueByCategory.loading = false;
+        state.revenueByCategory.data = action.payload;
+      })
+      .addCase(fetchRevenueByCategory.rejected, (state, action) => {
+        state.revenueByCategory.loading = false;
+        state.revenueByCategory.error = action.payload;
       });
   },
 });
