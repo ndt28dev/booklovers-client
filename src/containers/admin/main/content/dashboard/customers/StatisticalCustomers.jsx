@@ -1,13 +1,15 @@
 import CustomersCLV from "./contai/CustomersCLV";
 import CustomersOverview from "./contai/CustomersOverview";
-import CustomersTopOder from "./contai/CustomersTopOder";
+import CustomersShoppingHours from "./contai/CustomersShoppingHours";
+import CustomersTopBuy from "./contai/CustomersTopBuy";
 
 const StatisticalCustomers = () => {
   return (
     <div>
       <CustomersOverview />
       <CustomersCLV />
-      <CustomersTopOder />
+      <CustomersShoppingHours />
+      <CustomersTopBuy />
     </div>
   );
 };

@@ -89,12 +89,12 @@ export const fetchTodayDashboard = createAsyncThunk(
 
 export const fetchTopOrdersByYear = createAsyncThunk(
   "sales/fetchTopOrdersByYear",
-  async ({ year, page = 1, limit = 5 }, { rejectWithValue }) => {
+  async ({ year, limit = 5 }, { rejectWithValue }) => {
     try {
       const res = await axios.get(
         `${API_URL}/api/admin/statistics/top-orders-by-year`,
         {
-          params: { year, page, limit },
+          params: { year, limit },
         }
       );
 
@@ -138,7 +138,6 @@ const salesSlice = createSlice({
 
     topOrdersByYear: {
       data: [],
-      pagination: null,
       loading: false,
       error: null,
     },
@@ -226,7 +225,6 @@ const salesSlice = createSlice({
       .addCase(fetchTopOrdersByYear.fulfilled, (state, action) => {
         state.topOrdersByYear.loading = false;
         state.topOrdersByYear.data = action.payload.data;
-        state.topOrdersByYear.pagination = action.payload.pagination;
       })
       .addCase(fetchTopOrdersByYear.rejected, (state, action) => {
         state.topOrdersByYear.loading = false;

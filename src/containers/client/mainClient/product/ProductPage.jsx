@@ -147,11 +147,6 @@ const ProductPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSearchSubmit = () => {
-    setSearchKeyword(tempSearch);
-    setCurrentPage(1);
-  };
-
   const handleDetailProduct = (book) => {
     const slug = slugify(book.name, {
       lower: true,
@@ -318,7 +313,7 @@ const ProductPage = () => {
                   <FormControl
                     placeholder="Tìm kiếm sản phẩm..."
                     value={searchKeyword}
-                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    onChange={(e) => setSearchKeyword(e.target.value.trim())}
                   />
                 </InputGroup>
               </Col>

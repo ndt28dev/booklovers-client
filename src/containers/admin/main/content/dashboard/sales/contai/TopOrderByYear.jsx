@@ -30,12 +30,9 @@ const TopOrderByYear = () => {
 
   const [selectedYear, setSelectedYear] = useState(yearOptions[0]);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(limitOptions[0]);
 
-  const { data, pagination } = useSelector(
-    (state) => state.adminSales.topOrdersByYear
-  );
+  const { data } = useSelector((state) => state.adminSales.topOrdersByYear);
 
   const { currentOrder } = useSelector((state) => state.order.orderDetail);
 
@@ -43,11 +40,10 @@ const TopOrderByYear = () => {
     dispatch(
       fetchTopOrdersByYear({
         year: selectedYear.value,
-        page: currentPage,
         limit: limit.value,
       })
     );
-  }, [dispatch, selectedYear, currentPage, limit]);
+  }, [dispatch, selectedYear, limit]);
 
   const handleViewDetail = (order) => {
     setShowDetailModal(true);
@@ -89,7 +85,7 @@ const TopOrderByYear = () => {
         {formatDate(order.order_date)}
       </td>
       <td className="align-middle text-center">
-        {Number(order.total_price).toLocaleString("vi-VN")}
+        {Number(order.total_price).toLocaleString("vi-VN")}đ
       </td>
       <td className="align-middle text-center">
         <Button
@@ -147,7 +143,7 @@ const TopOrderByYear = () => {
                     ...base,
                     minHeight: "34px",
                     fontSize: "14px",
-                    width: "70px",
+                    width: "80px",
                   }),
                 }}
               />

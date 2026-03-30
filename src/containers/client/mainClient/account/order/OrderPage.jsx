@@ -167,7 +167,7 @@ const OrderPage = () => {
 
         <InputGroup className="mb-3">
           <FormControl
-            placeholder="Tìm đơn hàng theo mã, tên sản phẩm"
+            placeholder="Tìm đơn hàng theo mã"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

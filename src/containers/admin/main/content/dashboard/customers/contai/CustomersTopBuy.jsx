@@ -1,155 +1,160 @@
-import React, { useEffect, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { useEffect, useState } from "react";
+import { Badge, Button, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTopCustomersByYear } from "../../../../../../../redux/slices/admin/CustomerSlice";
+import { formatDate } from "../../../../../../../utils/format";
+import Select from "react-select";
+import MyDataTable from "../../../../../../../components/mytable/MyDataTable";
+
+const limitOptions = [
+  { value: 5, label: "5" },
+  { value: 10, label: "10" },
+  { value: 15, label: "15" },
+];
 
 const CustomersTopBuy = () => {
-  const [data, setData] = useState({
-    totalCustomers: 1200,
-    newCustomers: 120,
-    returningCustomers: 340,
-    aov: 250000,
+  const dispatch = useDispatch();
 
-    avgCLV: 1200000,
-    maxCLV: 15000000,
-    topCustomerName: "Nguyễn Văn A",
+  const currentYear = new Date().getFullYear();
+  const minYear = 2023;
 
-    topCustomers: [
-      { id: 1, name: "Nguyễn Văn A", total_orders: 12, total_spent: 15000000 },
-      { id: 2, name: "Trần Thị B", total_orders: 10, total_spent: 12000000 },
-      { id: 3, name: "Lê Văn C", total_orders: 8, total_spent: 9000000 },
-    ],
-
-    topOrders: [
-      { name: "Nguyễn Văn A", total: 5000000 },
-      { name: "Trần Thị B", total: 4200000 },
-    ],
-
-    hourData: Array.from({ length: 24 }, (_, i) => ({
-      hour: i,
-      orders: Math.floor(Math.random() * 20),
-    })),
-
-    topBooks: [
-      { title: "Đắc Nhân Tâm", sold: 120 },
-      { title: "Nhà Giả Kim", sold: 100 },
-      { title: "Dám Nghĩ Lớn", sold: 80 },
-    ],
-
-    vipCustomers: [
-      { id: 1, name: "Nguyễn Văn A", orders: 12, spent: 15000000 },
-      { id: 2, name: "Trần Thị B", orders: 10, spent: 12000000 },
-    ],
-  });
-
-  return (
-    <Row className="mb-4">
-      <Col md={6}>
-        <Card className="p-3 shadow-sm">
-          <h6>💰 CLV trung bình</h6>
-          <h4>{data.avgCLV.toLocaleString()} đ</h4>
-        </Card>
-      </Col>
-
-      <Col md={6}>
-        <Card className="p-3 shadow-sm">
-          <h6>🏆 CLV cao nhất</h6>
-          <h4>{data.maxCLV.toLocaleString()} đ</h4>
-          <small>{data.topCustomerName}</small>
-        </Card>
-      </Col>
-    </Row>
+  const yearOptions = Array.from(
+    { length: currentYear - minYear + 1 },
+    (_, i) => {
+      const year = currentYear - i;
+      return { value: year, label: `${year}` };
+    }
   );
 
-  {
-    /* 🏆 3. TOP KHÁCH */
-  }
-  <Card className="p-3 shadow-sm mb-4">
-    <h5>🏆 Top khách hàng</h5>
+  const [selectedYear, setSelectedYear] = useState(yearOptions[0]);
+  const [limit, setLimit] = useState(limitOptions[0]);
 
-    <table className="table mt-3">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Tên</th>
-          <th>Số đơn</th>
-          <th>Tổng chi tiêu</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.topCustomers.map((c, index) => (
-          <tr key={c.id}>
-            <td>{index + 1}</td>
-            <td>{c.name}</td>
-            <td>{c.total_orders}</td>
-            <td>{c.total_spent.toLocaleString()} đ</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </Card>;
+  const { data } = useSelector(
+    (state) => state.adminCustomer.topCustomersByYear
+  );
 
-  {
-    /* 🔥 ĐƠN LỚN NHẤT */
-  }
-  <Card className="p-3 shadow-sm mb-4">
-    <h5>🔥 Đơn hàng lớn nhất</h5>
+  useEffect(() => {
+    dispatch(
+      fetchTopCustomersByYear({
+        year: selectedYear.value,
+        limit: limit.value,
+      })
+    );
+  }, [dispatch, selectedYear, limit]);
 
-    <table className="table mt-3">
-      <thead>
-        <tr>
-          <th>Tên</th>
-          <th>Giá trị</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.topOrders.map((o, index) => (
-          <tr key={index}>
-            <td>{o.name}</td>
-            <td>{o.total.toLocaleString()} đ</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </Card>;
+  const columns = [
+    { title: "STT", style: { width: "3%", textAlign: "center" } },
+    { title: "Họ và tên", style: { width: "15%" } },
 
-  {
-    /* 📊 4. HÀNH VI */
-  }
-  <Row className="mb-4">
-    <Col md={6}>
-      <Card className="p-3 shadow-sm">
-        <h5>⏰ Giờ mua hàng</h5>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data.hourData}>
-            <XAxis dataKey="hour" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="orders" />
-          </BarChart>
-        </ResponsiveContainer>
-      </Card>
-    </Col>
+    { title: "Đơn đầu tiên", style: { width: "6%", textAlign: "center" } },
+    { title: "Đơn gần nhất", style: { width: "6%", textAlign: "center" } },
+    { title: "Loại KH", style: { width: "6%", textAlign: "center" } },
+    { title: "Số đơn", style: { width: "6%", textAlign: "center" } },
+    { title: "TB mỗi đơn", style: { width: "6%", textAlign: "center" } },
+    {
+      title: "Tổng tiền",
+      style: { width: "10%", textAlign: "center" },
+    },
+  ];
 
-    <Col md={6}>
-      <Card className="p-3 shadow-sm">
-        <h5>📚 Top sách</h5>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data.topBooks}>
-            <XAxis dataKey="title" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="sold" />
-          </BarChart>
-        </ResponsiveContainer>
-      </Card>
-    </Col>
-  </Row>;
+  const renderRow = (customer, index) => (
+    <tr key={index}>
+      <td className="text-center align-middle">{index + 1}</td>
+      <td className="align-middle ">{customer.fullname}</td>
+      <td className="align-middle text-center">
+        {formatDate(customer.first_order_date)}
+      </td>
+      <td className="align-middle text-center">
+        {formatDate(customer.last_order_date)}
+      </td>
+      <td className="align-middle text-center">
+        {customer.customer_type === "VIP" ? (
+          <Badge bg="primary">Khách VIP</Badge>
+        ) : customer.customer_type === "LOYAL" ? (
+          <Badge bg="success">Trung thành</Badge>
+        ) : (
+          <Badge bg="warning">Khách mới</Badge>
+        )}
+      </td>
+      <td className="align-middle text-center">{customer.total_orders}</td>
+      <td className="align-middle text-center">
+        {customer.avg_order_value.toLocaleString("vi-VN")}đ
+      </td>
+      <td className="align-middle text-center">
+        {customer.total_spent.toLocaleString("vi-VN")}đ
+      </td>
+    </tr>
+  );
+
+  return (
+    <Card
+      style={{
+        border: "none",
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+      }}
+    >
+      <Card.Body>
+        <div className="d-flex align-items-center gap-2 mb-3">
+          <div className="d-flex align-items-center gap-2">
+            <h6
+              style={{
+                color: "#E35765",
+                margin: 0,
+                fontWeight: "bold",
+              }}
+            >
+              Top
+            </h6>
+
+            <Select
+              value={limit}
+              onChange={(val) => {
+                setLimit(val);
+                setCurrentPage(1);
+              }}
+              options={limitOptions}
+              isSearchable={false}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  minHeight: "34px",
+                  fontSize: "14px",
+                  width: "80px",
+                }),
+              }}
+            />
+          </div>
+          <h6
+            style={{
+              color: "#E35765",
+              margin: 0,
+              fontWeight: "bold",
+            }}
+          >
+            khách hàng trong năm
+          </h6>
+          <Select
+            value={selectedYear}
+            onChange={(val) => {
+              setSelectedYear(val);
+              setCurrentPage(1);
+            }}
+            options={yearOptions}
+            isSearchable={false}
+            styles={{
+              control: (base) => ({
+                ...base,
+                minHeight: "34px",
+                fontSize: "14px",
+                width: "100px",
+              }),
+            }}
+          />
+        </div>
+        <MyDataTable columns={columns} data={data} renderRow={renderRow} />
+      </Card.Body>
+    </Card>
+  );
 };
 export default CustomersTopBuy;
