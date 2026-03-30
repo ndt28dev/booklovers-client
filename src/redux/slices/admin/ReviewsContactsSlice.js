@@ -53,6 +53,24 @@ export const fetchTopBooksMostReviews = createAsyncThunk(
   }
 );
 
+export const fetchTopBooksHighestRating = createAsyncThunk(
+  "reviews/fetchTopBooksHighestRating",
+  async ({ limit, year }, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/statistics/top-books-rating`,
+        {
+          params: { limit, year },
+        }
+      );
+
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 const reviewsContactsSlice = createSlice({
   name: "feedbackStats",
   initialState: {
@@ -69,6 +87,12 @@ const reviewsContactsSlice = createSlice({
     },
 
     topBooksMostReviews: {
+      data: null,
+      loading: false,
+      error: null,
+    },
+
+    topBooksHighestRating: {
       data: null,
       loading: false,
       error: null,
@@ -116,6 +140,20 @@ const reviewsContactsSlice = createSlice({
       .addCase(fetchTopBooksMostReviews.rejected, (state, action) => {
         state.topBooksMostReviews.loading = false;
         state.topBooksMostReviews.error =
+          action.payload || "Something went wrong";
+      })
+
+      .addCase(fetchTopBooksHighestRating.pending, (state) => {
+        state.topBooksHighestRating.loading = true;
+        state.topBooksHighestRating.error = null;
+      })
+      .addCase(fetchTopBooksHighestRating.fulfilled, (state, action) => {
+        state.topBooksHighestRating.loading = false;
+        state.topBooksHighestRating.data = action.payload;
+      })
+      .addCase(fetchTopBooksHighestRating.rejected, (state, action) => {
+        state.topBooksHighestRating.loading = false;
+        state.topBooksHighestRating.error =
           action.payload || "Something went wrong";
       });
   },
