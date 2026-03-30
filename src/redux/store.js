@@ -18,6 +18,7 @@ import reviewSlice from "./slices/reviewSlice";
 import salesSlice from "./slices/admin/SalesSlice";
 import customerSlice from "./slices/admin/CustomerSlice";
 import productsImportsSlice from "./slices/admin/ProductsImportsSlice";
+import reviewsContactsSlice from "./slices/admin/ReviewsContactsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -40,5 +41,6 @@ export const store = configureStore({
     adminSales: salesSlice,
     adminCustomer: customerSlice,
     adminProductsImports: productsImportsSlice,
+    adminReviewsContacts: reviewsContactsSlice,
   },
 });

@@ -1,43 +1,43 @@
 import { useEffect } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchReviewStats } from "../../../../../../../redux/slices/admin/ReviewsContactsSlice";
+import { fetchFeedbackStats } from "../../../../../../../redux/slices/admin/ReviewsContactsSlice";
 
-const ReviewsOverview = () => {
+const ContactsOverview = () => {
   const dispatch = useDispatch();
 
   const { data } = useSelector(
-    (state) => state.adminReviewsContacts.reviewStats
+    (state) => state.adminReviewsContacts.reviewOverview
   );
 
   useEffect(() => {
-    dispatch(fetchReviewStats());
+    dispatch(fetchFeedbackStats());
   }, [dispatch]);
 
   const cards = [
     {
-      label: "Tổng đánh giá",
-      value: data?.total_reviews,
+      label: "Tổng phản hồi",
+      value: data?.total,
       bg: "linear-gradient(135deg, #4f46e5, #3b82f6)",
       icon: "bi bi-chat-dots",
     },
     {
-      label: "Điểm trung bình",
-      value: Number(data?.avg_rating).toFixed(1),
-      bg: "linear-gradient(135deg, #f59e0b, #eab308)",
-      icon: "bi bi-star-fill",
-    },
-    {
-      label: "4 - 5 sao",
-      value: Number(data?.star_5) + Number(data?.star_4),
-      bg: "linear-gradient(135deg, #22c55e, #16a34a)",
-      icon: "bi bi-star-fill",
-    },
-    {
-      label: "1 - 2 - 3 sao",
-      value: Number(data?.star_1) + Number(data?.star_2) + Number(data?.star_3),
+      label: "Chưa xử lý",
+      value: data?.pending,
       bg: "linear-gradient(135deg, #ef4444, #f97316)",
-      icon: "bi bi-exclamation-triangle",
+      icon: "bi bi-clock",
+    },
+    {
+      label: "Đang xử lý",
+      value: data?.in_progress,
+      bg: "linear-gradient(135deg, #f59e0b, #eab308)",
+      icon: "bi bi-arrow-repeat",
+    },
+    {
+      label: "Đã xử lý",
+      value: data?.resolved,
+      bg: "linear-gradient(135deg, #22c55e, #16a34a)",
+      icon: "bi bi-check-circle",
     },
   ];
 
@@ -52,7 +52,7 @@ const ReviewsOverview = () => {
     >
       <Card.Body>
         <h6 className="mb-3 fw-bold" style={{ color: "#E35765" }}>
-          Thống kê đánh giá
+          Thống kê phản hồi
         </h6>
         <Row>
           {cards.map((item, idx) => (
@@ -75,7 +75,10 @@ const ReviewsOverview = () => {
 
                     <i
                       className={item.icon}
-                      style={{ fontSize: "28px", opacity: 0.9 }}
+                      style={{
+                        fontSize: "28px",
+                        opacity: 0.9,
+                      }}
                     ></i>
                   </div>
                 </Card.Body>
@@ -87,5 +90,4 @@ const ReviewsOverview = () => {
     </Card>
   );
 };
-
-export default ReviewsOverview;
+export default ContactsOverview;
