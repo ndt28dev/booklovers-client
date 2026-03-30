@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import "./Dashboard.scss";
 import StatisticalSales from "./sales/StatisticalSales";
-import StatisticalReviews from "./reviews/StatisticalReviews";
 import StatisticalCustomers from "./customers/StatisticalCustomers";
-import StatisticalProducts from "./products/StatisticalProducts";
+import StatisticalReviewsAndContacts from "./reviewsandcontacts/StatisticalReviewsAndContacts";
+import StatisticalProductsAndImports from "./productsandimports/StatisticalProductsAndImports";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("sales");
@@ -26,11 +26,11 @@ const Dashboard = () => {
         </Tab>
 
         <Tab eventKey="products" title="Thống kê sản phẩm / kho hàng">
-          <StatisticalProducts />
+          <StatisticalProductsAndImports />
         </Tab>
 
         <Tab eventKey="reviews" title="Thống kê phản hồi & đánh giá">
-          <StatisticalReviews />
+          <StatisticalReviewsAndContacts />
         </Tab>
       </Tabs>
     </div>
