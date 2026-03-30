@@ -23,19 +23,22 @@ const ReviewsOverview = () => {
     },
     {
       label: "Điểm trung bình",
-      value: Number(data?.avg_rating).toFixed(1),
+      value: Number(data?.avg_rating || 0).toFixed(1),
       bg: "linear-gradient(135deg, #f59e0b, #eab308)",
       icon: "bi bi-star-fill",
     },
     {
       label: "4 - 5 sao",
-      value: Number(data?.star_5) + Number(data?.star_4),
+      value: Number(data?.star_5 || 0) + Number(data?.star_4 || 0),
       bg: "linear-gradient(135deg, #22c55e, #16a34a)",
       icon: "bi bi-star-fill",
     },
     {
       label: "1 - 2 - 3 sao",
-      value: Number(data?.star_1) + Number(data?.star_2) + Number(data?.star_3),
+      value:
+        Number(data?.star_1 || 0) +
+        Number(data?.star_2 || 0) +
+        Number(data?.star_3 || 0),
       bg: "linear-gradient(135deg, #ef4444, #f97316)",
       icon: "bi bi-exclamation-triangle",
     },
