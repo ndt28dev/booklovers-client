@@ -64,7 +64,13 @@ const TopBooksMostReviews = () => {
   );
 
   return (
-    <Card className="shadow-sm border-0">
+    <Card
+      style={{
+        border: "none",
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+      }}
+    >
       <Card.Body>
         <div className="d-flex align-items-center mb-3 gap-2">
           <div className="d-flex align-items-center gap-2">

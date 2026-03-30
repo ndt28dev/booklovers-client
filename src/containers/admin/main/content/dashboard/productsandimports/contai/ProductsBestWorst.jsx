@@ -52,7 +52,8 @@ const ProductsBestWorst = () => {
     <Card
       style={{
         border: "none",
-        boxShadow: "rgba(0, 0, 0, 0.12) 0px 4px 12px",
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
       }}
     >
       <Card.Body>
