@@ -16,7 +16,8 @@ import subcategorySlice from "./slices/subcategorySlice";
 import systemSlice from "./slices/admin/systemSlice";
 import reviewSlice from "./slices/reviewSlice";
 import salesSlice from "./slices/admin/SalesSlice";
-import customerReducer from "./slices/admin/CustomerSlice";
+import customerSlice from "./slices/admin/CustomerSlice";
+import productsImportsSlice from "./slices/admin/ProductsImportsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -37,6 +38,7 @@ export const store = configureStore({
     review: reviewSlice,
     system: systemSlice,
     adminSales: salesSlice,
-    adminCustomer: customerReducer,
+    adminCustomer: customerSlice,
+    adminProductsImports: productsImportsSlice,
   },
 });
