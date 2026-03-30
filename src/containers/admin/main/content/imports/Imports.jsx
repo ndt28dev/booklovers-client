@@ -52,8 +52,11 @@ const Imports = () => {
         endDate: endDate || undefined,
       })
     );
+  }, [dispatch, currentPage, selectedSupplierId, startDate, endDate, limit]);
+
+  useEffect(() => {
     dispatch(fetchSuppliersAll());
-  }, [currentPage, selectedSupplierId, startDate, endDate]);
+  }, [dispatch]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {

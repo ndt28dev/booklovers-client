@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchStockWarnings } from "../../../../../../../redux/slices/admin/ProductsImportsSlice";
+import { fetchImportOverview } from "../../../../../../../redux/slices/admin/ProductsImportsSlice";
 
-const StockCard = ({ title, value, color, icon, bg, desc, loading }) => {
+const ImportCard = ({ title, value, icon, color, bg, desc }) => {
   return (
     <Card
       style={{
@@ -16,18 +16,11 @@ const StockCard = ({ title, value, color, icon, bg, desc, loading }) => {
           {title}
         </h6>
 
-        <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex justify-content-between align-items-center">
           <div>
-            <div
-              style={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                color: "#1f1f1f",
-              }}
-            >
-              {loading ? "..." : value ?? 0}
+            <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+              {value ?? 0}
             </div>
-
             <div style={{ fontSize: "13px", color: "#555" }}>{desc}</div>
           </div>
 
@@ -47,49 +40,49 @@ const StockCard = ({ title, value, color, icon, bg, desc, loading }) => {
   );
 };
 
-const ProductsStockWarnings = () => {
+const ImportOverview = () => {
   const dispatch = useDispatch();
 
   const { data, loading } = useSelector(
-    (state) => state.adminProductsImports.stockWarnings
+    (state) => state.adminProductsImports.importOverview
   );
 
   useEffect(() => {
-    dispatch(fetchStockWarnings());
+    dispatch(fetchImportOverview());
   }, [dispatch]);
 
   const cards = [
     {
-      title: "Còn hàng",
-      value: data?.in_stock,
-      color: "#28a745",
-      icon: "bi-check-circle",
+      title: "Đơn nhập hàng",
+      value: data?.total_import_details,
+      icon: "bi-bag",
+      color: "#0d6efd",
+      bg: "linear-gradient(135deg, #d7e8ff, #f8fbff)",
+      desc: "Tổng số đơn nhập",
+    },
+    {
+      title: "Doanh thu nhập",
+      value: data?.total_import_revenue.toLocaleString("vi-VN") + "đ",
+      icon: "bi-cash-coin",
+      color: "#198754",
       bg: "linear-gradient(135deg, #dff7e6, #f6fffa)",
-      desc: "Sách đang bán bình thường",
+      desc: "Tổng tiền nhập hàng",
     },
     {
-      title: "Sắp hết",
-      value: data?.low_stock,
+      title: "Sách nhập",
+      value: data?.total_import_books,
+      icon: "bi-box",
       color: "#fd7e14",
-      icon: "bi-exclamation-triangle",
       bg: "linear-gradient(135deg, #ffe2c8, #fff7ef)",
-      desc: "Cần theo dõi tồn kho",
+      desc: "Tổng số lượng nhập",
     },
     {
-      title: "Nguy cơ hết",
-      value: data?.critical_stock,
+      title: "Nhà cung cấp",
+      value: data?.total_suppliers,
+      icon: "bi-truck",
       color: "#dc3545",
-      icon: "bi-exclamation-octagon",
       bg: "linear-gradient(135deg, #ffd6db, #fff5f6)",
-      desc: "Cần nhập hàng gấp",
-    },
-    {
-      title: "Hết hàng",
-      value: data?.out_of_stock,
-      color: "#343a40",
-      icon: "bi-x-circle",
-      bg: "linear-gradient(135deg, #e1e5ea, #f8f9fa)",
-      desc: "Đang bị mất doanh thu",
+      desc: "Số NCC đang hợp tác",
     },
   ];
 
@@ -104,13 +97,13 @@ const ProductsStockWarnings = () => {
     >
       <Card.Body>
         <h6 className="mb-3 fw-bold" style={{ color: "#E35765" }}>
-          Thống kê tồn kho
+          Thống kê nhập hàng
         </h6>
 
         <Row>
           {cards.map((item, index) => (
             <Col md={3} key={index}>
-              <StockCard {...item} loading={loading} />
+              <ImportCard {...item} />
             </Col>
           ))}
         </Row>
@@ -119,4 +112,4 @@ const ProductsStockWarnings = () => {
   );
 };
 
-export default ProductsStockWarnings;
+export default ImportOverview;

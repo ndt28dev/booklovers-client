@@ -1,3 +1,4 @@
+import ImportOverview from "./contai/ImportOverview";
 import ProductsOverview from "./contai/ProductsOverview";
 import ProductsStockWarnings from "./contai/ProductsStockWarnings";
 
@@ -6,6 +7,7 @@ const StatisticalProductsAndImports = () => {
     <div>
       <ProductsOverview />
       <ProductsStockWarnings />
+      <ImportOverview />
     </div>
   );
 };

@@ -38,7 +38,7 @@ const CustomersOverview = () => {
     },
     {
       title: "AOV",
-      value: data?.aov.toLocaleString() + "đ",
+      value: data?.aov.toLocaleString("vi-VN") + "đ",
       icon: "bi-currency-dollar",
       bg: "#fff1f3",
       color: "#e11d48",

@@ -31,7 +31,7 @@ const CustomersCLV = () => {
               </div>
 
               <h5 className="mt-1 fw-bold  mb-0 text-primary">
-                {data?.avgCLV?.toLocaleString() || 0}đ
+                {data?.avgCLV?.toLocaleString("vi-VN") || 0}đ
               </h5>
             </Card.Body>
           </Card>
@@ -54,7 +54,7 @@ const CustomersCLV = () => {
 
               <div className="mt-1 d-flex align-items-center justify-content-between">
                 <h5 className="fw-bold  mb-0 text-success">
-                  {data?.maxCLV?.toLocaleString() || 0} đ
+                  {data?.maxCLV?.toLocaleString("vi-VN") || 0} đ
                 </h5>
 
                 <small className="text-muted">
@@ -81,7 +81,7 @@ const CustomersCLV = () => {
               </div>
               <div className="mt-1 d-flex align-items-center justify-content-between">
                 <h5 className="fw-bold  mb-0 text-info">
-                  {data?.maxOrder?.total_price?.toLocaleString() || 0} đ
+                  {data?.maxOrder?.total_price?.toLocaleString("vi-VN") || 0} đ
                 </h5>
 
                 <small className="text-muted">
@@ -108,7 +108,9 @@ const CustomersCLV = () => {
               </div>
               <div className="mt-1 d-flex align-items-center justify-content-between">
                 <h5 className="fw-bold  mb-0 text-warning">
-                  {data?.secondMaxOrder?.total_price?.toLocaleString() || 0} đ
+                  {data?.secondMaxOrder?.total_price?.toLocaleString("vi-VN") ||
+                    0}{" "}
+                  đ
                 </h5>
 
                 <small className="text-muted">

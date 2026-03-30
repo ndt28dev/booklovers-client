@@ -36,6 +36,20 @@ export const fetchStockWarnings = createAsyncThunk(
   }
 );
 
+export const fetchImportOverview = createAsyncThunk(
+  "imports/fetchImportOverview",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/statistics/import-overview`
+      );
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const productsImportsSlice = createSlice({
   name: "productsImports",
   initialState: {
@@ -45,6 +59,11 @@ const productsImportsSlice = createSlice({
       error: null,
     },
     stockWarnings: {
+      data: null,
+      loading: false,
+      error: null,
+    },
+    importOverview: {
       data: null,
       loading: false,
       error: null,
@@ -79,6 +98,18 @@ const productsImportsSlice = createSlice({
       .addCase(fetchStockWarnings.rejected, (state, action) => {
         state.stockWarnings.loading = false;
         state.stockWarnings.error = action.payload;
+      })
+
+      .addCase(fetchImportOverview.pending, (state) => {
+        state.importOverview.loading = true;
+      })
+      .addCase(fetchImportOverview.fulfilled, (state, action) => {
+        state.importOverview.loading = false;
+        state.importOverview.data = action.payload;
+      })
+      .addCase(fetchImportOverview.rejected, (state, action) => {
+        state.importOverview.loading = false;
+        state.importOverview.error = action.payload;
       });
   },
 });

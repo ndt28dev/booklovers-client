@@ -31,8 +31,8 @@ const OverviewCard = ({ title, value, icon, desc, color, bg }) => {
           <div>
             <div
               style={{
-                fontSize: "24px",
-                fontWeight: "800",
+                fontSize: "20px",
+                fontWeight: "bold",
                 color: "#1f1f1f",
               }}
             >

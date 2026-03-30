@@ -76,6 +76,7 @@ const initialState = {
 
   importDetail: {
     data: null,
+    pagination: null,
     loading: false,
     error: null,
   },
@@ -128,6 +129,7 @@ const importSlice = createSlice({
       .addCase(fetchImports.fulfilled, (state, action) => {
         state.imports.loading = false;
         state.imports.data = action.payload.data;
+        state.imports.pagination = action.payload.pagination;
       })
 
       .addCase(fetchImports.rejected, (state, action) => {

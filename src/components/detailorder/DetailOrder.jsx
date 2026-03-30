@@ -54,7 +54,7 @@ const DetailOrderModal = ({ show, handleClose, order }) => {
           <Col xs={12} md={6}>
             <p>
               <strong className="me-1">Ngày đặt:</strong>
-              {new Date(order.order_date).toLocaleString()}
+              {new Date(order.order_date).toLocaleString("vi-VN")}
             </p>
             <div className="d-flex justify-content-start align-items-center flex-wrap mb-3">
               <strong className="me-1">Thanh toán:</strong>

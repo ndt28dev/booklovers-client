@@ -114,7 +114,10 @@ const RevenueByCategory = () => {
                               : "",
                         }}
                       >
-                        {Number(item.total_revenue || 0).toLocaleString()}₫
+                        {Number(item.total_revenue || 0).toLocaleString(
+                          "vi-VN"
+                        )}
+                        đ
                       </small>
                     </div>
 
@@ -179,7 +182,10 @@ const RevenueByCategory = () => {
                   <div>
                     <div style={{ fontSize: "16px" }}>Doanh thu</div>
                     <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-                      {Number(selected?.total_revenue || 0).toLocaleString()}₫
+                      {Number(selected?.total_revenue || 0).toLocaleString(
+                        "vi-VN"
+                      )}
+                      đ
                     </div>
                   </div>
                 </div>
