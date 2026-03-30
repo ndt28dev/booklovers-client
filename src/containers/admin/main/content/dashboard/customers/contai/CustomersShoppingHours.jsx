@@ -11,6 +11,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  CartesianGrid,
 } from "recharts";
 
 import { fetchCustomerByHour } from "../../../../../../../redux/slices/admin/CustomerSlice";
@@ -36,7 +37,7 @@ const CustomersShoppingHours = () => {
   ];
 
   const [selectedYear, setSelectedYear] = useState(yearOptions[0]);
-  const [chartType, setChartType] = useState(chartOptions[2]);
+  const [chartType, setChartType] = useState(chartOptions[0]);
 
   const { data } = useSelector((state) => state.adminCustomer.customerByHour);
 
@@ -98,9 +99,25 @@ const CustomersShoppingHours = () => {
 
         <ResponsiveContainer width="100%" height={350}>
           <LineChart data={data}>
-            <XAxis dataKey="hour" />
-            <YAxis />
-            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" opacity={0.4} />
+
+            <XAxis dataKey="hour" tickFormatter={(value) => `${value}h`} />
+
+            <YAxis tickFormatter={(value) => value.toLocaleString("vi-VN")} />
+
+            <Tooltip
+              labelFormatter={(label) => `Giờ ${label}`}
+              formatter={(value, name) => {
+                const formatted = Number(value).toLocaleString("vi-VN");
+
+                if (name === "Đơn hàng") return [formatted, name];
+                if (name === "Doanh thu") return [formatted + " đ", name];
+                if (name === "Khách hàng") return [formatted, name];
+
+                return [formatted, name];
+              }}
+            />
+
             <Legend />
 
             {chartType.value === "orders" && (
@@ -108,7 +125,9 @@ const CustomersShoppingHours = () => {
                 type="monotone"
                 dataKey="total_orders"
                 stroke="#3b82f6"
-                strokeWidth={2}
+                strokeWidth={3}
+                dot={{ r: 3 }}
+                activeDot={{ r: 6 }}
                 name="Đơn hàng"
               />
             )}
@@ -118,7 +137,9 @@ const CustomersShoppingHours = () => {
                 type="monotone"
                 dataKey="total_revenue"
                 stroke="#22c55e"
-                strokeWidth={2}
+                strokeWidth={3}
+                dot={{ r: 3 }}
+                activeDot={{ r: 6 }}
                 name="Doanh thu"
               />
             )}
@@ -128,7 +149,9 @@ const CustomersShoppingHours = () => {
                 type="monotone"
                 dataKey="total_customers"
                 stroke="#ef4444"
-                strokeWidth={2}
+                strokeWidth={3}
+                dot={{ r: 3 }}
+                activeDot={{ r: 6 }}
                 name="Khách hàng"
               />
             )}
