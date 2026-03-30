@@ -1,4 +1,5 @@
 import ImportOverview from "./contai/ImportOverview";
+import ProductsBestWorst from "./contai/ProductsBestWorst";
 import ProductsOverview from "./contai/ProductsOverview";
 import ProductsStockWarnings from "./contai/ProductsStockWarnings";
 
@@ -8,6 +9,7 @@ const StatisticalProductsAndImports = () => {
       <ProductsOverview />
       <ProductsStockWarnings />
       <ImportOverview />
+      <ProductsBestWorst />
     </div>
   );
 };

@@ -50,6 +50,24 @@ export const fetchImportOverview = createAsyncThunk(
   }
 );
 
+export const fetchBestWorstBooks = createAsyncThunk(
+  "stats/fetchBestWorstBooks",
+  async (year, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/statistics/best-worst-books`,
+        {
+          params: { year },
+        }
+      );
+
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 const productsImportsSlice = createSlice({
   name: "productsImports",
   initialState: {
@@ -64,6 +82,11 @@ const productsImportsSlice = createSlice({
       error: null,
     },
     importOverview: {
+      data: null,
+      loading: false,
+      error: null,
+    },
+    bestWorstBooks: {
       data: null,
       loading: false,
       error: null,
@@ -110,6 +133,18 @@ const productsImportsSlice = createSlice({
       .addCase(fetchImportOverview.rejected, (state, action) => {
         state.importOverview.loading = false;
         state.importOverview.error = action.payload;
+      })
+
+      .addCase(fetchBestWorstBooks.pending, (state) => {
+        state.bestWorstBooks.loading = true;
+      })
+      .addCase(fetchBestWorstBooks.fulfilled, (state, action) => {
+        state.bestWorstBooks.loading = false;
+        state.bestWorstBooks.data = action.payload;
+      })
+      .addCase(fetchBestWorstBooks.rejected, (state, action) => {
+        state.bestWorstBooks.loading = false;
+        state.bestWorstBooks.error = action.payload;
       });
   },
 });
