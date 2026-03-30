@@ -43,23 +43,39 @@ const TopBooksMostReviews = () => {
   const columns = [
     { title: "STT", style: { width: "3%", textAlign: "center" } },
     { title: "Tên sản phẩm" },
-    { title: "Danh mục", style: { width: "18%" } },
-    { title: "Thể loại", style: { width: "23%", textAlign: "center" } },
-    { title: "Giá", style: { width: "10%", textAlign: "center" } },
-    { title: "SL", style: { width: "8%", textAlign: "center" } },
+    { title: "SL", style: { width: "6%", textAlign: "center" } },
+    {
+      title: <div style={{ fontSize: "16px", color: "#ffc107" }}>★★★★★</div>,
+      style: { width: "9%", textAlign: "center" },
+    },
+    {
+      title: <div style={{ fontSize: "16px", color: "#ffc107" }}>★★★★☆</div>,
+      style: { width: "9%", textAlign: "center" },
+    },
+    {
+      title: <div style={{ fontSize: "16px", color: "#ffc107" }}>★★★☆☆</div>,
+      style: { width: "9%", textAlign: "center" },
+    },
+    {
+      title: <div style={{ fontSize: "16px", color: "#ffc107" }}>★★☆☆☆</div>,
+      style: { width: "9%", textAlign: "center" },
+    },
+    {
+      title: <div style={{ fontSize: "16px", color: "#ffc107" }}>★☆☆☆☆</div>,
+      style: { width: "9%", textAlign: "center" },
+    },
   ];
 
   const renderRow = (product, index) => (
     <tr key={index}>
       <td className="text-center align-middle">{index + 1}</td>
       <td className="align-middle ">{product.name}</td>
-
-      <td className="align-middle ">{product.category_name}</td>
-      <td className="align-middle ">{product.subcategory_name}</td>
-      <td className="align-middle text-center">
-        {product.price.toLocaleString("vi-VN")}đ
-      </td>
       <td className="align-middle text-center">{product.total_reviews}</td>
+      <td className="align-middle text-center">{product.star_5}</td>
+      <td className="align-middle text-center">{product.star_4}</td>
+      <td className="align-middle text-center">{product.star_3}</td>
+      <td className="align-middle text-center">{product.star_2}</td>
+      <td className="align-middle text-center">{product.star_1}</td>
     </tr>
   );
 
