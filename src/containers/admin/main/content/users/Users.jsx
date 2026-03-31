@@ -121,7 +121,7 @@ const Users = () => {
       <td className="text-center align-middle">
         <Image
           src={
-            user?.avatar && user.avatar?.startsWith("https://")
+            user?.avatar && user?.avatar?.startsWith("https://")
               ? user.avatar
               : `${API_URL}/avatar/${user?.avatar}`
           }
