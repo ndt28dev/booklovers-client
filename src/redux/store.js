@@ -21,6 +21,8 @@ import productsImportsSlice from "./slices/admin/ProductsImportsSlice";
 import reviewsContactsSlice from "./slices/admin/ReviewsContactsSlice";
 import messageSlice from "./slices/messageSlice";
 import notificationSlice from "./slices/notificationSlice";
+import chatOptionSlice from "./slices/chatOptionSlice";
+import chatCategorySlice from "./slices/chatCategorySlice";
 
 export const store = configureStore({
   reducer: {
@@ -46,5 +48,7 @@ export const store = configureStore({
     adminReviewsContacts: reviewsContactsSlice,
     message: messageSlice,
     notification: notificationSlice,
+    chatOption: chatOptionSlice,
+    chatCategory: chatCategorySlice,
   },
 });

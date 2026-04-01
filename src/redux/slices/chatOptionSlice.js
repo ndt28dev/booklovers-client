@@ -4,10 +4,13 @@ import API_URL from "../../config/api";
 
 export const fetchChatOptions = createAsyncThunk(
   "chat/fetchOptions",
-  async (_, { rejectWithValue }) => {
+  async ({ page = 1, limit = 10 }, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API_URL}/api/admin/chat-options`);
-      return res.data.data;
+      const res = await axios.get(`${API_URL}/api/admin/chat-options`, {
+        params: { page, limit },
+      });
+
+      return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Lỗi tải options");
     }
@@ -63,13 +66,17 @@ const chatSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+
       .addCase(fetchChatOptions.pending, (state) => {
+        state.listChat.data = [];
         state.listChat.error = null;
       })
       .addCase(fetchChatOptions.fulfilled, (state, action) => {
-        state.listChat.data = action.payload;
+        state.listChat.data = action.payload.data;
+        state.listChat.pagination = action.payload.pagination;
       })
       .addCase(fetchChatOptions.rejected, (state, action) => {
+        state.listChat.data = [];
         state.listChat.error = action.payload;
       })
 

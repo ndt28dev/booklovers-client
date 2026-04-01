@@ -212,35 +212,18 @@ const SettingCategory = () => {
     <div>
       <div className="d-flex align-items-center justify-content-between mb-3">
         <h5 style={{ color: "#E35765" }}>Danh sách danh mục</h5>
-        {addingCat ? (
-          <div className="d-flex align-items-center gap-2">
-            <input
-              className="form-control"
-              value={newCatName}
-              onChange={(e) => setNewCatName(e.target.value)}
-              placeholder="Tên danh mục mới"
-              style={{ width: "200px", height: "30px" }}
-            />
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setAddingCat(false)}
-            >
-              Huỷ
-            </Button>
-            <Button variant="success" size="sm" onClick={handleCatAdd}>
-              Lưu
-            </Button>
-          </div>
-        ) : (
-          <Button
-            variant="primary"
-            onClick={() => setAddingCat(true)}
-            size="sm"
-          >
-            <i className="bi bi-plus me-2"></i>Thêm danh mục
+        <div className="d-flex align-items-center gap-2">
+          <input
+            className="form-control"
+            value={newCatName}
+            onChange={(e) => setNewCatName(e.target.value)}
+            placeholder="Tên danh mục mới"
+            style={{ width: "250px", height: "30px" }}
+          />
+          <Button variant="success" onClick={handleCatAdd} size="sm">
+            Thêm danh mục
           </Button>
-        )}
+        </div>
       </div>
 
       {data.map((cat) => (
