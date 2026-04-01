@@ -45,8 +45,6 @@ const SettingSystemPage = () => {
     }
   }, [settings]);
 
-  console.log(settings);
-
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {

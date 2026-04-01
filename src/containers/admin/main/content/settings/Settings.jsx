@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SettingProduct from "./SettingProduct";
 import SettingSystem from "./SettingSystem";
+import SettingChatOption from "./SettingChatOption";
 
 const Settings = () => {
   const [active, setActive] = useState("product");
@@ -8,6 +9,7 @@ const Settings = () => {
   const tabs = [
     { key: "product", label: "Quản lý sản phẩm" },
     { key: "system", label: "Cài đặt hệ thống" },
+    { key: "chat_options", label: "Hệ thống câu hỏi" },
   ];
 
   return (
@@ -41,10 +43,10 @@ const Settings = () => {
         ))}
       </div>
 
-      {/* Content */}
       <div style={{ marginTop: 10, background: "#fff", borderRadius: 10 }}>
         {active === "product" && <SettingProduct />}
         {active === "system" && <SettingSystem />}
+        {active === "chat_options" && <SettingChatOption />}
       </div>
     </div>
   );
