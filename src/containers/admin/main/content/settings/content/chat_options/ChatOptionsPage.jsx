@@ -2,17 +2,23 @@ import { useDispatch, useSelector } from "react-redux";
 import MyButtonCreate from "../../../../../../../components/button/MyButtonCreate";
 import MyDataTable from "../../../../../../../components/mytable/MyDataTable";
 import { useEffect, useState } from "react";
-import { fetchChatOptions } from "../../../../../../../redux/slices/chatOptionSlice";
+import {
+  deleteChatOption,
+  fetchChatOptions,
+  resetDeleteChat,
+} from "../../../../../../../redux/slices/chatOptionSlice";
 import MyButtonUpdate from "../../../../../../../components/button/MyButtonUpdate";
 import MyButtonDelete from "../../../../../../../components/button/MyButtonDelete";
 import CreateUpdateChatOption from "./crud/CreateUpdateChatOption";
 import { Button } from "react-bootstrap";
 import ChatCategoryPage from "./ChatCategoryPage";
+import { toast } from "react-toastify";
 
 const ChatOptionsPage = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenChatCategory, setIsOpenChatCategory] = useState(false);
+  const [isCheck, setIsCheck] = useState(false);
   const [dataSelected, setDataSelected] = useState(null);
 
   const { data, pagination } = useSelector(
@@ -23,6 +29,8 @@ const ChatOptionsPage = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = pagination?.totalPages || 0;
+
+  const deleteState = useSelector((state) => state.chatOption.deleteChat);
 
   useEffect(() => {
     dispatch(
@@ -41,10 +49,13 @@ const ChatOptionsPage = () => {
 
   const handleCreate = () => {
     setIsOpen(true);
+    setIsCheck(false);
   };
 
   const handleUpdate = (dataSelected) => {
     setIsOpen(true);
+    setIsCheck(true);
+    setDataSelected(dataSelected);
   };
 
   const handleOpenChatCategory = () => {
@@ -71,16 +82,25 @@ const ChatOptionsPage = () => {
       <td className="text-center align-middle">
         <MyButtonUpdate onClick={() => handleUpdate(chatOption)} />
         <MyButtonDelete
-        //   onClick={async () => {
-        //     if (window.confirm("Bạn có chắc muốn xoá?")) {
-        //       await dispatch(deleteSupplier(supplier.id));
-        //       dispatch(fetchSuppliers({ page: currentPage, limit: 10 }));
-        //     }
-        //   }}
+          onClick={async () => {
+            if (window.confirm("Bạn có chắc muốn xoá?")) {
+              await dispatch(deleteChatOption(chatOption.id));
+            }
+          }}
         />
       </td>
     </tr>
   );
+
+  useEffect(() => {
+    if (deleteState.success) {
+      toast.success("Xoá bộ câu hỏi thành công!");
+      dispatch(resetDeleteChat());
+      dispatch(fetchChatOptions({ page: currentPage, limit: 10 }));
+    } else if (deleteState.error) {
+      toast.error(deleteState.error?.message || deleteState.error);
+    }
+  }, [deleteState.error, deleteState.success]);
 
   return (
     <>

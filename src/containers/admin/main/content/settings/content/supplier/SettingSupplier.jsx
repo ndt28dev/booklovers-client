@@ -83,7 +83,6 @@ const SettingSupplier = () => {
           onClick={async () => {
             if (window.confirm("Bạn có chắc muốn xoá?")) {
               await dispatch(deleteSupplier(supplier.id));
-              dispatch(fetchSuppliers({ page: currentPage, limit: 10 }));
             }
           }}
         />

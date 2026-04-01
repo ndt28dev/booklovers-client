@@ -4,7 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 
 import MyModal from "../../../../../../../../components/mymodal/MyModal";
 import { fetchCategories } from "../../../../../../../../redux/slices/chatCategorySlice";
+
+import {
+  createChatOption,
+  updateChatOption,
+  resetCreateChat,
+  resetUpdateChat,
+  fetchChatOptions,
+} from "../../../../../../../../redux/slices/chatOptionSlice";
+
 import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const CreateUpdateChatOption = ({
   isOpen,
@@ -17,6 +27,8 @@ const CreateUpdateChatOption = ({
   const dispatch = useDispatch();
 
   const { data, loading } = useSelector((state) => state.chatCategory.list);
+  const createState = useSelector((state) => state.chatOption.createChat);
+  const updateState = useSelector((state) => state.chatOption.updateChat);
 
   const [form, setForm] = useState({
     id: null,
@@ -27,21 +39,18 @@ const CreateUpdateChatOption = ({
 
   const [errors, setErrors] = useState({});
 
-  // ===== fetch category =====
   useEffect(() => {
     if (isOpen) {
       dispatch(fetchCategories());
     }
   }, [isOpen, dispatch]);
 
-  // ===== convert options =====
   const categoryOptions =
     data?.map((item) => ({
       value: item.id,
       label: item.name,
     })) || [];
 
-  // ===== fill data =====
   useEffect(() => {
     if (dataSelected) {
       const selectedCategory = categoryOptions.find(
@@ -66,7 +75,32 @@ const CreateUpdateChatOption = ({
     setErrors({});
   }, [dataSelected, isOpen, data]);
 
-  // ===== validate =====
+  useEffect(() => {
+    if (!isOpen) {
+      setForm({
+        id: null,
+        question: "",
+        answer: "",
+        category: null,
+      });
+      setErrors({});
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (createState.success) {
+      dispatch(resetCreateChat());
+      onClose();
+    }
+  }, [createState.success]);
+
+  useEffect(() => {
+    if (updateState.success) {
+      dispatch(resetUpdateChat());
+      onClose();
+    }
+  }, [updateState.success]);
+
   const validate = () => {
     const newErrors = {};
 
@@ -86,7 +120,6 @@ const CreateUpdateChatOption = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  // ===== handle input =====
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -95,14 +128,12 @@ const CreateUpdateChatOption = ({
       [name]: value,
     }));
 
-    // clear lỗi khi nhập lại
     setErrors((prev) => ({
       ...prev,
       [name]: null,
     }));
   };
 
-  // ===== handle select =====
   const handleSelectCategory = (selected) => {
     setForm((prev) => ({
       ...prev,
@@ -115,7 +146,6 @@ const CreateUpdateChatOption = ({
     }));
   };
 
-  // ===== submit =====
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -127,16 +157,34 @@ const CreateUpdateChatOption = ({
       category_id: form.category?.value,
     };
 
-    console.log("SUBMIT:", payload);
-
-    // if (form.id) {
-    //   dispatch(updateChatOption({ id: form.id, ...payload }));
-    // } else {
-    //   dispatch(createChatOption(payload));
-    // }
-
-    onClose();
+    if (form.id) {
+      dispatch(updateChatOption({ id: form.id, ...payload }));
+    } else {
+      dispatch(createChatOption(payload));
+    }
   };
+
+  useEffect(() => {
+    if (createState.success) {
+      toast.success("Thêm bộ câu hỏi thành công!");
+      dispatch(resetCreateChat());
+      dispatch(fetchChatOptions({ page: currentPage, limit: 10 }));
+      onClose();
+    } else if (createState.error) {
+      toast.error(createState.error?.message || createState.error);
+    }
+  }, [createState.error, createState.success]);
+
+  useEffect(() => {
+    if (updateState.success) {
+      toast.success("Cập nhật bộ câu hỏi thành công!");
+      dispatch(resetUpdateChat());
+      dispatch(fetchChatOptions({ page: currentPage, limit: 10 }));
+      onClose();
+    } else if (updateState.error) {
+      toast.error(updateState.error?.message || updateState.error);
+    }
+  }, [updateState.error, updateState.success]);
 
   return (
     <MyModal show={isOpen} handleClose={onClose} title={title} size="md">
@@ -197,8 +245,14 @@ const CreateUpdateChatOption = ({
           >
             Huỷ
           </Button>
-          <Button type="submit" className="btn btn-success" size="sm">
-            Lưu
+
+          <Button
+            type="submit"
+            className="btn btn-success"
+            size="sm"
+            disabled={createState.loading || updateState.loading}
+          >
+            {createState.loading || updateState.loading ? "Đang lưu..." : "Lưu"}
           </Button>
         </div>
       </form>
