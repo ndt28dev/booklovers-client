@@ -61,10 +61,10 @@ const ProductsOverview = () => {
   const cards = useMemo(
     () => [
       {
-        title: "Tổng sản phẩm trong hệ thống",
+        title: "Tổng số sản phẩm ",
         value: data?.total_products,
         icon: "bi-box",
-        desc: "Tổng số đầu sách trong hệ thống",
+        desc: "Tổng số sách trong hệ thống",
         color: "#0d6efd",
         bg: "linear-gradient(135deg, #d7e8ff, #f8fbff)",
       },

@@ -44,17 +44,25 @@ const Sidebar = () => {
               "btn btn-light text-start fw-normal" + (isActive ? " active" : "")
             }
           >
-            <i className="bi bi-person-fill me-2"></i>
+            <i className="bi bi-person me-2"></i>
             Thông tin tài khoản
           </NavLink>
-
+          <NavLink
+            to="tin-nhan"
+            className={({ isActive }) =>
+              "btn btn-light text-start fw-normal" + (isActive ? " active" : "")
+            }
+          >
+            <i className="bi bi-chat-dots me-2"></i>
+            Tin nhắn
+          </NavLink>
           <NavLink
             to="dia-chi"
             className={({ isActive }) =>
               "btn btn-light text-start fw-normal" + (isActive ? " active" : "")
             }
           >
-            <i className="bi bi-geo-alt-fill me-2"></i>
+            <i className="bi bi-geo-alt me-2"></i>
             Địa chỉ
           </NavLink>
 

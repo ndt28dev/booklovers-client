@@ -25,7 +25,7 @@ const AccountPage = () => {
     <>
       <Container className="">
         <Breadcrumb items={breadcrumbItems} />
-        <Row className="pb-5 pt-3">
+        <Row className="pb-5 ">
           <Col md={12} lg={3}>
             <Sidebar />
           </Col>

@@ -20,6 +20,7 @@ import customerSlice from "./slices/admin/CustomerSlice";
 import productsImportsSlice from "./slices/admin/ProductsImportsSlice";
 import reviewsContactsSlice from "./slices/admin/ReviewsContactsSlice";
 import messageSlice from "./slices/messageSlice";
+import notificationSlice from "./slices/notificationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -44,5 +45,6 @@ export const store = configureStore({
     adminProductsImports: productsImportsSlice,
     adminReviewsContacts: reviewsContactsSlice,
     message: messageSlice,
+    notification: notificationSlice,
   },
 });

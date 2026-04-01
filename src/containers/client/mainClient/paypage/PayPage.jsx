@@ -32,6 +32,7 @@ import vnpay from "../../../../assets/image/bank/vnpay.png";
 import momo from "../../../../assets/image/bank/momo.png";
 import { createVnpayPayment } from "../../../../redux/slices/vnpaySlice";
 import API_URL from "../../../../config/api";
+import { socket } from "../../../../config/socket";
 
 const breadcrumbItems = [
   { label: "Trang chủ", link: "/" },
@@ -86,19 +87,6 @@ const PayPage = () => {
     dispatch(fetchCartFromServer());
   }, []);
 
-  // useEffect(() => {
-  //   if (cartItems.length > 0 && itemSelect.length > 0) {
-  //     const isValidSelection = itemSelect.every((selectedItem) =>
-  //       cartItems.some((cartItem) => cartItem.book_id === selectedItem.book_id)
-  //     );
-
-  //     if (!isValidSelection) {
-  //       toast.error("Sản phẩm bạn chọn không còn trong giỏ hàng.");
-  //       navigate("/gio-hang");
-  //     }
-  //   }
-  // }, [cartItems, itemSelect]);
-
   const [itemAddress, setItemAddress] = useState({});
   const [itemUpAddress, setItemUpAddress] = useState({});
 
@@ -122,6 +110,12 @@ const PayPage = () => {
     promotion,
     error: errorMessApply,
   } = useSelector((state) => state.cart.applyPro);
+
+  useEffect(() => {
+    if (user?.id) {
+      socket.emit("join_room", user.id);
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     if (promotion) {
@@ -225,19 +219,29 @@ const PayPage = () => {
           const result = await dispatch(createOrder(orderData));
           setFakeLoading(false);
 
+          // if (createOrder.fulfilled.match(result)) {
+          //   dispatch(fetchCartFromServer());
+          //   if (selectedMethod === "cod" || finalTotalPrice === 0) {
+          //     navigate("/dat-hang-thanh-cong");
+          //   }
+          // }
           if (createOrder.fulfilled.match(result)) {
             dispatch(fetchCartFromServer());
+            setFakeLoading(false);
+
+            const { orderId, orderCode } = result.payload;
+
+            //  emit socket tạo notification
+            socket.emit("order_created", {
+              userId: user?.id,
+              orderId,
+              orderCode,
+              fullname: itemAddress.fullname,
+            });
+
             if (selectedMethod === "cod" || finalTotalPrice === 0) {
               navigate("/dat-hang-thanh-cong");
             }
-            // else if (selectedMethod === "vnpay") {
-            //   dispatch(
-            //     createVnpayPayment({
-            //       amount: finalTotalPrice,
-            //       orderId: result.payload.id,
-            //     })
-            //   );
-            // }
           } else {
             toast.error("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
           }

@@ -129,7 +129,7 @@ const Promotions = () => {
       </td>
       <td className="align-middle text-center">
         {formatDate(promotion.start_date)}
-      </td>{" "}
+      </td>
       <td className="align-middle text-center">
         {formatDate(promotion.end_date)}
       </td>

@@ -364,7 +364,23 @@ const Header = () => {
                         closeNavbar();
                       }}
                     >
-                      <i className="bi bi-person-fill me-2"></i>Tài khoản
+                      <i className="bi bi-person me-2"></i>Tài khoản
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        navigate("/tai-khoan/tin-nhan");
+                        closeNavbar();
+                      }}
+                    >
+                      <i className="bi bi-chat-dots me-2"></i>Tin nhắn
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        navigate("/tai-khoan/dia-chi");
+                        closeNavbar();
+                      }}
+                    >
+                      <i className="bi bi-geo-alt me-2"></i>Địa chỉ
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => {

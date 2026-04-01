@@ -35,9 +35,9 @@ import Contacts from "../containers/admin/main/content/contacts/Contacts";
 import Promotions from "../containers/admin/main/content/promotions/Promotions";
 import NotFound from "../containers/notfound/NotFound";
 import Imports from "../containers/admin/main/content/imports/Imports";
-import Message from "../containers/admin/main/content/message/Message";
 import Reviews from "../containers/admin/main/content/reviews/Reviews";
 import MessagePage from "../containers/admin/main/content/message/MessagePage";
+import MessagePageClient from "../containers/client/mainClient/account/message/MessagePageClient";
 
 const AppRoutes = () => {
   return (
@@ -79,6 +79,7 @@ const AppRoutes = () => {
           <Route path="ho-so" element={<ProfilePage />} />
           <Route path="dia-chi" element={<LocationPage />} />
           <Route path="don-hang" element={<OrderPage />} />
+          <Route path="tin-nhan" element={<MessagePageClient />} />
           <Route index element={<ProfilePage />} />
         </Route>
       </Route>

@@ -11,16 +11,21 @@ import { useDispatch, useSelector } from "react-redux";
 import Notification from "../../../../components/notification/Notification";
 import API_URL from "../../../../config/api";
 import ProfileAdmin from "../content/profile/ProfileAdmin";
+import { fetchNotifications } from "../../../../redux/slices/notificationSlice";
 
 const Header = ({ handleList, showSidebar }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user.profileAdmin);
+  const unread = useSelector(
+    (state) => state.notification.list.filter((n) => n.is_read === 0).length
+  );
 
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getAdminUserProfile());
+    dispatch(fetchNotifications());
   }, []);
 
   const handleOpenProfile = () => {
@@ -31,6 +36,7 @@ const Header = ({ handleList, showSidebar }) => {
     dispatch(logoutAdmin());
     window.location.href = "/admin/dang-nhap";
   };
+
   return (
     <>
       <ProfileAdmin isOpen={open} onClose={() => setOpen(false)} />
@@ -68,10 +74,10 @@ const Header = ({ handleList, showSidebar }) => {
                 fontSize: "0.6rem",
               }}
             >
-              1
+              {unread}
             </Badge>
 
-            {show && <Notification />}
+            {show && <Notification onClose={() => setShow(false)} />}
           </div>
           <Dropdown>
             <Dropdown.Toggle

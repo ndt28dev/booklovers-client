@@ -37,12 +37,58 @@ const messageSlice = createSlice({
   reducers: {
     setSelectedUser: (state, action) => {
       state.selectedUser = action.payload;
-      state.messages = []; // reset khi đổi user
     },
 
     // realtime message
     addMessageRealtime: (state, action) => {
-      state.messages.push(action.payload);
+      const msg = action.payload;
+      const userId = Number(msg.user_id);
+
+      state.messages.push(msg);
+
+      const index = state.users.findIndex((u) => Number(u.id) === userId);
+
+      const isFromUser = msg.sender_type?.trim().toLowerCase() === "user";
+
+      const isActiveChat = Number(state.selectedUser) === userId;
+
+      const shouldIncrease = isFromUser && !isActiveChat;
+
+      if (index !== -1) {
+        const user = state.users[index];
+
+        state.users[index] = {
+          ...user,
+          last_message: msg.message,
+          last_sender: msg.sender_type,
+          unread_count: shouldIncrease
+            ? (user.unread_count || 0) + 1
+            : user.unread_count || 0,
+        };
+
+        // move to top
+        const [moved] = state.users.splice(index, 1);
+        state.users.unshift(moved);
+      } else {
+        state.users.unshift({
+          id: userId,
+          fullname: msg.fullname,
+          avatar: msg.avatar,
+          last_message: msg.message,
+          last_sender: msg.sender_type,
+          unread_count: shouldIncrease ? 1 : 0,
+        });
+      }
+    },
+
+    markUserSeen: (state, action) => {
+      const userId = action.payload;
+
+      const index = state.users.findIndex((u) => u.id === userId);
+
+      if (index !== -1) {
+        state.users[index].unread_count = 0;
+      }
     },
   },
 
@@ -69,6 +115,7 @@ const messageSlice = createSlice({
   },
 });
 
-export const { setSelectedUser, addMessageRealtime } = messageSlice.actions;
+export const { setSelectedUser, addMessageRealtime, markUserSeen } =
+  messageSlice.actions;
 
 export default messageSlice.reducer;
