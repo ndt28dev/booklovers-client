@@ -96,20 +96,12 @@ const Footer = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 size="sm"
               />
-              {/* <ButtonCustom
+              <ButtonCustom
                 bgrColor="#E14654"
                 text="Đăng ký"
                 onClick={handleEmailSubmit}
                 disabled={!isValidEmail(email)}
-              /> */}
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={handleEmailSubmit}
-                zIndex="0"
-              >
-                Đăng ký
-              </Button>
+              />
             </InputGroup>
           </Col>
         </Row>
