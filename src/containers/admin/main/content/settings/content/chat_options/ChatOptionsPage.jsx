@@ -50,6 +50,7 @@ const ChatOptionsPage = () => {
   const handleCreate = () => {
     setIsOpen(true);
     setIsCheck(false);
+    setDataSelected(null);
   };
 
   const handleUpdate = (dataSelected) => {

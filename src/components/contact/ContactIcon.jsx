@@ -7,6 +7,7 @@ import phone from "../../assets/image/logoicon/phone.png";
 import zalo from "../../assets/image/logoicon/zalo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSystemSettings } from "../../redux/slices/admin/systemSlice";
+// import chat from "../../assets/image/logoicon/chat.webp";
 
 const ContactIcon = ({ openChat }) => {
   const dispatch = useDispatch();
@@ -38,22 +39,7 @@ const ContactIcon = ({ openChat }) => {
       >
         <img src={zalo} alt="Zalo" style={{ width: "35px", height: "35px" }} />
       </a>
-      {/* <a href="" target="_blank" rel="noopener noreferrer">
-        <img
-          src={mail}
-          alt="Email"
-          className="mb-3"
-          style={{ width: "35px", height: "35px" }}
-        />
-      </a> */}
-      {/* <a href="https://beone.com.vn" target="_blank" rel="noopener noreferrer">
-        <img
-          src={phone}
-          alt="Phone"
-          className="mb-3"
-          style={{ width: "35px", height: "35px" }}
-        />
-      </a> */}
+
       <a
         onClick={openChat}
         className="p-2"
