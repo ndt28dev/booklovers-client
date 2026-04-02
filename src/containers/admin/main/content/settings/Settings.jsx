@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SettingProduct from "./SettingProduct";
 import SettingSystem from "./SettingSystem";
 import SettingChatOption from "./SettingChatOption";
+import SettingNotification from "./SettingNotification";
 
 const Settings = () => {
   const [active, setActive] = useState("product");
@@ -10,6 +11,7 @@ const Settings = () => {
     { key: "product", label: "Quản lý sản phẩm" },
     { key: "chat_options", label: "Hệ thống câu hỏi" },
     { key: "system", label: "Cài đặt hệ thống" },
+    { key: "notification", label: "Quản lý thông báo" },
   ];
 
   return (
@@ -47,6 +49,7 @@ const Settings = () => {
         {active === "product" && <SettingProduct />}
         {active === "chat_options" && <SettingChatOption />}
         {active === "system" && <SettingSystem />}
+        {active === "notification" && <SettingNotification />}
       </div>
     </div>
   );

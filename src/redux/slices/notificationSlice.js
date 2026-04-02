@@ -28,6 +28,19 @@ export const markAllAsRead = createAsyncThunk(
   }
 );
 
+export const deleteAllNotifications = createAsyncThunk(
+  "notification/deleteAllNotifications",
+  async (user_id, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${API_URL}/api/admin/notifications/${user_id}`);
+
+      return user_id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Lỗi xoá thông báo");
+    }
+  }
+);
+
 const notificationSlice = createSlice({
   name: "notification",
   initialState: {
@@ -58,6 +71,10 @@ const notificationSlice = createSlice({
           ...n,
           is_read: 1,
         }));
+      })
+
+      .addCase(deleteAllNotifications.fulfilled, (state) => {
+        state.list = [];
       });
   },
 });

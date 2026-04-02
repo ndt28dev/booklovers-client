@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteAllNotifications,
   fetchNotifications,
   markAllAsRead,
 } from "../../redux/slices/notificationSlice";
-import { Badge } from "react-bootstrap";
+import { Badge, Button } from "react-bootstrap";
 
 const formatTime = (date) => {
   const d = new Date(date);
@@ -60,7 +61,18 @@ const Notification = ({ onClose }) => {
           overflowY: "auto",
         }}
       >
-        <p className="mb-2 fw-bold">Thông báo</p>
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <p className="mb-0 fw-bold">Thông báo</p>
+          {list.length > 0 && (
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => dispatch(deleteAllNotifications(0))}
+            >
+              Xoá tất cả
+            </Button>
+          )}
+        </div>
 
         {list.length === 0 && (
           <div className="text-center text-muted py-3">Không có thông báo</div>
