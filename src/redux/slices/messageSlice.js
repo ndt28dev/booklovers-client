@@ -67,6 +67,7 @@ const messageSlice = createSlice({
           unread_count: shouldIncrease
             ? (user.unread_count || 0) + 1
             : user.unread_count || 0,
+          last_time: msg.created_at || new Date().toISOString(),
         };
 
         // move to top
@@ -80,6 +81,7 @@ const messageSlice = createSlice({
           last_message: msg.message,
           last_sender: msg.sender_type,
           unread_count: shouldIncrease ? 1 : 0,
+          last_time: msg.created_at || new Date().toISOString(),
         });
       }
     },

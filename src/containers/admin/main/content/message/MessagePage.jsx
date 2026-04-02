@@ -182,6 +182,23 @@ const MessagePage = () => {
                         minute: "2-digit",
                       })}
                     </span>
+                    {/* <span style={{ fontSize: "11px", color: "#999" }}>
+                      {(() => {
+                        const time = new Date(user.last_time);
+
+                        if (isNaN(time.getTime())) {
+                          return new Date().toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          });
+                        }
+
+                        return time.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        });
+                      })()}
+                    </span> */}
                   </div>
 
                   <div
