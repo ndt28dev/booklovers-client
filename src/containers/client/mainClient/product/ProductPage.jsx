@@ -108,6 +108,10 @@ const ProductPage = () => {
   }, []);
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [categorySlug, subcategorySlug, id, idSub]);
+
+  useEffect(() => {
     dispatch(
       fetchAllBook({
         page: currentPage,
