@@ -165,7 +165,11 @@ const ReviewsBooks = ({ bookId }) => {
               <div className="d-flex align-items-start justify-content-between">
                 <div className="d-flex align-items-center">
                   <Image
-                    src={`${API_URL}/avatar/${item.user.avatar}`}
+                    src={
+                      item.user.avatar.startsWith("https://")
+                        ? item.user.avatar
+                        : `${API_URL}/avatar/${item.user.avatar}`
+                    }
                     roundedCircle
                     style={{ width: "45px", height: "45px" }}
                     className="me-2"
