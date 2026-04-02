@@ -90,7 +90,7 @@ const ProductPage = () => {
 
   const [selectedPrices, setSelectedPrices] = useState([]);
 
-  const limit = checkedswitch ? 8 : 12;
+  const limit = checkedswitch ? 12 : 12;
 
   const { listBook } = useSelector((state) => state.book.fetchBook);
   const totalPages = useSelector((state) => {

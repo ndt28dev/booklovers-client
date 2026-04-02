@@ -514,7 +514,7 @@ const CartPage = () => {
                         className="mb-3 border-bottom pb-2 gap-1"
                       >
                         <div
-                          className="d-flex align-items-center gap-2"
+                          className="d-flex align-items-start gap-2"
                           style={{ flex: 1 }}
                         >
                           <Image
@@ -523,8 +523,8 @@ const CartPage = () => {
                             height={90}
                             className="rounded border"
                           />
-                          <div>
-                            <div className="d-flex gap-1 justify-content-between">
+                          <div style={{ flex: 1 }}>
+                            <div className="d-flex gap-1 align-items-start justify-content-between">
                               <div
                                 className="fw-semibold"
                                 style={{ color: "#333" }}
