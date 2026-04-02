@@ -360,7 +360,7 @@ const DetailProduct = () => {
                           <i className="bi bi-plus btnIncrease-icon"></i>
                         </Button>
                       </InputGroup>
-                      <span className="ms-2 text-success fw-semibold">
+                      <span className="ms-2 mb-0 text-success fw-semibold">
                         Còn lại {maxQuantity}
                       </span>
                     </div>
