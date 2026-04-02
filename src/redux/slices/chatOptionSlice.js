@@ -83,9 +83,20 @@ export const deleteChatOption = createAsyncThunk(
   }
 );
 
-// =======================
-// INITIAL STATE
-// =======================
+export const fetchCategoriesWithOptions = createAsyncThunk(
+  "chatUser/fetchCategories",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/categories-with-options`
+      );
+      return res.data.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Lỗi tải danh mục");
+    }
+  }
+);
+
 const initialState = {
   listChat: {
     data: [],
@@ -117,6 +128,21 @@ const initialState = {
     loading: false,
     error: null,
   },
+
+  categories: {
+    data: [],
+    loading: false,
+    error: null,
+  },
+
+  chat: {
+    messages: [
+      {
+        from: "bot",
+        text: "Bạn cần hỗ trợ gì?",
+      },
+    ],
+  },
 };
 
 const chatOptionSlice = createSlice({
@@ -134,6 +160,44 @@ const chatOptionSlice = createSlice({
     },
     resetAnswer: (state) => {
       state.answer = initialState.answer;
+    },
+    addUserMessage: (state, action) => {
+      state.chat.messages.push({
+        from: "user",
+        text: action.payload,
+      });
+    },
+
+    addBotMessage: (state, action) => {
+      state.chat.messages.push({
+        from: "bot",
+        text: action.payload,
+      });
+    },
+
+    selectOption: (state, action) => {
+      const { question, answer } = action.payload;
+
+      // user hỏi
+      state.chat.messages.push({
+        from: "user",
+        text: question,
+      });
+
+      // bot trả lời
+      state.chat.messages.push({
+        from: "bot",
+        text: answer,
+      });
+    },
+
+    resetChat: (state) => {
+      state.chat.messages = [
+        {
+          from: "bot",
+          text: "Bạn cần hỗ trợ gì?",
+        },
+      ];
     },
   },
 
@@ -230,6 +294,19 @@ const chatOptionSlice = createSlice({
       .addCase(deleteChatOption.rejected, (state, action) => {
         state.deleteChat.loading = false;
         state.deleteChat.error = action.payload;
+      })
+
+      .addCase(fetchCategoriesWithOptions.pending, (state) => {
+        state.categories.loading = true;
+        state.categories.error = null;
+      })
+      .addCase(fetchCategoriesWithOptions.fulfilled, (state, action) => {
+        state.categories.loading = false;
+        state.categories.data = action.payload;
+      })
+      .addCase(fetchCategoriesWithOptions.rejected, (state, action) => {
+        state.categories.loading = false;
+        state.categories.error = action.payload;
       });
   },
 });
@@ -239,6 +316,10 @@ export const {
   resetUpdateChat,
   resetDeleteChat,
   resetAnswer,
+  addUserMessage,
+  resetChat,
+  selectOption,
+  addBotMessage,
 } = chatOptionSlice.actions;
 
 export default chatOptionSlice.reducer;

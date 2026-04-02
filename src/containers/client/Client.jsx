@@ -8,6 +8,7 @@ import { Outlet } from "react-router-dom";
 import ContactIcon from "../../components/contact/ContactIcon";
 import UpScrollTop from "../../components/upscrolltop/UpScrollTop";
 import ChatBox from "../../components/chatbox/ChatBox";
+import ChatBoxAi from "../../components/chatbox/ChatBoxAi";
 
 const Client = () => {
   const [showChat, setShowChat] = React.useState(false);
@@ -26,7 +27,8 @@ const Client = () => {
         <Outlet />
       </div>
       <Footer />
-      {showChat && <ChatBox onClose={handleCloseChat} />}
+      {/* {showChat && <ChatBox onClose={handleCloseChat} />} */}
+      {showChat && <ChatBoxAi onClose={handleCloseChat} />}
       {!showChat && (
         <>
           <UpScrollTop />

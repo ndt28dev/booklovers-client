@@ -8,8 +8,8 @@ const Settings = () => {
 
   const tabs = [
     { key: "product", label: "Quản lý sản phẩm" },
-    { key: "system", label: "Cài đặt hệ thống" },
     { key: "chat_options", label: "Hệ thống câu hỏi" },
+    { key: "system", label: "Cài đặt hệ thống" },
   ];
 
   return (
@@ -45,8 +45,8 @@ const Settings = () => {
 
       <div style={{ marginTop: 10, background: "#fff", borderRadius: 10 }}>
         {active === "product" && <SettingProduct />}
-        {active === "system" && <SettingSystem />}
         {active === "chat_options" && <SettingChatOption />}
+        {active === "system" && <SettingSystem />}
       </div>
     </div>
   );

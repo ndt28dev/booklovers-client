@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Image, Form, InputGroup } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  Form,
+  InputGroup,
+  Button,
+} from "react-bootstrap";
 import ButtonCustom from "../../../components/button/ButtonCustom";
 import "./Footer.scss";
 import { Link } from "react-router-dom";
@@ -88,12 +96,20 @@ const Footer = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 size="sm"
               />
-              <ButtonCustom
+              {/* <ButtonCustom
                 bgrColor="#E14654"
                 text="Đăng ký"
                 onClick={handleEmailSubmit}
                 disabled={!isValidEmail(email)}
-              />
+              /> */}
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={handleEmailSubmit}
+                zIndex="0"
+              >
+                Đăng ký
+              </Button>
             </InputGroup>
           </Col>
         </Row>
