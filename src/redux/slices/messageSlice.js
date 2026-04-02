@@ -44,13 +44,16 @@ const messageSlice = createSlice({
       const msg = action.payload;
       const userId = Number(msg.user_id);
 
-      state.messages.push(msg);
+      const isActiveChat = Number(state.selectedUser) === userId;
+
+      // chỉ push message nếu đang mở đúng user
+      if (isActiveChat) {
+        state.messages.push(msg);
+      }
 
       const index = state.users.findIndex((u) => Number(u.id) === userId);
 
       const isFromUser = msg.sender_type?.trim().toLowerCase() === "user";
-
-      const isActiveChat = Number(state.selectedUser) === userId;
 
       const shouldIncrease = isFromUser && !isActiveChat;
 
