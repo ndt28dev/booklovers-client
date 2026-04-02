@@ -177,12 +177,6 @@ const MessagePage = () => {
                     <span>{user.fullname}</span>
 
                     <span style={{ fontSize: "11px", color: "#999" }}>
-                      {new Date(user.last_time).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                    {/* <span style={{ fontSize: "11px", color: "#999" }}>
                       {(() => {
                         const time = new Date(user.last_time);
 
@@ -198,7 +192,7 @@ const MessagePage = () => {
                           minute: "2-digit",
                         });
                       })()}
-                    </span> */}
+                    </span>
                   </div>
 
                   <div
