@@ -101,7 +101,7 @@ const ChatCategoryPage = ({ isOpen, onClose }) => {
       show={isOpen}
       handleClose={onClose}
       title="Danh sách danh mục câu hỏi"
-      size="lg"
+      size="md"
     >
       <div className="d-flex gap-2 mb-3">
         <Form.Control
